@@ -2,18 +2,33 @@ html,
 body {
   color: var(--title-text);
   background: var(--background);
+  margin: 0;
 }
 
 /* Set the dark mode variables... */
 [data-theme="dark"] {
   --background: #21212c;
+  --secondary-background: #2b2c37;
   --title-text: white;
   --desc-text: grey;
+  --border: #3e3f4e
 }
 
 /* Set the light mode variables... */
 [data-theme="light"] {
   --background: #f4f7fd;
+  --secondary-background: #ffffff;
   --title-text: black;
   --desc-text: grey;
+  --border: #dde5f3;
+}
+
+.navbar {
+  background-color: var(--secondary-background);
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebar {
+  background-color: var(--secondary-background);
+  border-right: 1px solid var(--border);
 }

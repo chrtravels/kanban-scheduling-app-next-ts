@@ -9,7 +9,7 @@ import styles from './navbar.module.scss'
 
 const Navbar = () => {
   const { theme, setTheme} = useTheme();
-  const [mounted, setMounted] = useState(false)
+  const [mounted, setMounted] = useState (false)
 
 
   useEffect(() => {
@@ -24,9 +24,9 @@ const Navbar = () => {
   console.log('theme: ', useTheme())
 
   return (
-    <div className={styles.container}>
+    <div className={`navbar ${styles.container}`}>
       <div className={styles.leftContent}>
-        <div className={styles.logo}>
+        <div className={`sidebar ${styles.logo}`}>
           {theme === 'dark' ? (
             <Image
             src='/assets/logo-light.svg'
@@ -45,7 +45,7 @@ const Navbar = () => {
             )
           }
         </div>
-        <div className={styles.boardName}></div>
+        <div className={styles.boardName}><h2>Platform Launch</h2></div>
       </div>
 
       <div className={styles.navbarActions}>
