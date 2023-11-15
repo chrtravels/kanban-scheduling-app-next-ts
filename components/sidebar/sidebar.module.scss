@@ -18,8 +18,13 @@
   height: 2.5rem;
   width: 2.8rem;
   background-color: #635fc7;
-  border-top-right-radius: 50%;
-  border-bottom-right-radius: 50%
+  -webkit-border-top-right-radius: 1em;
+  -moz-border-top-right-radius: 1em;
+  -webkit-border-bottom-right-radius: 1em;
+  -moz-border-bottom-right-radius: 1em;
+  border-top-right-radius: 500px;
+  border-bottom-right-radius: 500px;
+  cursor: pointer;
 }
 
 .sideNav {

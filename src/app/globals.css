@@ -19,9 +19,9 @@ body {
   --secondary-background: #2b2c37;
   --title-text: white;
   --desc-text: grey;
-  --border: #3e3f4e
-  --secondary: #f4f7fd
-  --secondary-hover: #e4ebfa
+  --border: #3e3f4e;
+  --secondary: #f4f7fd;
+  --secondary-hover: #e4ebfa;
 }
 
 /* Set the light mode variables... */
@@ -31,8 +31,8 @@ body {
   --title-text: black;
   --desc-text: grey;
   --border: #dde5f3;
-  --secondary: #efeff9
-  --secondary-hover: #d8d7f1
+  --secondary: #efeff9;
+  --secondary-hover: #d8d7f1;
 }
 
 .navbar {
