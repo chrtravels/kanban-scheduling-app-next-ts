@@ -54,17 +54,19 @@ const Navbar = ({ sidebarExpanded }) => {
       <div className={styles.navbarActions}>
         <div className={styles.addTaskBtn}>
         <button
-          aria-label='Toggle Dark Mode'
+          className='btn-large btn-primary'
+          aria-label='Add New Task'
           type='button'
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-          >
-          {theme === 'dark' ? (
-            'light'
-          ) : (
-            'dark'
-          )}
+        >
+        +Add New Task
         </button>
       </div>
+      <Image
+            src='/assets/icon-vertical-ellipsis.svg'
+            height={20}
+            width={5}
+            alt='edit button'
+      />
     </div>
     </div>
   )

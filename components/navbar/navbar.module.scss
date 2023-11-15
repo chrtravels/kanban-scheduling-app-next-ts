@@ -29,6 +29,18 @@
 
 .navbarActions {
   display: flex;
+  align-items: center;
   gap: 1rem;
-  margin: 1rem;
+  margin-right: 2rem;
+
+  img {
+    cursor: pointer;
+  }
+}
+
+.addTaskBtn {
+  button {
+    padding: 1rem 1.5rem;
+  }
+
 }

@@ -1,8 +1,8 @@
 :root {
-  --primary: #645fc7
-  --primary-hover: #a7a4ff
-  --destructive: #ea5555
-  --destructive-hover: #FF9898
+  --primary: #645fc7;
+  --primary-hover: #a7a4ff;
+  --destructive: #ea5555;
+  --destructive-hover: #FF9898;
 }
 
 html,
@@ -62,11 +62,21 @@ body {
 .btn-large {
   width: 100%;
   padding: 1rem 0;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 500px;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-small {
-  width: 100%;
+  /* width: 100%; */
   padding: .5rem 0;
+  -webkit-border-radius: 1em;
+  -moz-border-radius: 1em;
+  border-radius: 500px;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-primary {
@@ -75,7 +85,6 @@ body {
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
-
 }
 
 .btn-secondary {
