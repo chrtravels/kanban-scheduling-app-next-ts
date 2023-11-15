@@ -3,14 +3,19 @@
 import styles from './sidebar.module.scss'
 
 import { useTheme } from 'next-themes'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
 
 import { AiFillEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 
+type Props = {
+  sidebarExpanded: Boolean;
+  setSidebarExpanded: Dispatch<SetStateAction<Boolean>>;
+}
 
-export default function Sidebar({ sidebarExpanded, setSidebarExpanded}) {
+
+export default function Sidebar({ sidebarExpanded, setSidebarExpanded}: Props) {
   const { theme, setTheme} = useTheme();
   const [active, setActive] = useState(false);
   const [mounted, setMounted] = useState (false)

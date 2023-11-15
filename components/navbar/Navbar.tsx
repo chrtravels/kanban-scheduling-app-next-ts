@@ -7,7 +7,7 @@ import Image from 'next/image';
 import styles from './navbar.module.scss'
 
 
-const Navbar = ({ sidebarExpanded }) => {
+const Navbar = ( prop: { sidebarExpanded: Boolean } ) => {
   const { theme, setTheme} = useTheme();
   const [mounted, setMounted] = useState (false)
 
@@ -48,7 +48,7 @@ const Navbar = ({ sidebarExpanded }) => {
             )
           }
         </div>
-        <div className={sidebarExpanded ? styles.activeSidebar : styles.boardName} style={contentStyle}><h2>Platform Launch</h2></div>
+        <div className={prop.sidebarExpanded ? styles.activeSidebar : styles.boardName} style={contentStyle}><h2>Platform Launch</h2></div>
       </div>
 
       <div className={styles.navbarActions}>

@@ -4,8 +4,11 @@ import { useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Navbar from '../navbar/Navbar';
 
-export default function SidebarLayout({ children }) {
-  const [sidebarExpanded, setSidebarExpanded] = useState(false);
+export default function SidebarLayout({ children,
+}: {
+  children: React.ReactNode
+}) {
+  const [sidebarExpanded, setSidebarExpanded] = useState<Boolean>(false);
 
   // Changes the content container left margin to move with the side bar
   const contentStyle = {

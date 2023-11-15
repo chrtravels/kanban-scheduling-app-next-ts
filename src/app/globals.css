@@ -80,6 +80,7 @@ body {
 }
 
 .btn-primary {
+  color: white;
   background-color: var(--primary);
 }
 
@@ -88,6 +89,7 @@ body {
 }
 
 .btn-secondary {
+  color: var(--primary);
   background-color: var(--secondary);
 }
 

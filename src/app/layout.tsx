@@ -2,7 +2,6 @@ import type { Metadata } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Providers from '../../context/Providers';
-import Navbar from '../../components/navbar/Navbar';
 import SidebarLayout from '../../components/layout/SidebarLayout';
 
 const inter = Inter({
@@ -30,9 +29,6 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${plus_jakarta_sans.variable}`}>
         <Providers>
-          {/* <div className='layout-navbar'>
-            <Navbar />
-          </div> */}
           <SidebarLayout>
           {children}
           </SidebarLayout>
