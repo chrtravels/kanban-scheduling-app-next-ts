@@ -21,7 +21,7 @@ export const DarkModeToggle = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${theme === 'light' ? styles.lightBackground : styles.darkBackground}`}>
       <Image
         src='/assets/icon-light-theme.svg'
         height={19}

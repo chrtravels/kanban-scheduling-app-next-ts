@@ -1,5 +1,17 @@
 .container {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: .7rem;
+  width: 14.5rem;
+  padding: .7rem 0;
+  border-radius: 6px;
+}
+
+.lightBackground {
+  background-color: #f4f7fd;
+}
+
+.darkBackground {
+ background-color: #20212c;
 }
