@@ -10,6 +10,7 @@ body {
   color: var(--title-text);
   background: var(--background);
   margin: 0;
+  font-family: var(--font-plus-jakarta-sans);
 }
 
 /* Set the dark mode variables... */
@@ -91,4 +92,51 @@ body {
 
 .btn-destructive:hover {
   background-color: var(--destructive-hover);
+}
+
+/* Checkboxes */
+
+
+/* Text Fields */
+
+
+/* Dropdown */
+
+
+/* FONTS */
+.heading-xl {
+  font-size: 24px;
+  line-height: 30px;
+  font-weight: 700;
+}
+
+.heading-l {
+  font-size: 18px;
+  line-height: 23px;
+  font-weight: 700;
+}
+
+.heading-m {
+  font-size: 15px;
+  line-height: 19px;
+  font-weight: 700;
+}
+
+.heading-s {
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 700;
+  kerning: 2.4px;
+}
+
+.body-l {
+  font-size: 13px;
+  line-height: 23px;
+  font-weight: 500;
+}
+
+.body-m {
+  font-size: 12px;
+  line-height: 15px;
+  font-weight: 500;
 }

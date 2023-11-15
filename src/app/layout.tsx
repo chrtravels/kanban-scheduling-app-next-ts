@@ -1,11 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Providers from '../../context/Providers';
 import Navbar from '../../components/navbar/Navbar';
 import SidebarLayout from '../../components/layout/SidebarLayout';
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter'
+})
+
+const plus_jakarta_sans = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  variable: '--font-plus-jakarta-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Kanban Boards',
@@ -19,7 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.variable} ${plus_jakarta_sans.variable}`}>
         <Providers>
           {/* <div className='layout-navbar'>
             <Navbar />
