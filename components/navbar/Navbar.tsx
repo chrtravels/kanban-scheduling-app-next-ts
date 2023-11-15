@@ -7,21 +7,24 @@ import Image from 'next/image';
 import styles from './navbar.module.scss'
 
 
-const Navbar = () => {
+const Navbar = ({ sidebarExpanded }) => {
   const { theme, setTheme} = useTheme();
   const [mounted, setMounted] = useState (false)
+
+  const contentStyle = {
+    transition: "all 0.5s ease-in-out",
+};
 
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  console.log('resolved theme: ', theme)
   if (!mounted) {
     return null
   }
 
-  console.log('theme: ', useTheme())
+  console.log('theme: ', theme)
 
   return (
     <div className={`navbar ${styles.container}`}>
@@ -45,7 +48,7 @@ const Navbar = () => {
             )
           }
         </div>
-        <div className={styles.boardName}><h2>Platform Launch</h2></div>
+        <div className={sidebarExpanded ? styles.activeSidebar : styles.boardName} style={contentStyle}><h2>Platform Launch</h2></div>
       </div>
 
       <div className={styles.navbarActions}>

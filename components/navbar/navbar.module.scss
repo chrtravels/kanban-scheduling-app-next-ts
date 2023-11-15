@@ -1,4 +1,6 @@
 .container {
+  position: fixed;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   height: 6rem;
@@ -14,7 +16,15 @@
   height: 4rem;
   display: flex;
   justify-content: flex-start;
-  padding: 2rem 2rem 0 1.5rem;
+  padding: 2rem 2rem 0 2rem;
+}
+
+.boardName {
+
+}
+
+.activeSidebar {
+  padding-left: 3rem;
 }
 
 .navbarActions {
