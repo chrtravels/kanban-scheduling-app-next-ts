@@ -1,3 +1,10 @@
+:root {
+  --primary: #645fc7
+  --primary-hover: #a7a4ff
+  --destructive: #ea5555
+  --destructive-hover: #FF9898
+}
+
 html,
 body {
   color: var(--title-text);
@@ -12,6 +19,8 @@ body {
   --title-text: white;
   --desc-text: grey;
   --border: #3e3f4e
+  --secondary: #f4f7fd
+  --secondary-hover: #e4ebfa
 }
 
 /* Set the light mode variables... */
@@ -21,6 +30,8 @@ body {
   --title-text: black;
   --desc-text: grey;
   --border: #dde5f3;
+  --secondary: #efeff9
+  --secondary-hover: #d8d7f1
 }
 
 .navbar {
@@ -46,10 +57,38 @@ body {
   z-index: 1;
 }
 
-.lightMode-background {
+/* Buttons */
+.btn-large {
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.btn-small {
+  width: 100%;
+  padding: .5rem 0;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
 
 }
 
-.darkMode-background {
+.btn-secondary {
+  background-color: var(--secondary);
+}
 
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+}
+
+.btn-destructive {
+  background-color: var(--destructive);
+}
+
+.btn-destructive:hover {
+  background-color: var(--destructive-hover);
 }
