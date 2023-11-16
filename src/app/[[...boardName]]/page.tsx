@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import styles from './page.module.css'
 
-import conn from '../../lib/db'
+import conn from '../../../lib/db'
 
 async function getData() {
   try {
@@ -15,11 +15,19 @@ async function getData() {
   }
 }
 
+// Type Definitions:
 type Board = {
   [key: string]: any[]
 }
 
-export default async function Home() {
+type Params = {
+  params: {
+    boardName: Array<string>;
+  };
+}
+
+// Sort data into separate boards
+async function getBoards() {
   const boards: Board = {};
   const getBoards = await getData()
 
@@ -32,6 +40,27 @@ export default async function Home() {
       boards[boardName] = [{'status': board.status, 'tasks': board.tasks}]
     }
   })
+
+  return boards;
+}
+
+async function generateStaticParams() {
+  const boards = await getBoards();
+  const params: string[] = [];
+
+  Object.keys(boards).forEach((key) => {
+    if (!params.includes(key)) {
+      params.push(key.split(' ').join('-'));
+    }
+  })
+  console.log(params)
+  return params;
+}
+
+generateStaticParams();
+
+export default async function Home({ params: { boardName } }: Params) {
+  const boards = await getBoards();
 
   console.log('boards: ', boards)
 
