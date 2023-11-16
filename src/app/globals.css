@@ -58,6 +58,11 @@ body {
   z-index: 1;
 }
 
+/* Task Cards */
+.task-card {
+  background-color: var(--secondary-background);
+}
+
 /* Buttons */
 .btn-large {
   width: 100%;

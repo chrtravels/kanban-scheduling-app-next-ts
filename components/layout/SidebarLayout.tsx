@@ -12,7 +12,7 @@ export default function SidebarLayout({ children,
 
   // Changes the content container left margin to move with the side bar
   const contentStyle = {
-    marginLeft: sidebarExpanded ? "250px" : "70px",
+    marginLeft: sidebarExpanded ? "270px" : "0px",
     transition: "all 0.5s ease-in-out",
     // transition: "margin 0.2s ease"
 };

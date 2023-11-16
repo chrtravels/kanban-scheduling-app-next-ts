@@ -2,7 +2,7 @@ import Image from 'next/image'
 import styles from './page.module.css'
 
 import conn from '../../../lib/db'
-import { BoardLayout } from '../../../components/board/BoardLayout';
+import BoardLayout from '../../../components/board/BoardLayout';
 
 async function getData() {
   try {

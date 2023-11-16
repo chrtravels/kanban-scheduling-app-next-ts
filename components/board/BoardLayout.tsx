@@ -2,13 +2,15 @@
 
 import styles from './boardLayout.module.scss'
 
+import TaskCards from './boardCard/TaskCards';
 
-export const BoardLayout = (props: { boards: {[key: string]: any[]}, boardName: string}) => {
+
+export default function BoardLayout (props: { boards: {[key: string]: any[]}, boardName: string}) {
   const currentBoardName = props.boardName.split('-').join(' ');
   const selectedBoard = props.boards[currentBoardName];
 
-  console.log('current board: ', currentBoardName)
-  console.log(selectedBoard)
+  // console.log('current board: ', currentBoardName)
+  // console.log(selectedBoard)
 
   const bulletColorArray = [
     '#49c4e5',
@@ -19,7 +21,7 @@ export const BoardLayout = (props: { boards: {[key: string]: any[]}, boardName: 
   return (
     <div className={styles.container}>
       {selectedBoard.map((column, idx) => {
-        // console.log(board[0])
+
         return (
           <div key={idx} className={styles.column}>
             <div className={styles.columnHeader}>
@@ -27,6 +29,19 @@ export const BoardLayout = (props: { boards: {[key: string]: any[]}, boardName: 
                 <div className={styles.bullet} style={{backgroundColor: bulletColorArray[idx]}}></div>
               }
               <div className={styles.title}>{column.status.toUpperCase()} <span>({column.tasks.length})</span></div>
+            </div>
+
+            <div className={styles.columnBody}>
+              {selectedBoard.map((board, idx) => {
+
+                if (column.status === board.status) {
+                  const tasks: [{title: string, status: string, subtasks: [], description: string}] = board.tasks;
+
+                  return (
+                    <TaskCards tasks={tasks} />
+                  )
+                }
+              })}
             </div>
           </div>
         )

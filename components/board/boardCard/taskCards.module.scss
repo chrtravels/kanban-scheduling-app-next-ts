@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.cardContainer {
+  display: flex;
+  flex-direction: column;
+  width: 18rem;
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.subtasks {
+  color: #828fa3;
+}
