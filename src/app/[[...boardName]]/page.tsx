@@ -2,6 +2,7 @@ import Image from 'next/image'
 import styles from './page.module.css'
 
 import conn from '../../../lib/db'
+import { BoardLayout } from '../../../components/board/BoardLayout';
 
 async function getData() {
   try {
@@ -53,7 +54,7 @@ async function generateStaticParams() {
       params.push(key.split(' ').join('-'));
     }
   })
-  console.log(params)
+
   return params;
 }
 
@@ -62,11 +63,10 @@ generateStaticParams();
 export default async function Home({ params: { boardName } }: Params) {
   const boards = await getBoards();
 
-  console.log('boards: ', boards)
 
   return (
     <main className={styles.main}>
-      <h1>Home Page</h1>
+      <BoardLayout boards={boards} boardName={boardName[0]} />
     </main>
   )
 }
