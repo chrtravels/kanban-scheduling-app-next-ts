@@ -1,13 +1,12 @@
 .container {
   display: flex;
   gap: 2rem;
-  margin-top: 2rem;
+  margin: 2rem 0 0 2rem;
 }
 
 .column {
   display: flex;
   flex-direction: column;
-  margin-left: 2rem;
 }
 
 .columnHeader {
