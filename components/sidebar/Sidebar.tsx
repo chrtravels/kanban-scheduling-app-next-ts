@@ -90,8 +90,9 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
               key={boardName}
               href={{
                 pathname: `/${boardName.split(' ').join('-')}`,
-                query: { board: boardName }
+                // query: { board: boardName }
               }}
+              style={{ textDecoration: 'none'}}
               >
                 <div className={`${boardName === selected ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}>
                   <Image
