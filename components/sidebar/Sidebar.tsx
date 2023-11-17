@@ -5,20 +5,24 @@ import styles from './sidebar.module.scss'
 import { useTheme } from 'next-themes'
 import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 
+import BoardIcon from '../../public/assets/icon-board.svg';
 import { AiFillEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 
 type Props = {
+  boardNames: string[];
+  boardCount: number;
   sidebarExpanded: Boolean;
   setSidebarExpanded: Dispatch<SetStateAction<Boolean>>;
 }
 
-
-export default function Sidebar({ sidebarExpanded, setSidebarExpanded}: Props) {
+export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSidebarExpanded}: Props) {
   const { theme, setTheme} = useTheme();
   const [active, setActive] = useState(false);
-  const [mounted, setMounted] = useState (false)
+  const [mounted, setMounted] = useState(false)
+  const [selected, setSelected] = useState('platform launch')
 
   useEffect(() => {
     setMounted(true);
@@ -64,6 +68,43 @@ export default function Sidebar({ sidebarExpanded, setSidebarExpanded}: Props) {
             />
             )
           }
+        </div>
+
+        <div className={styles.sidebarNavItemsContainer}>
+          <span className={`heading-s ${styles.navItemsHeader}`}>ALL BOARDS ({boardCount})</span>
+
+          {boardNames.map((boardName) => {
+            const capitalizedBoardName = () => {
+              if (!boardName.includes(' ')) {
+                const capitalizedWords: string[] = [];
+                const words = boardName.split(' ')
+                words.forEach((word) => {
+                  capitalizedWords.push(word[0].toUpperCase() + word.slice(1))
+                })
+                return capitalizedWords.join(' ');
+              } else return boardName[0].toUpperCase() + boardName.slice(1);
+            }
+
+            return (
+              <Link
+              key={boardName}
+              href={{
+                pathname: `/${boardName.split(' ').join('-')}`,
+                query: { board: boardName }
+              }}
+              >
+                <div className={`${boardName === selected ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}>
+                  <Image
+                    src='/assets/icon-board.svg'
+                    height={16}
+                    width={16}
+                    alt='board link'
+                  />
+                  <span className='body-l'>{capitalizedBoardName()}</span>
+                </div>
+              </Link>
+            )
+          })}
         </div>
 
         <div className={styles.sidebarActions}>

@@ -2,17 +2,35 @@
 
 import styles from './taskCards.module.scss'
 
+import EditTask from '../editTask/EditTask';
+
 export default function TaskCards(props: { tasks: [{title: string, status: string, subtasks: [], description: string}] }) {
   const tasks = props.tasks;
-  // console.log('tasks: ', tasks)
 
   return (
     <div className={styles.container}>
-      {tasks.map((task, idx) => {
+      {tasks.map((task) => {
+        type TasksCompleted = () => number;
+
+        const tasksCompleted: TasksCompleted = () => {
+          let numCompleted= 0;
+
+          task.subtasks.forEach((subtask: {title: string, isCompleted: boolean}) => {
+            if (subtask.isCompleted) {
+              numCompleted++;
+            }
+          })
+
+          return numCompleted;
+        }
+
         return (
-          <div className={`task-card ${styles.cardContainer}`}>
-            <span>{task.title}</span>
-            <span className={styles.subtasks}>0 of {task.subtasks.length} subtasks</span>
+          <div key={task.title}>
+            {/* <EditTask task={task} tasksCompleted={tasksCompleted()} /> */}
+            <div className={`card ${styles.cardContainer}`}>
+              <span>{task.title}</span>
+              <span className={styles.subtasks}>{tasksCompleted()} of {task.subtasks.length} subtasks</span>
+            </div>
           </div>
         )
       })}

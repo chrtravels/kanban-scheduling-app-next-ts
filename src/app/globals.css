@@ -22,6 +22,8 @@ body {
   --border: #3e3f4e;
   --secondary: #f4f7fd;
   --secondary-hover: #e4ebfa;
+  --subtask-dropdown-selection: #20212c;
+  --subtask-hover: #39395b
 }
 
 /* Set the light mode variables... */
@@ -33,6 +35,8 @@ body {
   --border: #dde5f3;
   --secondary: #efeff9;
   --secondary-hover: #d8d7f1;
+  --subtask-dropdown-selection: #f4f7fd;
+  --subtask-hover: #d8d7f1
 }
 
 .navbar {
@@ -59,7 +63,7 @@ body {
 }
 
 /* Task Cards */
-.task-card {
+.card {
   background-color: var(--secondary-background);
 }
 
@@ -143,6 +147,7 @@ body {
   line-height: 15px;
   font-weight: 700;
   kerning: 2.4px;
+  color: #828fa3
 }
 
 .body-l {
@@ -155,4 +160,12 @@ body {
   font-size: 12px;
   line-height: 15px;
   font-weight: 500;
+}
+
+.subtask {
+  background-color: var(--subtask-dropdown-selection);
+}
+
+.subtask:hover {
+  background-color: var(--subtask-hover);
 }

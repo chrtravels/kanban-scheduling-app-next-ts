@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 import styles from './page.module.css'
 
 import conn from '../../../lib/db'
@@ -10,6 +11,7 @@ async function getData() {
     const result = await conn.query(
       query
     )
+
     return result.rows;
   } catch (error) {
     throw new Error('Failed to fetch data')
@@ -63,10 +65,17 @@ generateStaticParams();
 export default async function Home({ params: { boardName } }: Params) {
   const boards = await getBoards();
 
+  if (!boardName) {
+    if (Object.keys(boards)[0].includes(' ')) {
+      redirect(`/${Object.keys(boards)[0].split(' ').join('-')}`)
+    } else redirect(`/${Object.keys(boards)[0].replace(/%20/g, " ")}`)
+  }
+
+  const verifiedBoardName = boardName[0].replace(/%20/g, " ")
 
   return (
     <main className={styles.main}>
-      <BoardLayout boards={boards} boardName={boardName[0]} />
+      <BoardLayout boards={boards} boardName={verifiedBoardName} />
     </main>
   )
 }
