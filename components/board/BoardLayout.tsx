@@ -9,7 +9,6 @@ import TaskCards from './taskCard/TaskCards';
 export default function BoardLayout (props: { boards: {[key: string]: any[]}, boardName: string}) {
   const currentBoardName = props.boardName.includes('-') ? props.boardName.split('-').join(' ') : props.boardName;
   const selectedBoard = props.boards[currentBoardName]
-  console.log(selectedBoard)
 
   const bulletColorArray = [
     '#49c4e5',

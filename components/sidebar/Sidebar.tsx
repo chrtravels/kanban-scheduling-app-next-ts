@@ -84,7 +84,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
                 return capitalizedWords.join(' ');
               } else return boardName[0].toUpperCase() + boardName.slice(1);
             }
-
+            console.log('boardName: ', boardName)
             return (
               <Link
               key={boardName}
@@ -94,7 +94,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
               }}
               style={{ textDecoration: 'none'}}
               >
-                <div className={`${boardName === selected ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}>
+                <div className={`${boardName === selected ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`} onClick={() => setSelected(boardName)}>
                   <Image
                     src='/assets/icon-board.svg'
                     height={16}
