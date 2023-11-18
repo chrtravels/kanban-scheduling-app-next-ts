@@ -23,7 +23,8 @@ body {
   --secondary: #f4f7fd;
   --secondary-hover: #e4ebfa;
   --subtask-dropdown-selection: #20212c;
-  --subtask-hover: #39395b
+  --subtask-hover: #39395b;
+  --new-col-background: #22232e;
 }
 
 /* Set the light mode variables... */
@@ -36,7 +37,8 @@ body {
   --secondary: #efeff9;
   --secondary-hover: #d8d7f1;
   --subtask-dropdown-selection: #f4f7fd;
-  --subtask-hover: #d8d7f1
+  --subtask-hover: #d8d7f1;
+  --new-col-background: #eaf0fa;
 }
 
 .navbar {
@@ -168,4 +170,8 @@ body {
 
 .subtask:hover {
   background-color: var(--subtask-hover);
+}
+
+.new-column {
+  background-color: var(--new-col-background);
 }

@@ -1,8 +1,9 @@
 'use client'
 
 import styles from './boardLayout.module.scss'
+import NewColumn from './newColumn/NewColumn';
 
-import TaskCards from './boardCard/TaskCards';
+import TaskCards from './taskCard/TaskCards';
 
 
 export default function BoardLayout (props: { boards: {[key: string]: any[]}, boardName: string}) {
@@ -45,7 +46,7 @@ export default function BoardLayout (props: { boards: {[key: string]: any[]}, bo
           )
         } else return;
       })}
-
+      <NewColumn />
     </div>
   )
 }

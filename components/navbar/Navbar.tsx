@@ -62,10 +62,10 @@ const Navbar = ( prop: { sidebarExpanded: Boolean } ) => {
         </button>
       </div>
       <Image
-            src='/assets/icon-vertical-ellipsis.svg'
-            height={20}
-            width={5}
-            alt='edit button'
+        src='/assets/icon-vertical-ellipsis.svg'
+        height={20}
+        width={5}
+        alt='edit button'
       />
     </div>
     </div>
