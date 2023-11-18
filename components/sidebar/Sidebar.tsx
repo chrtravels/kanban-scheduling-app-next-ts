@@ -114,8 +114,10 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
             setActive(!active)
             setSidebarExpanded(!sidebarExpanded)
           } }>
+          </div>
+          <div className={styles.hideSidebarBtn}>
             <AiOutlineEyeInvisible />
-            <span>Hide Sidebar</span>
+            <span className='body-m'>Hide Sidebar</span>
           </div>
         </div>
       </div>
