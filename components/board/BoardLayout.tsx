@@ -31,12 +31,12 @@ export default function BoardLayout (props: { boards: {[key: string]: any[]}, bo
 
               <div className={styles.columnBody}>
                 {selectedBoard.map((board, idx) => {
-
                   if (column.status === board.status) {
                     const tasks: [{title: string, status: string, subtasks: [], description: string}] = board.tasks;
-
                     return (
-                      <TaskCards tasks={tasks} />
+                      <div key={`${board.status}-${idx}`}>
+                        <TaskCards tasks={tasks} />
+                      </div>
                     )
                   }
                 })}

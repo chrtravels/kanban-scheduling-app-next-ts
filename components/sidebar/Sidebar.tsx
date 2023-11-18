@@ -84,7 +84,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
                 return capitalizedWords.join(' ');
               } else return boardName[0].toUpperCase() + boardName.slice(1);
             }
-            console.log('boardName: ', boardName)
+
             return (
               <Link
               key={boardName}
