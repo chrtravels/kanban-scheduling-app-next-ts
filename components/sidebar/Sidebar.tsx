@@ -8,6 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import BoardIcon from '../../public/assets/icon-board.svg';
+import hideSidebarIcon from '../../public/assets/icon-hide-sidebar.svg'
 import { AiFillEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 
@@ -114,10 +115,15 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
             setActive(!active)
             setSidebarExpanded(!sidebarExpanded)
           } }>
-          </div>
-          <div className={styles.hideSidebarBtn}>
-            <AiOutlineEyeInvisible />
-            <span className='body-m'>Hide Sidebar</span>
+            <div className={styles.hideSidebarBtn}>
+              <Image
+              src='/assets/icon-hide-sidebar.svg'
+              height={16}
+              width={18}
+              alt='hide sidebar icon'
+              />
+              <span className='body-l'>Hide Sidebar</span>
+            </div>
           </div>
         </div>
       </div>

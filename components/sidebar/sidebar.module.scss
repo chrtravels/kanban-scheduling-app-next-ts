@@ -74,13 +74,39 @@
 }
 
 .hideSidebarToggle {
+  width: 100%;
   display: flex;
   align-items: center;
+  margin-top: .3rem;
 }
 
 .hideSidebarToggle:hover {
-  color: #645fc7;
   cursor: pointer;
+}
+
+.hideSidebarBtn {
+  width: 84%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: .5rem;
+  color: #828ea3;
+  margin-right: 1.3rem;
+  padding: .8rem 0 .8rem 1.7rem;
+}
+
+.hideSidebarBtn:hover {
+  background-color: #efeff9;
+  -webkit-border-top-right-radius: 1em;
+  -moz-border-top-right-radius: 1em;
+  -webkit-border-bottom-right-radius: 1em;
+  -moz-border-bottom-right-radius: 1em;
+  border-top-right-radius: 500px;
+  border-bottom-right-radius: 500px;
+
+  span {
+    color: #645fc7;
+  }
 }
 
 .sidebarNavItemsContainer {
@@ -122,26 +148,4 @@
 .navItem:hover {
   color: #645fc7;
   background-color: #efeff9;
-}
-
-.hideSidebarBtn {
-  width: 85%;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: .5rem;
-  color: #828ea3;
-  margin-right: 1.2rem;
-  padding: .8rem 0 .8rem 1.4rem;
-}
-
-.hideSidebarBtn:hover {
-  color: #645fc7;
-  background-color: #efeff9;
-  -webkit-border-top-right-radius: 1em;
-  -moz-border-top-right-radius: 1em;
-  -webkit-border-bottom-right-radius: 1em;
-  -moz-border-bottom-right-radius: 1em;
-  border-top-right-radius: 500px;
-  border-bottom-right-radius: 500px;
 }
