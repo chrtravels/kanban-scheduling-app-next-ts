@@ -2,14 +2,32 @@
 
 import styles from './taskCards.module.scss'
 
+import { useState } from 'react';
 import EditTask from '../editTask/EditTask';
 
-export default function TaskCards(props: { tasks: [{title: string, status: string, subtasks: [], description: string}] }) {
+
+type Props = {
+  tasks: [{
+    title: string,
+    status: string,
+    subtasks: [],
+    description: string,
+  }],
+  statusTypes: string[]
+  // taskIndex: number,
+  // setClickedTask: {},
+}
+
+export default function TaskCards(props: Props) {
   const tasks = props.tasks;
+
+  const [clickedTask, setClickedTask] = useState(tasks[0])
+  const [showEditTask, setShowEditTask] = useState(false);
 
   return (
     <div className={styles.container}>
-      {tasks.map((task) => {
+      {tasks.map((task, idx) => {
+        // Get the number of subtasks completed
         type TasksCompleted = () => number;
 
         const tasksCompleted: TasksCompleted = () => {
@@ -26,8 +44,16 @@ export default function TaskCards(props: { tasks: [{title: string, status: strin
 
         return (
           <div key={task.title}>
-            {/* <EditTask task={task} tasksCompleted={tasksCompleted()} /> */}
-            <div className={`card ${styles.cardContainer}`}>
+            {showEditTask &&
+            <EditTask
+            task={clickedTask}
+            // tasksCompleted={tasksCompleted()}
+            statusTypes={props.statusTypes}
+            />}
+            <div className={`card ${styles.cardContainer}`} onClick={() => {
+              setClickedTask(task)
+              setShowEditTask(true)
+            }}>
               <span>{task.title}</span>
               <span className={styles.subtasks}>{tasksCompleted()} of {task.subtasks.length} subtasks</span>
             </div>
