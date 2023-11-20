@@ -19,6 +19,7 @@ type Params = {
 export default function EditTask(props: Params) {
   const task = props.task;
   const [selectedOption, setSelectedOption] = useState(task.status);
+  const [subtasks, setSubtasks] = useState(task.subtasks);
 
   type TaskState = {
     title: string,
@@ -49,6 +50,19 @@ export default function EditTask(props: Params) {
         }
 
   type Options = () => [{}]
+
+  console.log(subtasks)
+
+  function handleChange (e, position) {
+    // Update subTasks completed status
+      setSubtasks((subtasks) => ([
+        ...subtasks, subtasks[position]
+      ]))
+
+        // setSubtasks((subtasks) => setSubtasks([
+        //   ...subtasks, subtasks[idx]
+        //   ]))
+  }
 
   // const options: Options = () => {
   //   let list: [{label?: string, value?: string}] = [{}]
@@ -85,10 +99,30 @@ export default function EditTask(props: Params) {
         <span className='heading-s subtask-header'>Subtasks ({tasksCompleted()} of {task.subtasks.length})</span>
 
         <div className={styles.subtasks}>
-          {task.subtasks.map((subtask) => {
-            return <div className={`subtask body-l ${styles.task}`}>{subtask.title}</div>
+          {task.subtasks.map((subtask, idx) => {
+            return (
+              <div className={`subtask body-l ${styles.task}`}>
+                <input
+                className={`checkbox`}
+                id={subtask.title}
+                type="checkbox"
+                value="you"
+                checked={subtasks[idx].isCompleted}
+                onChange={(e) => {
+                  // handleSelected(e, index)
+                  handleChange(e, idx)
+
+                  // setSubtasks((subtasks) => ([
+                  // ...subtasks, subtasks[idx]
+                  // ]))
+                }}
+                />
+                {subtask.title}
+                </div>
+            )
           })}
         </div>
+
         <div className={styles.status}>
           <span className='body-l'>Current Status</span>
           <select

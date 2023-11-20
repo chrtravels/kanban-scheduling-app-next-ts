@@ -121,7 +121,12 @@ body {
 }
 
 /* Checkboxes */
-
+.checkbox {
+  -ms-transform: scale(1.2); /* IE 9 */
+  -webkit-transform: scale(1.2); /* Chrome, Safari, Opera */
+  transform: scale(1.2);
+  margin-right: 1.2rem;
+}
 
 /* Text Fields */
 
@@ -165,7 +170,7 @@ body {
 
 .customSelectOptions {
   position: absolute;
-  top: 3.5rem;
+  top: 3rem;
   left: 0;
   width: 100%;
   border: none;
@@ -224,13 +229,11 @@ body {
 
 .drop-down:hover {
   border: 1px solid var(--primary);
-  /* margin: -2px; */
 }
 
 /* Active */
-.drop-down-active {
+.drop-down:active {
   border: 1px solid var(--primary);;
-  margin: -2px;
 }
 
 /* Menu */
