@@ -21,7 +21,7 @@ export default function EditTask(props: Params) {
   const task = props.task;
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
-  const [showActionsBox, setShowActionsBox] = useState(true);
+  const [showActionsBox, setShowActionsBox] = useState(false);
 
   type TaskState = {
     title: string,
@@ -118,12 +118,14 @@ export default function EditTask(props: Params) {
           )}
 
           <h3>{task.title}</h3>
-          <Image
-          src='/assets/icon-vertical-ellipsis.svg'
-          height={20}
-          width={5}
-          alt='edit button'
-          />
+          <div className={styles.actionsButton} onClick={() => setShowActionsBox(!showActionsBox)}>
+            <Image
+            src='/assets/icon-vertical-ellipsis.svg'
+            height={20}
+            width={5}
+            alt='edit button'
+            />
+          </div>
         </div>
 
         <p className='body-l'>{task.description}</p>

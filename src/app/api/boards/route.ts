@@ -1,6 +1,6 @@
 import conn from '../../../../lib/db';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     const query = 'SELECT * FROM boards'
     const result = await conn.query(
