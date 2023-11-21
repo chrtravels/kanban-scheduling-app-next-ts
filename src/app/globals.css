@@ -293,6 +293,11 @@ body {
   font-weight: 500;
 }
 
+/* Edit Task Component */
+.actions-container {
+  background-color: var(--subtask-dropdown-selection);
+}
+
 .subtask {
   background-color: var(--subtask-dropdown-selection);
 }

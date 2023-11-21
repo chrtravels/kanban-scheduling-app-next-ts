@@ -13,13 +13,15 @@ type Params = {
     subtasks: [{title: string, isCompleted: boolean}],
     description: string
   },
-  statusTypes: string[]
+  statusTypes: string[],
+  setShowEditTask: () => boolean
 }
 
 export default function EditTask(props: Params) {
   const task = props.task;
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
+  const [showActionsBox, setShowActionsBox] = useState(true);
 
   type TaskState = {
     title: string,
@@ -78,6 +80,12 @@ export default function EditTask(props: Params) {
 
   }
 
+  function handleEditOptions (e) {
+    const value = e.target.value;
+    if (value === 'cancel') {
+      props.setShowEditTask(false);
+    }
+  }
 
   // const options: Options = () => {
   //   let list: [{label?: string, value?: string}] = [{}]
@@ -101,6 +109,14 @@ export default function EditTask(props: Params) {
     <div className={styles.container}>
       <div className={`card ${styles.editContainer}`}>
         <div className={styles.header}>
+          {showActionsBox && (
+            <div className={`actions-container ${styles.actionsContainer}`}>
+              <button className='heading-s' value='save' onClick={(e) => handleEditOptions(e)}>Save Task Edits</button>
+              <button className='heading-s' value='delete' onClick={(e) => handleEditOptions(e)}>Delete Task</button>
+              <button className='heading-s' value='cancel' onClick={(e) => handleEditOptions(e)}>Cancel</button>
+            </div>
+          )}
+
           <h3>{task.title}</h3>
           <Image
           src='/assets/icon-vertical-ellipsis.svg'

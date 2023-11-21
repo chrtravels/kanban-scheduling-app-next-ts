@@ -47,8 +47,8 @@ export default function TaskCards(props: Props) {
             {showEditTask &&
             <EditTask
             task={clickedTask}
-            // tasksCompleted={tasksCompleted()}
             statusTypes={props.statusTypes}
+            setShowEditTask={setShowEditTask}
             />}
             <div className={`card ${styles.cardContainer}`} onClick={() => {
               setClickedTask(task)
