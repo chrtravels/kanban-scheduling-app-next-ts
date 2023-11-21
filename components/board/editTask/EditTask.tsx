@@ -37,21 +37,20 @@ export default function EditTask(props: Params) {
 
   type TasksCompleted = () => number;
 
-        const tasksCompleted: TasksCompleted = () => {
-          let numCompleted= 0;
+  const tasksCompleted: TasksCompleted = () => {
+    let numCompleted= 0;
 
-          task.subtasks.forEach((subtask: {title: string, isCompleted: boolean}) => {
-            if (subtask.isCompleted) {
-              numCompleted++;
-            }
-          })
+    subtasks.forEach((subtask: {title: string, isCompleted: boolean}) => {
+      if (subtask.isCompleted) {
+        numCompleted++;
+      }
+    })
 
-          return numCompleted;
-        }
+    return numCompleted;
+  }
 
   type Options = () => [{}]
 
-        console.log('subtasks: ', subtasks)
   // Setup array to contain the state of the "you" column check boxes
   const [subtasksChecked, setSubtasksChecked] = useState(
     subtasks.map((subtask) => {
@@ -69,14 +68,16 @@ export default function EditTask(props: Params) {
   }
 
   function handleChange (e, position) {
-    const subTasksCopy = [...subtasks];
+    const subTasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
 
     subTasksCopy[position] = subtasks[position].isCompleted ?
     {'title': subtasks[position].title, 'isCompleted': false} :
     {'title': subtasks[position].title, 'isCompleted': true}
     // Update subTasks completed status
-      setSubtasks(subTasksCopy)
+    setSubtasks(subTasksCopy)
+
   }
+
 
   // const options: Options = () => {
   //   let list: [{label?: string, value?: string}] = [{}]
@@ -115,48 +116,50 @@ export default function EditTask(props: Params) {
         <div className={styles.subtasks}>
           {task.subtasks.map((subtask, idx) => {
             return (
-              <div className={`subtask body-l ${styles.task}`}>
+              <div className={`subtask body-l ${styles.subtask}`}>
                 <input
-                className={`checkbox`}
+                className='checkbox'
                 id={subtask.title}
-                type="checkbox"
-                value="status"
+                type='checkbox'
+                value='status'
                 checked={subtasksChecked[idx]}
                 onChange={(e) => {
                   handleSelected(e, idx)
                   handleChange(e, idx)
                 }}
                 />
-                {subtask.title}
+                <span className={subtasksChecked[idx] ? styles.completedSubtask : ''}>{subtask.title}</span>
                 </div>
             )
           })}
         </div>
 
         <div className={styles.status}>
-          <span className='body-l'>Current Status</span>
-          <select
-          id='currentStatus'
-          name='currentStatus'
-          className='nativeSelect'
-          aria-labelledby='currentStatusLabel'
-          value={taskState.status}
-          onChange={(e) => setTaskState((taskState) => ({
-              ...taskState, [e.target.id]: e.target.value
-            }))}>
-            {props.statusTypes.map((option) => {
-              return <option value={option}>{option}</option>
-            })}
-          </select>
+          <span className='body-m status-header'>Current Status</span>
+          <div className={styles.dropdownContainer}>
+            <select
+            id='currentStatus'
+            name='currentStatus'
+            className='nativeSelect'
+            aria-labelledby='currentStatusLabel'
+            value={taskState.status}
+            onChange={(e) => setTaskState((taskState) => ({
+                ...taskState, [e.target.id]: e.target.value
+              }))}>
+              {props.statusTypes.map((option) => {
+                return <option value={option}>{option}</option>
+              })}
+            </select>
 
-          <DropdownList
-          options={props.statusTypes}
-          selectedOption={selectedOption}
-          setSelectedOption={setSelectedOption}
-          currentFieldName='Current Status'
-          state={taskState}
-          setState={setTaskState}
-          />
+            <DropdownList
+            options={props.statusTypes}
+            selectedOption={selectedOption}
+            setSelectedOption={setSelectedOption}
+            currentFieldName='Current Status'
+            state={taskState}
+            setState={setTaskState}
+            />
+          </div>
         </div>
       </div>
     </div>

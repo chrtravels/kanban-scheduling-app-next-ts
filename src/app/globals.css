@@ -27,6 +27,7 @@ body {
   --new-col-background: #22232e;
   --dropdown-border: #414552;
   --subtask-header: white;
+  --status-header: #ffffff;
 }
 
 /* Set the light mode variables... */
@@ -43,6 +44,7 @@ body {
   --new-col-background: #eaf0fa;
   --dropdown-border: #e0e3e8;
   --subtask-header: #828fa3;
+  --status-header: #828fa3;
 }
 
 .navbar {
@@ -295,6 +297,10 @@ body {
   background-color: var(--subtask-dropdown-selection);
 }
 
+.subtask input[type='checkbox'] {
+  background-color: var(--secondary-background);
+}
+
 .subtask:hover {
   background-color: var(--subtask-hover);
 }
@@ -305,4 +311,8 @@ body {
 
 .new-column {
   background-color: var(--new-col-background);
+}
+
+.status-header {
+  color: var(--status-header);
 }
