@@ -51,17 +51,31 @@ export default function EditTask(props: Params) {
 
   type Options = () => [{}]
 
-  console.log(subtasks)
+        console.log('subtasks: ', subtasks)
+  // Setup array to contain the state of the "you" column check boxes
+  const [subtasksChecked, setSubtasksChecked] = useState(
+    subtasks.map((subtask) => {
+      return subtask.isCompleted
+    })
+  );
+
+
+  function handleSelected (e, position) {
+    // Handle the checkbox state changes for "you" column
+      const updatedSubtasksChecked = subtasksChecked.map((checked, index) => {
+        return index === position ? !checked : checked
+      });
+      setSubtasksChecked(updatedSubtasksChecked);
+  }
 
   function handleChange (e, position) {
-    // Update subTasks completed status
-      setSubtasks((subtasks) => ([
-        ...subtasks, subtasks[position]
-      ]))
+    const subTasksCopy = [...subtasks];
 
-        // setSubtasks((subtasks) => setSubtasks([
-        //   ...subtasks, subtasks[idx]
-        //   ]))
+    subTasksCopy[position] = subtasks[position].isCompleted ?
+    {'title': subtasks[position].title, 'isCompleted': false} :
+    {'title': subtasks[position].title, 'isCompleted': true}
+    // Update subTasks completed status
+      setSubtasks(subTasksCopy)
   }
 
   // const options: Options = () => {
@@ -106,15 +120,11 @@ export default function EditTask(props: Params) {
                 className={`checkbox`}
                 id={subtask.title}
                 type="checkbox"
-                value="you"
-                checked={subtasks[idx].isCompleted}
+                value="status"
+                checked={subtasksChecked[idx]}
                 onChange={(e) => {
-                  // handleSelected(e, index)
+                  handleSelected(e, idx)
                   handleChange(e, idx)
-
-                  // setSubtasks((subtasks) => ([
-                  // ...subtasks, subtasks[idx]
-                  // ]))
                 }}
                 />
                 {subtask.title}
