@@ -1,7 +1,8 @@
 'use client'
 
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './editTask.module.scss'
 import DropdownList from '../../dropownList/DropdownList';
 
@@ -14,172 +15,183 @@ type Params = {
     description: string
   },
   statusTypes: string[],
-  setShowEditTask: () => boolean
+  setShowTask: () => boolean
 }
+
+type Task = {
+  title: string,
+  status: string,
+  subtasks: [{title: string, isCompleted: boolean}],
+  description: string
+}
+
+type Subtasks = [{
+  title: string,
+  isCompleted: boolean
+}]
 
 export default function EditTask(props: Params) {
   const task = props.task;
-  const [selectedOption, setSelectedOption] = useState(task.status);
-  const [subtasks, setSubtasks] = useState(task.subtasks);
-  const [showActionsBox, setShowActionsBox] = useState(false);
 
-  type TaskState = {
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }
-
-  const [taskState, setTaskState] = useState<TaskState>({
+  const [currentTask, setCurrentTask] = useState<Task>({
     title: task.title,
     status: task.status,
     subtasks: task.subtasks,
-    description: task.title
+    description: task.description
   })
 
-  type TasksCompleted = () => number;
+  const [selectedOption, setSelectedOption] = useState(currentTask.status);
+  const [subtasks, setSubtasks] = useState<Subtasks>(currentTask.subtasks);
 
-  const tasksCompleted: TasksCompleted = () => {
-    let numCompleted= 0;
+  const router = useRouter();
 
-    subtasks.forEach((subtask: {title: string, isCompleted: boolean}) => {
-      if (subtask.isCompleted) {
-        numCompleted++;
+  useEffect(() => {
+    setCurrentTask({
+      title: currentTask.title,
+      status: currentTask.status,
+      subtasks: subtasks,
+      description: currentTask.description
+    });
+  }, [setSubtasks])
+
+
+  function handleAddTask (e) {
+    setSubtasks([...subtasks, {'title': '', 'isCompleted': false}])
+  }
+
+  function handleDeleteSubtask (e) {
+    console.log('delete')
+  }
+
+  const handleSubmit = async (board) => {
+    const options = {
+      method: 'PATCH',
+      header: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(board)
+    }
+
+    try {
+      const res = await fetch('/api/task', options);
+      const data = res.json();
+      console.log(data);
+      // return data;
+      if (res.ok) {
+        props.setShowEditTask(false);
+        router.refresh();
       }
-    })
-
-    return numCompleted;
-  }
-
-  type Options = () => [{}]
-
-  // Setup array to contain the state of the "you" column check boxes
-  const [subtasksChecked, setSubtasksChecked] = useState(
-    subtasks.map((subtask) => {
-      return subtask.isCompleted
-    })
-  );
-
-
-  function handleSelected (e, position) {
-    // Handle the checkbox state changes for "you" column
-      const updatedSubtasksChecked = subtasksChecked.map((checked, index) => {
-        return index === position ? !checked : checked
-      });
-      setSubtasksChecked(updatedSubtasksChecked);
-  }
-
-  function handleChange (e, position) {
-    const subTasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
-
-    subTasksCopy[position] = subtasks[position].isCompleted ?
-    {'title': subtasks[position].title, 'isCompleted': false} :
-    {'title': subtasks[position].title, 'isCompleted': true}
-    // Update subTasks completed status
-    setSubtasks(subTasksCopy)
-
-  }
-
-  function handleEditOptions (e) {
-    const value = e.target.value;
-    if (value === 'cancel') {
-      props.setShowEditTask(false);
+    } catch (error) {
+      throw new Error('Error updating task')
     }
   }
 
-  // const options: Options = () => {
-  //   let list: [{label?: string, value?: string}] = [{}]
-
-  //    props.statusTypes.forEach((status) => {
-  //     if (Object.keys(list[0]).length === 0) {
-  //       list = [{label: status, value: status}]
-  //     } else {
-  //       list.push(
-  //         {
-  //           label: status,
-  //           value: status,
-  //         }
-  //       )
-  //     }
-  //   })
-  //   return list;
-  // }
-
   return (
-    <div className={styles.container}>
-      <div className={`card ${styles.editContainer}`}>
-        <div className={styles.header}>
-          {showActionsBox && (
-            <div className={`actions-container ${styles.actionsContainer}`}>
-              <button className='heading-s' value='save' onClick={(e) => handleEditOptions(e)}>Save Task Edits</button>
-              <button className='heading-s' value='delete' onClick={(e) => handleEditOptions(e)}>Delete Task</button>
-              <button className='heading-s' value='cancel' onClick={(e) => handleEditOptions(e)}>Cancel</button>
-            </div>
-          )}
-
-          <h3>{task.title}</h3>
-          <div className={styles.actionsButton} onClick={() => setShowActionsBox(!showActionsBox)}>
-            <Image
-            src='/assets/icon-vertical-ellipsis.svg'
-            height={20}
-            width={5}
-            alt='edit button'
-            />
-          </div>
-        </div>
-
-        <p className='body-l'>{task.description}</p>
-        <span className='heading-s subtask-header'>Subtasks ({tasksCompleted()} of {task.subtasks.length})</span>
-
-        <div className={styles.subtasks}>
-          {task.subtasks.map((subtask, idx) => {
-            return (
-              <div className={`subtask body-l ${styles.subtask}`}>
-                <input
-                className='checkbox'
-                id={subtask.title}
-                type='checkbox'
-                value='status'
-                checked={subtasksChecked[idx]}
-                onChange={(e) => {
-                  handleSelected(e, idx)
-                  handleChange(e, idx)
-                }}
-                />
-                <span className={subtasksChecked[idx] ? styles.completedSubtask : ''}>{subtask.title}</span>
-                </div>
-            )
-          })}
-        </div>
-
-        <div className={styles.status}>
-          <span className='body-m status-header'>Current Status</span>
-          <div className={styles.dropdownContainer}>
-            <select
-            id='currentStatus'
-            name='currentStatus'
-            className='nativeSelect'
-            aria-labelledby='currentStatusLabel'
-            value={taskState.status}
-            onChange={(e) => setTaskState((taskState) => ({
-                ...taskState, [e.target.id]: e.target.value
-              }))}>
-              {props.statusTypes.map((option) => {
-                return <option value={option}>{option}</option>
-              })}
-            </select>
-
-            <DropdownList
-            options={props.statusTypes}
-            selectedOption={selectedOption}
-            setSelectedOption={setSelectedOption}
-            currentFieldName='Current Status'
-            state={taskState}
-            setState={setTaskState}
-            />
-          </div>
+    <div className={styles.formWrapper}>
+      <div className={styles.header}>
+        <span className='modal-header heading-l'>Edit Task</span>
+        <div className={styles.cancelButton}>
+          <button onClick={() => props.setShowTask(false)}>x</button>
         </div>
       </div>
+
+      <div className={styles.formContainer}>
+        <form onSubmit={handleSubmit}>
+          <div className={styles.formRow}>
+            <span className='subtask-header body-m'>Title</span>
+            <input
+              type='text'
+              id='title'
+              name='title'
+              value={currentTask.title}
+              onChange={(e) => setCurrentTask((currentTask) => ({
+                ...currentTask, [e.target.id]: e.target.value
+              }))}
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <span className='body-m'>Description</span>
+            <textarea
+              id='description'
+              name='description'
+              rows={4}
+              value={currentTask.description}
+              placeholder='Add your description here...'
+              onChange={(e) => setCurrentTask((currentTask) => ({
+                ...currentTask, [e.target.id]: e.target.value
+              }))}
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <span className='subtask-header body-m'>Subtasks</span>
+
+            {subtasks.map((subtask) => {
+              return (
+                <div className={styles.subtaskRow}>
+                  <input
+                    type='text'
+                    id='title'
+                    name='title'
+                    value={task.title}
+                    onChange={(e) => setCurrentTask((currentTask) => ({
+                      ...currentTask, [e.target.id]: e.target.value
+                    }))}
+                    />
+
+                  <div className={styles.deleteButton} onClick={() => props.setShowEditTask(false)}>
+                    <Image
+                    src='/assets/icon-cross.svg'
+                    height={15}
+                    width={15}
+                    alt='delete subtask button'
+                    />
+                  </div>
+                </div>
+              )
+            })}
+
+            <div className={styles.btnContainer}>
+              <button className='btn-small btn-secondary' onClick={handleAddTask}>+ Add New Subtask</button>
+            </div>
+          </div>
+
+          <div className={styles.status}>
+            <span className='body-m status-header'>Status</span>
+            <div className={styles.dropdownContainer}>
+              <select
+              id='currentStatus'
+              name='currentStatus'
+              className='nativeSelect'
+              aria-labelledby='currentStatusLabel'
+              value={currentTask.status}
+              onChange={(e) => setCurrentTask((currentTask) => ({
+                  ...currentTask, [e.target.id]: e.target.value
+                }))}>
+                {props.statusTypes.map((option) => {
+                  return <option value={option}>{option}</option>
+                })}
+              </select>
+
+              <DropdownList
+              options={props.statusTypes}
+              selectedOption={selectedOption}
+              setSelectedOption={setSelectedOption}
+              currentFieldName='Current Status'
+              state={currentTask}
+              setState={setCurrentTask}
+              />
+            </div>
+          </div>
+
+          <div className={styles.btnContainer}>
+            <button className='btn-small btn-primary' onClick={handleSubmit}>Save Changes</button>
+          </div>
+        </form>
+      </div>
+
     </div>
   )
 }

@@ -3,10 +3,9 @@
 import { useState, useEffect } from 'react';
 import styles from './boardLayout.module.scss'
 import NewColumn from './newColumn/NewColumn';
-
 import TaskCards from './taskCard/TaskCards';
-import EditTask from './editTask/EditTask';
 
+type StatusTypes = string[]
 
 export default function BoardLayout (props: { boards: {[key: string]: any[]}, boardName: string}) {
   const currentBoardName = props.boardName.includes('-') ? props.boardName.split('-').join(' ') : props.boardName;
@@ -15,7 +14,7 @@ export default function BoardLayout (props: { boards: {[key: string]: any[]}, bo
   const [clickedTask, setClickedTask] = useState({})
   const [showEditTask, setShowEditTask] = useState(false);
   // Get the status options for the drop Edit task component drop down list
-  const [statusTypes, setStatusTypes] = useState<Array>([]);
+  const [statusTypes, setStatusTypes] = useState<StatusTypes>([]);
 
   useEffect(() => {
     setShowEditTask(true);
@@ -35,11 +34,6 @@ export default function BoardLayout (props: { boards: {[key: string]: any[]}, bo
 
   return (
     <div className={styles.container}>
-      {/* {showEditTask &&
-      <EditTask
-      task={task}
-      clickedTask={clickedTask}
-      />} */}
       {selectedBoard.map((category, idx) => {
         if (category.tasks.length > 0) {
           if (!statusTypes.includes(category.status)) {
@@ -61,7 +55,7 @@ export default function BoardLayout (props: { boards: {[key: string]: any[]}, bo
                     const tasks: [{title: string, status: string, subtasks: [], description: string}] = column.tasks;
                     return (
                       <div key={`${column.status}-${idx}`}>
-                        <TaskCards tasks={tasks} statusTypes={statusTypes} />
+                        <TaskCards boards={selectedBoard} tasks={tasks} statusTypes={statusTypes} />
                       </div>
                     )
                   }

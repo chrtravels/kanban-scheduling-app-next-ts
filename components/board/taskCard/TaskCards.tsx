@@ -4,6 +4,7 @@ import styles from './taskCards.module.scss'
 
 import { useState } from 'react';
 import EditTask from '../editTask/EditTask';
+import ViewTask from '../viewTask/ViewTask';
 
 
 type Props = {
@@ -23,6 +24,7 @@ export default function TaskCards(props: Props) {
 
   const [clickedTask, setClickedTask] = useState(tasks[0])
   const [showEditTask, setShowEditTask] = useState(false);
+  const [showTask, setShowTask] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -44,15 +46,16 @@ export default function TaskCards(props: Props) {
 
         return (
           <div key={task.title}>
-            {showEditTask &&
-            <EditTask
+            {showTask &&
+            <ViewTask
             task={clickedTask}
             statusTypes={props.statusTypes}
-            setShowEditTask={setShowEditTask}
+            setShowTask={setShowTask}
             />}
+
             <div className={`card ${styles.cardContainer}`} onClick={() => {
               setClickedTask(task)
-              setShowEditTask(true)
+              setShowTask(true)
             }}>
               <span>{task.title}</span>
               <span className={styles.subtasks}>{tasksCompleted()} of {task.subtasks.length} subtasks</span>
