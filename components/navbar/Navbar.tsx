@@ -24,7 +24,6 @@ const Navbar = ( prop: { sidebarExpanded: Boolean } ) => {
     return null
   }
 
-  console.log('theme: ', theme)
 
   return (
     <div className={`navbar ${styles.container}`}>

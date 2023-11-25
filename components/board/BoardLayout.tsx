@@ -5,11 +5,20 @@ import styles from './boardLayout.module.scss'
 import NewColumn from './newColumn/NewColumn';
 import TaskCards from './taskCard/TaskCards';
 
+type Params = {
+  boards: {[key: string]: [
+    {db_id: number, status: 'string', tasks: []}
+  ]},
+  boardName: string,
+}
+
 type StatusTypes = string[]
 
-export default function BoardLayout (props: { boards: {[key: string]: any[]}, boardName: string}) {
-  const currentBoardName = props.boardName.includes('-') ? props.boardName.split('-').join(' ') : props.boardName;
-  const selectedBoard = props.boards[currentBoardName]
+export default function BoardLayout (props: Params) {
+  const { boards, boardName } = props;
+
+  const currentBoardName = boardName.includes('-') ? boardName.split('-').join(' ') : boardName;
+  const selectedBoard = boards[currentBoardName]
   // Collect the data for the clicked task card
   const [clickedTask, setClickedTask] = useState({})
   const [showEditTask, setShowEditTask] = useState(false);
@@ -55,7 +64,7 @@ export default function BoardLayout (props: { boards: {[key: string]: any[]}, bo
                     const tasks: [{title: string, status: string, subtasks: [], description: string}] = column.tasks;
                     return (
                       <div key={`${column.status}-${idx}`}>
-                        <TaskCards boards={selectedBoard} tasks={tasks} statusTypes={statusTypes} />
+                        <TaskCards databaseId={column.db_id} boardName={currentBoardName} boardStatus={column.status} tasks={tasks} statusTypes={statusTypes} />
                       </div>
                     )
                   }

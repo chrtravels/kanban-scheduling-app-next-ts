@@ -8,6 +8,11 @@ import EditTask from '../editTask/EditTask';
 
 
 type Params = {
+  databaseId: number,
+  boardName: string,
+  boardStatus: string,
+  tasks: [],
+  taskId: number,
   task: {
     title: string,
     status: string,
@@ -19,7 +24,8 @@ type Params = {
 }
 
 export default function ViewTask(props: Params) {
-  const task = props.task;
+  const { databaseId, boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask } = props;
+
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
   const [showActionsBox, setShowActionsBox] = useState(false);
@@ -112,8 +118,8 @@ export default function ViewTask(props: Params) {
       console.log(data);
       // return data;
       if (res.ok) {
-        props.setShowTask(false);
-        router.refresh();
+        setShowTask(false);
+        // router.refresh();
       }
     } catch (error) {
       throw new Error('Error updating task')
@@ -142,7 +148,7 @@ export default function ViewTask(props: Params) {
     return (
       <div className={styles.container}>
         <div className={`card ${styles.editContainer}`}>
-          <EditTask task={taskState} statusTypes={props.statusTypes} setShowTask={props.setShowTask} />
+          <EditTask databaseId={databaseId} boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} statusTypes={statusTypes} setShowTask={setShowTask} />
         </div>
       </div>
     )

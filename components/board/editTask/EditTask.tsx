@@ -1,13 +1,20 @@
 'use client'
 
+import styles from './editTask.module.scss'
+
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import styles from './editTask.module.scss'
 import DropdownList from '../../dropownList/DropdownList';
+import { convertCircularStructure } from '../../../utils/utilities';
 
 
 type Params = {
+  databaseId: number,
+  boardStatus: string,
+  boardName: string,
+  tasks: [],
+  taskId: number,
   task: {
     title: string,
     status: string,
@@ -31,7 +38,7 @@ type Subtasks = [{
 }]
 
 export default function EditTask(props: Params) {
-  const task = props.task;
+  const { databaseId, boardStatus, boardName, taskId, tasks, task, statusTypes, setShowTask } = props;
 
   const [currentTask, setCurrentTask] = useState<Task>({
     title: task.title,
@@ -53,6 +60,7 @@ export default function EditTask(props: Params) {
       description: currentTask.description
     });
   }, [setSubtasks])
+  console.log(currentTask)
 
 
   function handleAddTask (e) {
@@ -63,14 +71,17 @@ export default function EditTask(props: Params) {
     console.log('delete')
   }
 
-  const handleSubmit = async (board) => {
+  const handleSubmit = async () => {
+    const updatedTasks: [{}] = [...tasks];
+    updatedTasks[taskId] = currentTask;
+
     const options = {
       method: 'PATCH',
       header: {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(board)
+      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
     }
 
     try {
@@ -79,7 +90,7 @@ export default function EditTask(props: Params) {
       console.log(data);
       // return data;
       if (res.ok) {
-        props.setShowEditTask(false);
+        setShowTask(false);
         router.refresh();
       }
     } catch (error) {
@@ -92,7 +103,7 @@ export default function EditTask(props: Params) {
       <div className={styles.header}>
         <span className='modal-header heading-l'>Edit Task</span>
         <div className={styles.cancelButton}>
-          <button onClick={() => props.setShowTask(false)}>x</button>
+          <button onClick={() => setShowTask(false)}>x</button>
         </div>
       </div>
 
@@ -128,20 +139,20 @@ export default function EditTask(props: Params) {
           <div className={styles.formRow}>
             <span className='subtask-header body-m'>Subtasks</span>
 
-            {subtasks.map((subtask) => {
+            {subtasks.map((subtask, index) => {
               return (
-                <div className={styles.subtaskRow}>
+                <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
                   <input
                     type='text'
                     id='title'
                     name='title'
-                    value={task.title}
+                    value={subtask.title}
                     onChange={(e) => setCurrentTask((currentTask) => ({
                       ...currentTask, [e.target.id]: e.target.value
                     }))}
                     />
 
-                  <div className={styles.deleteButton} onClick={() => props.setShowEditTask(false)}>
+                  <div className={styles.deleteButton} onClick={(e) => handleDeleteSubtask(e)}>
                     <Image
                     src='/assets/icon-cross.svg'
                     height={15}
@@ -162,10 +173,10 @@ export default function EditTask(props: Params) {
             <span className='body-m status-header'>Status</span>
             <div className={styles.dropdownContainer}>
               <select
-              id='currentStatus'
-              name='currentStatus'
+              id='status'
+              name='status'
               className='nativeSelect'
-              aria-labelledby='currentStatusLabel'
+              aria-labelledby='statusLabel'
               value={currentTask.status}
               onChange={(e) => setCurrentTask((currentTask) => ({
                   ...currentTask, [e.target.id]: e.target.value
@@ -176,10 +187,10 @@ export default function EditTask(props: Params) {
               </select>
 
               <DropdownList
-              options={props.statusTypes}
+              options={statusTypes}
               selectedOption={selectedOption}
               setSelectedOption={setSelectedOption}
-              currentFieldName='Current Status'
+              currentFieldName='status'
               state={currentTask}
               setState={setCurrentTask}
               />
@@ -187,7 +198,7 @@ export default function EditTask(props: Params) {
           </div>
 
           <div className={styles.btnContainer}>
-            <button className='btn-small btn-primary' onClick={handleSubmit}>Save Changes</button>
+            <button className='btn-small btn-primary' onClick={() => handleSubmit()}>Save Changes</button>
           </div>
         </form>
       </div>

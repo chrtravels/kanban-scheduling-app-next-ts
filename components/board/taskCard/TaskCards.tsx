@@ -8,6 +8,9 @@ import ViewTask from '../viewTask/ViewTask';
 
 
 type Props = {
+  databaseId: number,
+  boardName: string,
+  boardStatus: string,
   tasks: [{
     title: string,
     status: string,
@@ -15,14 +18,13 @@ type Props = {
     description: string,
   }],
   statusTypes: string[]
-  // taskIndex: number,
-  // setClickedTask: {},
 }
 
 export default function TaskCards(props: Props) {
-  const tasks = props.tasks;
+  const { databaseId, boardName, boardStatus, tasks, statusTypes } = props;
 
   const [clickedTask, setClickedTask] = useState(tasks[0])
+  const [clickedId, setClickedId] = useState(0)
   const [showEditTask, setShowEditTask] = useState(false);
   const [showTask, setShowTask] = useState(false);
 
@@ -48,13 +50,19 @@ export default function TaskCards(props: Props) {
           <div key={task.title}>
             {showTask &&
             <ViewTask
+            databaseId={databaseId}
+            boardStatus={boardStatus}
+            boardName={boardName}
+            tasks={tasks}
             task={clickedTask}
-            statusTypes={props.statusTypes}
+            taskId={clickedId}
+            statusTypes={statusTypes}
             setShowTask={setShowTask}
             />}
 
             <div className={`card ${styles.cardContainer}`} onClick={() => {
               setClickedTask(task)
+              setClickedId(idx)
               setShowTask(true)
             }}>
               <span>{task.title}</span>

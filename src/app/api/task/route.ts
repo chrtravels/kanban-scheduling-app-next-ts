@@ -1,20 +1,26 @@
 import { NextResponse } from "next/server";
 import conn from '../../../../lib/db';
+import { NextRequest } from 'next/server.js';
 
-type Board = {
-  db_id: number,
-  boardName: string,
-  status: string,
-  tasks: [{title: string, status: string, subtasks: [{title: string, isCompleted: boolean}]}]
-}
+// type request = {
+//   databaseId: number,
+//   boardName: string,
+//   boardStatus: string,
+//   tasks: [{title: string, status: string, subtasks: [{title: string, isCompleted: boolean}]}]
+// }
 
-export async function PATCH(board: Board) {
-  const {db_id, boardName, status, tasks} = board
+export async function PATCH(request: Request) {
+  const body = await request.json()
+
+  const databaseId = body[0];
+  const boardStatus = body[1];
+  const updatedTasks = body[2];
 
   try {
-    const query = 'Update boards SET board_name = $1, status = $2, tasks = $3 WHERE id = $4';
-    const values = [boardName, status, tasks, db_id]
-    const result = await conn.query(query, values)
+    const query = 'Update boards SET status = $1, tasks = $2 WHERE id = $3';
+    const values = [boardStatus, JSON.stringify(updatedTasks), databaseId];
+    const result = await conn.query(query, values);
+
     return NextResponse.json(result);
   } catch (error) {
     throw new Error('Failed to update task')
@@ -23,7 +29,7 @@ export async function PATCH(board: Board) {
 
 export async function DELETE(request: Request) {
   try {
-    const query = 'SELECT * FROM boards'
+    const query = 'DELETE * FROM boards'
     const result = await conn.query(
       query
     )

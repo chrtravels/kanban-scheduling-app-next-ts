@@ -28,7 +28,7 @@ type Params = {
     boardName: Array<string>;
   };
 }
-// CHANGE TO INCLUDE THE ORIGINAL DATABASE ENTRY ID WITH EACH ENTRY TO boards
+
 // Sort data into separate boards
 async function getBoards() {
   const boards: Board = {};
@@ -36,7 +36,7 @@ async function getBoards() {
 
   getBoards.forEach((board:{id: number, board_name: string, status: string, tasks: []}) => {
     const boardName: string = board.board_name;
-
+    // INCLUDE THE ORIGINAL DATABASE ENTRY ID WITH EACH ENTRY TO boards
     if (boards[boardName]) {
       boards[boardName] = [...boards[boardName], {'db_id': board.id, 'status': board.status, 'tasks': board.tasks}]
     } else {
