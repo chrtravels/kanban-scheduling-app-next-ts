@@ -49,7 +49,7 @@ export default function EditTask(props: Params) {
 
   const [selectedOption, setSelectedOption] = useState(currentTask.status);
   const [subtasks, setSubtasks] = useState<Subtasks>(currentTask.subtasks);
-  // Used to only
+
   const [newSubtask, setNewSubtask] = useState(false)
 
   const router = useRouter();
