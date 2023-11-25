@@ -4,7 +4,7 @@ import styles from './editTask.module.scss'
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
 import { convertCircularStructure } from '../../../utils/utilities';
 
@@ -49,6 +49,8 @@ export default function EditTask(props: Params) {
 
   const [selectedOption, setSelectedOption] = useState(currentTask.status);
   const [subtasks, setSubtasks] = useState<Subtasks>(currentTask.subtasks);
+  // Used to only
+  const [newSubtask, setNewSubtask] = useState(false)
 
   const router = useRouter();
 
@@ -59,15 +61,17 @@ export default function EditTask(props: Params) {
       subtasks: subtasks,
       description: currentTask.description
     });
-  }, [setSubtasks])
-  console.log(currentTask)
+
+  }, [subtasks])
 
 
   function handleAddTask (e) {
-    setSubtasks([...subtasks, {'title': '', 'isCompleted': false}])
+    e.preventDefault();
+    setSubtasks([...currentTask.subtasks, {'title': '', 'isCompleted': false}]);
   }
 
   function handleDeleteSubtask (e) {
+    e.preventDefault()
     console.log('delete')
   }
 
@@ -87,10 +91,8 @@ export default function EditTask(props: Params) {
     try {
       const res = await fetch('/api/task', options);
       const data = res.json();
-      console.log(data);
-      // return data;
+
       if (res.ok) {
-        setShowTask(false);
         router.refresh();
       }
     } catch (error) {
@@ -144,13 +146,18 @@ export default function EditTask(props: Params) {
                 <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
                   <input
                     type='text'
-                    id='title'
-                    name='title'
+                    id='subtasks'
+                    name='subtasks'
                     value={subtask.title}
-                    onChange={(e) => setCurrentTask((currentTask) => ({
-                      ...currentTask, [e.target.id]: e.target.value
-                    }))}
-                    />
+                    onChange={(e) => {
+                      const tempSubtasks = [...subtasks];
+                      let obj = tempSubtasks[index];
+                      obj.title =  e.target.value;
+                      tempSubtasks[index] = obj;
+                      setSubtasks([...tempSubtasks])
+                      }
+                    }
+                  />
 
                   <div className={styles.deleteButton} onClick={(e) => handleDeleteSubtask(e)}>
                     <Image
@@ -165,7 +172,7 @@ export default function EditTask(props: Params) {
             })}
 
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-secondary' onClick={handleAddTask}>+ Add New Subtask</button>
+              <button className='btn-small btn-secondary' onClick={(e) => handleAddTask(e)}>+ Add New Subtask</button>
             </div>
           </div>
 

@@ -1,19 +1,8 @@
 'use client'
 
-// import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useState } from 'react';
 
-// import {ReactComponent as DownArrow} from '../../public/assets/icon-chevron-down.svg';
-// const UpArrow = dynamic(() => import('../../public/assets/icon-chevron-up.svg'), {
-//   ssr: false,
-// });
-// const DownArrow = dynamic(() => import('../../public/assets/icon-chevron-down.svg'), {
-//   ssr: false,
-// });
-// const Checkmark = dynamic(() => import('../../public/assets/icon-check.svg'), {
-//   ssr: false,
-// });
 
 type Options = {
   options: string[],
@@ -38,7 +27,7 @@ export default function DropdownList(props: Options) {
     const value = e.currentTarget.getAttribute('data-value')
     setSelectedOption(value);
     setState((state) => ({
-      ...state, [currentFieldName.toLowerCase()]: value.toLowerCase()
+      ...state, [currentFieldName]: value
     }))
   }
 
