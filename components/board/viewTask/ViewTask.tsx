@@ -63,8 +63,6 @@ export default function ViewTask(props: Params) {
     return numCompleted;
   }
 
-  type Options = () => [{}]
-
   // Setup array to contain the state of the check boxes
   const [subtasksChecked, setSubtasksChecked] = useState(
     subtasks.map((subtask) => {
@@ -93,10 +91,9 @@ export default function ViewTask(props: Params) {
     setTaskState((taskState) => ({
       ...taskState, 'subtasks': subTasksCopy
     }))
-
+    // Updates the task on the database when the task is marked completed
     handleUpdateTask(subTasksCopy)
   }
-
 
 
   function handleEditTask (e) {
@@ -132,6 +129,7 @@ export default function ViewTask(props: Params) {
     }
   }
 
+  // Used to update the task on the database when the status changes
   useMemo(() => {
     handleUpdateTask(taskState.subtasks)
   }, [taskState])
