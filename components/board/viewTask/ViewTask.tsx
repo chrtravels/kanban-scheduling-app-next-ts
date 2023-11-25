@@ -1,10 +1,12 @@
 'use client'
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './viewTask.module.scss'
 import DropdownList from '../../dropownList/DropdownList';
 import EditTask from '../editTask/EditTask';
+
 
 
 type Params = {
@@ -31,6 +33,8 @@ export default function ViewTask(props: Params) {
   const [showActionsBox, setShowActionsBox] = useState(false);
   const [showEditTask, setShowEditTask] = useState(false);
 
+  const router = useRouter();
+
   type TaskState = {
     title: string,
     status: string,
@@ -41,7 +45,7 @@ export default function ViewTask(props: Params) {
   const [taskState, setTaskState] = useState<TaskState>({
     title: task.title,
     status: task.status,
-    subtasks: task.subtasks,
+    subtasks: subtasks,
     description: task.description
   })
 
@@ -61,20 +65,20 @@ export default function ViewTask(props: Params) {
 
   type Options = () => [{}]
 
-  // Setup array to contain the state of the "you" column check boxes
+  // Setup array to contain the state of the check boxes
   const [subtasksChecked, setSubtasksChecked] = useState(
     subtasks.map((subtask) => {
       return subtask.isCompleted
     })
   );
 
-
   function handleSelected (e, position) {
-    // Handle the checkbox state changes for "you" column
+    // Handle the checkbox state changes
       const updatedSubtasksChecked = subtasksChecked.map((checked, index) => {
         return index === position ? !checked : checked
       });
       setSubtasksChecked(updatedSubtasksChecked);
+
   }
 
   function handleChange (e, position) {
@@ -86,11 +90,13 @@ export default function ViewTask(props: Params) {
     // Update subTasks completed status
     setSubtasks(subTasksCopy)
 
+    setTaskState((taskState) => ({
+      ...taskState, 'subtasks': subTasksCopy
+    }))
+
+    handleUpdateTask(subTasksCopy)
   }
 
-  useEffect(() => {
-    setShowActionsBox(false);
-  }, [setShowEditTask])
 
 
   function handleEditTask (e) {
@@ -98,51 +104,38 @@ export default function ViewTask(props: Params) {
     setShowEditTask(true);
   }
 
-  function handleDeleteTask (e) {
-    console.log('delete')
-  }
+  const handleUpdateTask = async (subtasks) => {
+    const updatedTasks: [{}] = [...tasks];
+    const clonedTaskState = Object.assign({}, taskState);
+    clonedTaskState.subtasks = subtasks
+    console.log('status:', clonedTaskState.status)
+    updatedTasks[taskId] = clonedTaskState;
 
-  const handleSaveUpdate = async (board) => {
     const options = {
       method: 'PATCH',
       header: {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify(board)
+      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
     }
 
     try {
       const res = await fetch('/api/task', options);
       const data = res.json();
-      console.log(data);
-      // return data;
+
       if (res.ok) {
-        setShowTask(false);
-        // router.refresh();
+        router.refresh();
       }
     } catch (error) {
       throw new Error('Error updating task')
     }
   }
 
-  // const options: Options = () => {
-  //   let list: [{label?: string, value?: string}] = [{}]
+  useMemo(() => {
+    handleUpdateTask(taskState.subtasks)
+  }, [taskState])
 
-  //    props.statusTypes.forEach((status) => {
-  //     if (Object.keys(list[0]).length === 0) {
-  //       list = [{label: status, value: status}]
-  //     } else {
-  //       list.push(
-  //         {
-  //           label: status,
-  //           value: status,
-  //         }
-  //       )
-  //     }
-  //   })
-  //   return list;
-  // }
 
   if (showEditTask) {
     return (
@@ -204,14 +197,15 @@ export default function ViewTask(props: Params) {
             <span className='body-m status-header'>Current Status</span>
             <div className={styles.dropdownContainer}>
               <select
-              id='currentStatus'
-              name='currentStatus'
+              id='status'
+              name='status'
               className='nativeSelect'
               aria-labelledby='currentStatusLabel'
               value={taskState.status}
               onChange={(e) => setTaskState((taskState) => ({
                   ...taskState, [e.target.id]: e.target.value
-                }))}>
+                }))
+              }>
                 {props.statusTypes.map((option) => {
                   return <option value={option}>{option}</option>
                 })}
@@ -221,7 +215,7 @@ export default function ViewTask(props: Params) {
               options={props.statusTypes}
               selectedOption={selectedOption}
               setSelectedOption={setSelectedOption}
-              currentFieldName='Current Status'
+              currentFieldName='status'
               state={taskState}
               setState={setTaskState}
               />

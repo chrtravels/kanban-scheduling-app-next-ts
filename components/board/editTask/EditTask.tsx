@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useMemo, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
-import { convertCircularStructure } from '../../../utils/utilities';
 
 
 type Params = {
@@ -49,8 +48,7 @@ export default function EditTask(props: Params) {
 
   const [selectedOption, setSelectedOption] = useState(currentTask.status);
   const [subtasks, setSubtasks] = useState<Subtasks>(currentTask.subtasks);
-
-  const [newSubtask, setNewSubtask] = useState(false)
+  // const [newSubtask, setNewSubtask] = useState(false)
 
   const router = useRouter();
 
