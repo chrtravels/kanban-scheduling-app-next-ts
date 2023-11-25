@@ -70,9 +70,10 @@ export default function EditTask(props: Params) {
     setSubtasks([...currentTask.subtasks, {'title': '', 'isCompleted': false}]);
   }
 
-  function handleDeleteSubtask (e) {
-    e.preventDefault()
-    console.log('delete')
+  function handleRemoveSubtask (e, index) {
+    const tempSubtasks = [...subtasks];
+    tempSubtasks.splice(index, 1)
+    setSubtasks([...tempSubtasks])
   }
 
   const handleSubmit = async () => {
@@ -159,7 +160,7 @@ export default function EditTask(props: Params) {
                     }
                   />
 
-                  <div className={styles.deleteButton} onClick={(e) => handleDeleteSubtask(e)}>
+                  <div className={styles.deleteButton} onClick={(e) => handleRemoveSubtask(e, index)}>
                     <Image
                     src='/assets/icon-cross.svg'
                     height={15}
