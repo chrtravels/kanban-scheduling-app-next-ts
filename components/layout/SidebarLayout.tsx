@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Navbar from '../navbar/Navbar';
 
@@ -13,14 +13,28 @@ type Board = {
 
 type StringArray = string[]
 
+
 export default function SidebarLayout({ children,
 }: {
   children: React.ReactNode
 }) {
-  const [sidebarExpanded, setSidebarExpanded] = useState<Boolean>(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(false);
   const [boards, setBoards] = useState([]);
   const [boardNames, setBoardNames] = useState<StringArray>([]);
   const [boardCount, setBoardCount] = useState(0)
+  const [statusList, setStatusList] = useState([]);
+  // ShowAddTask is passed to Navbar/ & used to activate the AddTask modal
+  // const [showAddTask, setShowAddTask] = useState<boolean>(false);
+  // Passed to Navbar to be able to reload the page on click new task and keep
+  // the currently opened board.
+  const [currentBoard, setCurrentBoard] = useState<string>(boardNames[0]);
+
+  useEffect(() => {
+    if (boardNames.length > 0) {
+      if (!currentBoard) setCurrentBoard(boardNames[0]);
+    }
+  }, [boardNames])
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +49,7 @@ export default function SidebarLayout({ children,
 
   useEffect(() => {
     const boardList: Array<string> = [];
+    const statusTypes = [];
     let count = 0;
 
     if (boards.length > 0) {
@@ -43,12 +58,15 @@ export default function SidebarLayout({ children,
         if (!boardList.includes(el.board_name)) {
           boardList.push(el.board_name)
         }
+        if (currentBoard === el.board_name && !statusTypes.includes(el.status)) {
+          statusTypes.push(el.status);
+        }
       })
     }
     setBoardCount(count);
     setBoardNames([...boardList])
-
-  }, boards)
+    setStatusList([...statusTypes])
+  }, [boards, currentBoard])
 
   // Changes the content container left margin to move with the side bar
   const contentStyle = {
@@ -59,11 +77,25 @@ export default function SidebarLayout({ children,
 
   return (
     <>
-      <Navbar sidebarExpanded={sidebarExpanded} />
-      <Sidebar boardNames={boardNames} boardCount={boardCount} sidebarExpanded={sidebarExpanded} setSidebarExpanded={setSidebarExpanded} />
-      <div className='layout-content' style={contentStyle}>
-      { children }
-      </div>
+      <Navbar
+      sidebarExpanded={sidebarExpanded}
+      // showAddTask={showAddTask} setShowAddTask={setShowAddTask}
+      currentBoard={currentBoard}
+      setCurrentBoard={setCurrentBoard}
+      statusList={statusList}
+      />
+
+      <Sidebar
+      boardNames={boardNames}
+      boardCount={boardCount}
+      sidebarExpanded={sidebarExpanded}
+      setSidebarExpanded={setSidebarExpanded}
+      currentBoard={currentBoard}
+      setCurrentBoard={setCurrentBoard} />
+
+      <main className='layout-content' style={contentStyle}>
+        { children }
+      </main>
     </>
   )
 }

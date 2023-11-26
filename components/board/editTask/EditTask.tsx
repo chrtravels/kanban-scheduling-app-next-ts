@@ -4,7 +4,7 @@ import styles from './editTask.module.scss'
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
 
 

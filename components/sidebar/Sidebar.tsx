@@ -13,17 +13,19 @@ import { AiFillEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 
 type Props = {
-  boardNames: string[];
-  boardCount: number;
-  sidebarExpanded: Boolean;
-  setSidebarExpanded: Dispatch<SetStateAction<Boolean>>;
+  boardNames: string[],
+  boardCount: number,
+  sidebarExpanded: Boolean,
+  setSidebarExpanded: Dispatch<SetStateAction<Boolean>>,
+  setCurrentBoard: Dispatch<SetStateAction<string>>,
+  currentBoard: string,
 }
 
-export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSidebarExpanded}: Props) {
+export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard}: Props) {
   const { theme, setTheme} = useTheme();
   const [active, setActive] = useState(false);
   const [mounted, setMounted] = useState(false)
-  const [selected, setSelected] = useState('platform launch')
+  // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
 
   useEffect(() => {
     setMounted(true);
@@ -87,24 +89,32 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
             }
 
             return (
-              <Link
-              key={boardName}
-              href={{
-                pathname: `/${boardName.split(' ').join('-')}`,
-                // query: { board: boardName }
-              }}
-              style={{ textDecoration: 'none'}}
-              >
-                <div className={`${boardName === selected ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`} onClick={() => setSelected(boardName)}>
-                  <Image
-                    src='/assets/icon-board.svg'
-                    height={16}
-                    width={16}
-                    alt='board link'
-                  />
-                  <span className='body-l'>{capitalizedBoardName()}</span>
-                </div>
-              </Link>
+              <div onClick={() => {
+                setCurrentBoard(boardName)
+                console.log('boardname from sidebar: ', boardName)
+              }}>
+                <Link
+                key={boardName}
+                href={{
+                  pathname: `/${boardName.split(' ').join('-')}`,
+                  query: { board: boardName }
+                }}
+                style={{ textDecoration: 'none'}}
+                >
+                  <div
+                  className={`${boardName === currentBoard ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}
+                  >
+                    <Image
+                      src='/assets/icon-board.svg'
+                      height={16}
+                      width={16}
+                      alt='board link'
+                    />
+                    <span className='body-l'>{capitalizedBoardName()}</span>
+                  </div>
+                </Link>
+              </div>
+
             )
           })}
         </div>

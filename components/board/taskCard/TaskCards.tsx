@@ -27,6 +27,7 @@ export default function TaskCards(props: Props) {
   const [clickedId, setClickedId] = useState(0)
   const [showEditTask, setShowEditTask] = useState(false);
   const [showTask, setShowTask] = useState(false);
+  const [showAddTask, setShowAddTask] = useState(false);
 
   return (
     <div className={styles.container}>

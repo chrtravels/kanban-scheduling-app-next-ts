@@ -105,7 +105,6 @@ export default function ViewTask(props: Params) {
     const updatedTasks: [{}] = [...tasks];
     const clonedTaskState = Object.assign({}, taskState);
     clonedTaskState.subtasks = subtasks
-    console.log('status:', clonedTaskState.status)
     updatedTasks[taskId] = clonedTaskState;
 
     const options = {
