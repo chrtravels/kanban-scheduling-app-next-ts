@@ -9,7 +9,7 @@ type Options = {
   selectedOption: string,
   setSelectedOption: (selectedOption: string) => string,
   currentFieldName: string,
-  state: {title: string, status: string, subtasks: [{}], description: string},
+  state: {title: string, status: string, subtasks: [{title: string, isCompleted: boolean}], description: string},
   setState: (state: {}) => {}
 }
 
@@ -67,7 +67,7 @@ export default function DropdownList(props: Options) {
             </div>
             )
           } else {
-            return <div key={index} className='customSelectOption' data-value={option} onClick={handleSelect}>{option}</div>
+            return <div key={index} className='customSelectOption' data-value={option} onClick={(e) => handleSelect(e)}>{option}</div>
           }
         })}
       </div>

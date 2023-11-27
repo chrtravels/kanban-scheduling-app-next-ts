@@ -2,13 +2,22 @@ import { NextResponse } from "next/server";
 import conn from '../../../../lib/db';
 import { NextRequest } from 'next/server.js';
 
-// type request = {
-//   databaseId: number,
-//   boardName: string,
-//   boardStatus: string,
-//   tasks: [{title: string, status: string, subtasks: [{title: string, isCompleted: boolean}]}]
-// }
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const boardName = url.searchParams.get('boardName');
+  const boardStatus = url.searchParams.get('boardStatus');
 
+  try {
+    const query = 'SELECT * FROM boards where board_name = $1 and status = $2'
+    const values = [boardName, boardStatus]
+    const result = await conn.query(query, values)
+    return NextResponse.json(result.rows);
+  } catch (error) {
+    throw new Error('Failed to fetch data')
+  }
+}
+
+// Updates existing database entry with a specific id
 export async function PATCH(request: Request) {
   const body = await request.json()
 
