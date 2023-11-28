@@ -1,0 +1,108 @@
+.container {
+  position: absolute;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 1, 18, .5);
+  z-index: 100;
+}
+
+.addTaskModal {
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 2rem;
+  border-radius: 6px;
+
+  h3 {
+    margin-bottom: .5rem;
+    padding-right: 2rem;
+  }
+}
+
+.formWrapper {
+  margin-bottom: .5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin: .8rem 0;
+}
+
+.cancelButton {
+  button {
+    background: none;
+    color: #717b8d;
+    font-size: 1rem;
+    border: 1px solid #494c58;
+    border-radius: 4px;
+  }
+}
+
+.formContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.formRow {
+  margin-bottom: 1rem;
+
+  input, select, option, textarea {
+    width: 94%;
+    height: 2rem;
+    margin-top: .5rem;
+    padding: 0 .5rem 0 1rem;
+    // color: $dark-font;
+    background: none;
+    border-radius: 2px;
+    border: 1px solid #494c58;
+    cursor: pointer;
+  }
+
+  textarea {
+    height: 6rem;
+    padding-top: .5rem;
+    resize: none;
+  }
+
+  textarea::placeholder {
+    padding-top: .5rem;
+  }
+}
+
+.subtaskRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: .2rem;
+
+  input {
+    width: 100%;
+    height: 2rem;
+    margin: .5rem 0 0 0;
+    padding: 0 .5rem 0 1rem;
+  }
+}
+
+.deleteButton {
+  margin-top: .6rem;
+}
+
+.status {
+  margin-bottom: .9rem;
+}
+
+.dropdownContainer {
+  margin-top: .5rem;
+}
+
+.btnContainer {
+  margin-top: 1rem;
+
+  button {
+    width: 100%;
+  }
+}

@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation'
 import styles from './navbar.module.scss'
 import AddTask from '../board/addTask/AddTask';
+import EditBoard from '../board/editBoard/EditBoard';
 
 type Params = {
   sidebarExpanded: boolean,
@@ -23,7 +24,11 @@ const Navbar = ( props: Params ) => {
 
   const { theme, setTheme} = useTheme();
   const [mounted, setMounted] = useState (false);
-  const [showAddTaskModal, setShowAddTaskModal] = useState(false)
+  const [showAddTaskModal, setShowAddTaskModal] = useState(false);
+  // Shows the ellipsis actions menu
+  const [showActions, setShowActions] = useState(false);
+  const [showEditBoardModal, setShowEditBoardModal] = useState(false);
+  const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
 
   // const searchParams = useSearchParams();
   // const boardName = searchParams.get('board');
@@ -31,7 +36,6 @@ const Navbar = ( props: Params ) => {
   const contentStyle = {
     transition: "all 0.5s ease-in-out",
 };
-
 
   useEffect(() => {
     setMounted(true);
@@ -44,6 +48,25 @@ const Navbar = ( props: Params ) => {
 
   return (
     <div className={styles.wrapper}>
+      {showActions && (
+        <div className={`actions-container ${styles.actionsContainer}`}>
+          <button className='heading-s' value='edit' onClick={(e) => setShowEditBoardModal(true)}>Edit Task</button>
+          <button className='heading-s' value='delete' onClick={(e) => setShowDeleteBoardModal(true)}>Delete Task</button>
+        </div>
+      )}
+
+      {showEditBoardModal && (
+        <EditBoard
+        setShowEditBoardModal={setShowEditBoardModal}
+        />
+      )}
+
+      {showDeleteBoardModal && (
+        <EditBoard
+        setShowEditBoardModal={setShowEditBoardModal}
+        />
+      )}
+
       {showAddTaskModal && (
           <AddTask
           currentBoard={currentBoard}
@@ -91,12 +114,14 @@ const Navbar = ( props: Params ) => {
             </Link>
 
           </div>
-        <Image
-          src='/assets/icon-vertical-ellipsis.svg'
-          height={20}
-          width={5}
-          alt='edit button'
-        />
+        <div className={styles.ellipsisMenu} onClick={() => setShowActions(!showActions)}>
+          <Image
+            src='/assets/icon-vertical-ellipsis.svg'
+            height={20}
+            width={5}
+            alt='edit button'
+          />
+        </div>
       </div>
       </div>
     </div>
