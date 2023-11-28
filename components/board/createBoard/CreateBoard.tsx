@@ -31,22 +31,20 @@ export default function CreateBoard(props: Params) {
 
   const [newBoard, setNewBoard] = useState({
     name: '',
-    status: '',
-    tasks: []
+    statusList: []
   })
 
   const [columnNames, setColumnNames]  = useState([]);
 
   const router = useRouter();
 
-  // useEffect(() => {
-  //   setNewBoard({
-  //     board_name: newBoard.board_name,
-  //     status: newBoard.status,
-  //     tasks: []
-  //   });
+  useEffect(() => {
+    setNewBoard({
+      name: newBoard.name,
+      statusList: [...columnNames],
+    });
 
-  // }, [columns])
+  }, [columnNames])
 
   // SET BOARD NAME AND COLUMNS TO BE UNIQUE TO AVOID DUPLICATE ENTRIES
   function handleAddColumn (e: React.MouseEvent<HTMLDivElement>) {
@@ -61,28 +59,36 @@ export default function CreateBoard(props: Params) {
   }
 
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault()
     // COLUMN HAS TO BE SUBMITTED TO HANDLE SUBMIT MULTIPLE TIMES TO CREATE ALL OF THE STATUS ROWS
     const boardName = newBoard.name;
 
-    const options = {
-      method: 'PATCH',
-      header: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify([boardName, status])
-    }
+    if (boardName) {
+      columnNames.forEach(async (statusName) => {
+        const options = {
+          method: 'POST',
+          header: {
+            'Accept': 'application/json',
+            'Content-type': 'application/json',
+          },
+          body: JSON.stringify([boardName, statusName])
+        }
 
-    try {
-      const res = await fetch('/api/task', options);
-      const data = res.json();
+        try {
+          const res = await fetch('/api/boards', options);
+          const data = await res.json();
 
-      if (res.ok) {
-        router.refresh();
-      }
-    } catch (error) {
-      throw new Error('Error updating task')
+          if (res.ok) {
+            router.refresh();
+          }
+        } catch (error) {
+          console.log(error)
+          throw new Error('Error updating task')
+        }
+      })
+      setShowAddBoardModal(false);
+      router.refresh();
     }
   }
 
@@ -107,7 +113,8 @@ export default function CreateBoard(props: Params) {
                 name='name'
                 value={newBoard.name}
                 placeholder='e.g. Web Design'
-                onChange={(e) => setNewBoard((newBoard) => ({
+                required
+                onChange={(e) => setNewBoard((board) => ({
                   ...newBoard, [e.target.id]: e.target.value
                 }))}
               />
@@ -118,13 +125,17 @@ export default function CreateBoard(props: Params) {
 
               {columnNames.map((name, index) => {
                 return (
-                  <div id={name} className={styles.subtaskRow}>
+                  <div id={name} className={styles.statusRow}>
                     <input
                       type='text'
                       id='columnNames'
                       name='columnNames'
-                      value={name}
-                      onChange={(e) => {setColumnNames([...columnNames])}}
+                      value={columnNames[index]}
+                      onChange={(e) => {
+                        const tempColumns = [...columnNames];
+                        tempColumns[index] = e.target.value;
+                        setColumnNames([...tempColumns])
+                      }}
                     />
 
                     <div className={styles.deleteButton} onClick={(e) => handleRemoveColumn(e, index)}>
@@ -146,7 +157,7 @@ export default function CreateBoard(props: Params) {
 
 
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={handleSubmit}>Create New Board</button>
+              <button className='btn-small btn-primary' onClick={(e) => handleSubmit(e)}>Create New Board</button>
             </div>
           </form>
         </div>

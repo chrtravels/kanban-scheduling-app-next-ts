@@ -34,8 +34,6 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
     return null
   }
 
-  console.log(showAddBoardModal)
-
   return (
     <div className={styles.main}>
       {showAddBoardModal && (
