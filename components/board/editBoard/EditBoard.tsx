@@ -28,7 +28,7 @@ export default function EditBoard(props: Params) {
   const { setShowEditBoardModal } = props;
   const [rowToUpdate, setRowToUpdate] = useState([{}])
 
-  const [newTask, setNewTask] = useState({
+  const [newBoard, setNewBoard] = useState({
     title: '',
     status: '',
     subtasks: [],
@@ -41,7 +41,7 @@ export default function EditBoard(props: Params) {
   const router = useRouter();
 
   useEffect(() => {
-    setNewTask({
+    setNewBoard({
       title: newTask.title,
       status: selectedOption,
       subtasks: subtasks,
@@ -181,8 +181,4 @@ export default function EditBoard(props: Params) {
 
     </div>
   )
-}
-
-async function getDatabaseRowId () {
-
 }

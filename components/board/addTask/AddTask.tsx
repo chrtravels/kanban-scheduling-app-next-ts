@@ -227,7 +227,3 @@ export default function AddTask(props: Params) {
     </div>
   )
 }
-
-async function getDatabaseRowId () {
-
-}

@@ -7,10 +7,8 @@ import { useEffect, useState, Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import BoardIcon from '../../public/assets/icon-board.svg';
-import hideSidebarIcon from '../../public/assets/icon-hide-sidebar.svg'
-import { AiFillEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
+import CreateBoard from '../board/createBoard/CreateBoard';
 
 type Props = {
   boardNames: string[],
@@ -26,6 +24,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
   const [active, setActive] = useState(false);
   const [mounted, setMounted] = useState(false)
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
+  const [showAddBoardModal, setShowAddBoardModal] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -35,8 +34,14 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
     return null
   }
 
+  console.log(showAddBoardModal)
+
   return (
     <div className={styles.main}>
+      {showAddBoardModal && (
+        <CreateBoard setShowAddBoardModal={setShowAddBoardModal} />
+      )}
+
       <div className={styles.btnContainer}>
         {/* Activates sidebar */}
         <div className={styles.sidebarBtn} onClick={() => {
@@ -91,7 +96,6 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
             return (
               <div onClick={() => {
                 setCurrentBoard(boardName)
-                console.log('boardname from sidebar: ', boardName)
               }}>
                 <Link
                 key={boardName}
@@ -117,6 +121,15 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
 
             )
           })}
+            <div id={styles.createBoardBtn} className={`${styles.selected} ${styles.navItem}`} onClick={() => setShowAddBoardModal(true)}>
+              <Image
+                src='/assets/icon-board.svg'
+                height={16}
+                width={16}
+                alt='board link'
+              />
+              <span className='body-l'>+ Create New Board</span>
+            </div>
         </div>
 
         <div className={styles.sidebarActions}>

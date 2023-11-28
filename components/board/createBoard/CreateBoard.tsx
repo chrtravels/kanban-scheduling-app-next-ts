@@ -12,7 +12,7 @@ type Params = {
   setShowAddBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
-type Task = {
+type Board = {
   title: string,
   status: string,
   subtasks: [{title: string, isCompleted: boolean}] | [],
@@ -29,60 +29,41 @@ export default function CreateBoard(props: Params) {
   const { setShowAddBoardModal } = props;
   const [rowToUpdate, setRowToUpdate] = useState([{}])
 
-  const [newTask, setNewTask] = useState({
-    title: '',
+  const [newBoard, setNewBoard] = useState({
+    name: '',
     status: '',
-    subtasks: [],
-    description: ''
+    tasks: []
   })
 
-  const [selectedOption, setSelectedOption] = useState(newTask.status);
-  const [subtasks, setSubtasks]  = useState(newTask.subtasks);
+  const [columnNames, setColumnNames]  = useState([]);
 
   const router = useRouter();
 
-  useEffect(() => {
-    setNewTask({
-      title: newTask.title,
-      status: selectedOption,
-      subtasks: subtasks,
-      description: newTask.description
-    });
+  // useEffect(() => {
+  //   setNewBoard({
+  //     board_name: newBoard.board_name,
+  //     status: newBoard.status,
+  //     tasks: []
+  //   });
 
-  }, [subtasks, selectedOption])
+  // }, [columns])
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await fetch(`/api/task?boardName=${currentBoard}&boardStatus=${selectedOption}`);
-      const data = await res.json();
-      setRowToUpdate(data);
-      return Response.json(data);
-    }
-    fetchData()
-  }, [selectedOption])
-
-
+  // SET BOARD NAME AND COLUMNS TO BE UNIQUE TO AVOID DUPLICATE ENTRIES
   function handleAddColumn (e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
-    setSubtasks([...newTask.subtasks, {'title': '', 'isCompleted': false}]);
+    setColumnNames([...columnNames, e.target.id]);
   }
 
-  function handleRemoveColumn (e: React.MouseEvent<HTMLDivElement>, index: number) {
-    const tempSubtasks = [...subtasks];
-    tempSubtasks.splice(index, 1)
-    setSubtasks([...tempSubtasks])
+  function handleRemoveColumn (e: React.MouseEvent<HTMLElement>, index: number) {
+    const tempColumns = [...columnNames];
+    tempColumns.splice(index, 1)
+    setColumnNames([...tempColumns])
   }
 
 
   const handleSubmit = async () => {
-    const {id, status, tasks} = rowToUpdate[0];
-
-    const updatedTasks = [...tasks];
-    updatedTasks.push(newTask);
-
-    const databaseId = id;
-    const boardStatus = status;
-
+    // COLUMN HAS TO BE SUBMITTED TO HANDLE SUBMIT MULTIPLE TIMES TO CREATE ALL OF THE STATUS ROWS
+    const boardName = newBoard.name;
 
     const options = {
       method: 'PATCH',
@@ -90,7 +71,7 @@ export default function CreateBoard(props: Params) {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
+      body: JSON.stringify([boardName, status])
     }
 
     try {
@@ -107,12 +88,12 @@ export default function CreateBoard(props: Params) {
 
   return (
     <div className={styles.container}>
-      <div className={`card ${styles.addTaskModal}`}>
+      <div className={`card ${styles.addBoardModal}`}>
         <div className={styles.formWrapper}>
         <div className={styles.header}>
           <span className='modal-header heading-l'>Add New Board</span>
           <div className={styles.cancelButton}>
-            <button onClick={() => setShowAddTaskModal(false)}>x</button>
+            <button onClick={() => setShowAddBoardModal(false)}>x</button>
           </div>
         </div>
 
@@ -122,12 +103,12 @@ export default function CreateBoard(props: Params) {
               <span className='subtask-header body-m'>Board Name</span>
               <input
                 type='text'
-                id='title'
-                name='title'
-                value={newTask.title}
-                placeholder='e.g. Take coffee break'
-                onChange={(e) => setNewTask((newTask) => ({
-                  ...newTask, [e.target.id]: e.target.value
+                id='name'
+                name='name'
+                value={newBoard.name}
+                placeholder='e.g. Web Design'
+                onChange={(e) => setNewBoard((newBoard) => ({
+                  ...newBoard, [e.target.id]: e.target.value
                 }))}
               />
             </div>
@@ -135,30 +116,23 @@ export default function CreateBoard(props: Params) {
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Board Columns</span>
 
-              {subtasks.map((subtask, index) => {
+              {columnNames.map((name, index) => {
                 return (
-                  <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
+                  <div id={name} className={styles.subtaskRow}>
                     <input
                       type='text'
-                      id='subtasks'
-                      name='subtasks'
-                      value={subtask.title}
-                      onChange={(e) => {
-                        const tempSubtasks = [...subtasks];
-                        let obj = tempSubtasks[index];
-                        obj.title =  e.target.value;
-                        tempSubtasks[index] = obj;
-                        setSubtasks([...tempSubtasks])
-                        }
-                      }
+                      id='columnNames'
+                      name='columnNames'
+                      value={name}
+                      onChange={(e) => {setColumnNames([...columnNames])}}
                     />
 
-                    <div className={styles.deleteButton} onClick={(e) => handleRemoveSubtask(e, index)}>
+                    <div className={styles.deleteButton} onClick={(e) => handleRemoveColumn(e, index)}>
                       <Image
                       src='/assets/icon-cross.svg'
                       height={15}
                       width={15}
-                      alt='delete subtask button'
+                      alt='delete column button'
                       />
                     </div>
                   </div>
@@ -166,13 +140,13 @@ export default function CreateBoard(props: Params) {
               })}
 
               <div className={styles.btnContainer}>
-                <button className='btn-small btn-secondary' onClick={(e) => handleAddTask(e)}>+ Add New Subtask</button>
+                <button className='btn-small btn-secondary' onClick={(e) => handleAddColumn(e)}>+ Add New Column</button>
               </div>
             </div>
 
 
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={handleSubmit}>Create Task</button>
+              <button className='btn-small btn-primary' onClick={handleSubmit}>Create New Board</button>
             </div>
           </form>
         </div>
@@ -182,8 +156,4 @@ export default function CreateBoard(props: Params) {
 
     </div>
   )
-}
-
-async function getDatabaseRowId () {
-
 }
