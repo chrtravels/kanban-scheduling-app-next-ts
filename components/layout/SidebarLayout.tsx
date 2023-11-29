@@ -31,7 +31,7 @@ export default function SidebarLayout({ children,
     }
   }, [boardNames])
 
-
+  console.log()
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch('/api/boards');

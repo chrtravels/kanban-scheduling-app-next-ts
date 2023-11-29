@@ -42,6 +42,16 @@ const Navbar = ( props: Params ) => {
     transition: "all 0.5s ease-in-out",
 };
 
+// Removes scrollbar when modal open
+useEffect(() => {
+  console.log(showAddTaskModal)
+  if (showAddTaskModal || showEditBoardModal || showDeleteBoardModal) {
+    document.body.classList.add("overflow-y-hidden")
+  } else {
+    document.body.classList.remove("overflow-y-hidden")
+  }
+}, [showAddTaskModal, showEditBoardModal, showDeleteBoardModal])
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -63,12 +73,14 @@ const Navbar = ( props: Params ) => {
       {showEditBoardModal && (
         <EditBoard
         setShowEditBoardModal={setShowEditBoardModal}
+        currentBoard={currentBoard}
         />
       )}
 
       {showDeleteBoardModal && (
         <EditBoard
         setShowEditBoardModal={setShowEditBoardModal}
+        currentBoard={currentBoard}
         />
       )}
 

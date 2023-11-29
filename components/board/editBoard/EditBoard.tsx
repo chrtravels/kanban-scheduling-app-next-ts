@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 
 type Params = {
   setShowEditBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
+  currentBoard: string
 }
 
 type Task = {
@@ -25,7 +26,7 @@ type Subtasks = [{
 
 
 export default function EditBoard(props: Params) {
-  const { setShowEditBoardModal } = props;
+  const { setShowEditBoardModal, currentBoard } = props;
   const [rowToUpdate, setRowToUpdate] = useState([{}])
 
   const [newBoard, setNewBoard] = useState({

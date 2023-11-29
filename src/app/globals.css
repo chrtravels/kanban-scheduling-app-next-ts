@@ -333,3 +333,7 @@ input, textarea, option, select {
 .modal-header {
   color: var(--modal-header-text)
 }
+
+.overflow-y-hidden {
+  overflow: hidden;
+}

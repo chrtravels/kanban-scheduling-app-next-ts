@@ -25,7 +25,16 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
   const [mounted, setMounted] = useState(false)
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
   const [showAddBoardModal, setShowAddBoardModal] = useState(false);
-  console.log(currentBoard)
+
+  // Removes scrollbar when modal open
+  useEffect(() => {
+    if (showAddBoardModal) {
+      document.body.classList.add("overflow-y-hidden")
+    } else {
+      document.body.classList.remove("overflow-y-hidden")
+    }
+  }, [showAddBoardModal])
+
   useEffect(() => {
     setMounted(true);
   }, []);

@@ -13,7 +13,12 @@ type Params = {
   databaseId: number,
   boardName: string,
   boardStatus: string,
-  tasks: [],
+  tasks: [{
+    title: string,
+    status: string,
+    subtasks: [{title: string, isCompleted: boolean}],
+    description: string
+  }],
   taskId: number,
   task: {
     title: string,
@@ -22,7 +27,7 @@ type Params = {
     description: string
   },
   statusTypes: string[],
-  setShowTask: () => boolean,
+  setShowTask: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
 export default function ViewTask(props: Params) {
@@ -70,7 +75,7 @@ export default function ViewTask(props: Params) {
     })
   );
 
-  function handleSelected (e, position) {
+  function handleSelected (e, position: number) {
     // Handle the checkbox state changes
       const updatedSubtasksChecked = subtasksChecked.map((checked, index) => {
         return index === position ? !checked : checked
@@ -79,7 +84,7 @@ export default function ViewTask(props: Params) {
 
   }
 
-  function handleChange (e, position) {
+  function handleChange (e, position: number) {
     const subTasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
 
     subTasksCopy[position] = subtasks[position].isCompleted ?
@@ -96,12 +101,12 @@ export default function ViewTask(props: Params) {
   }
 
 
-  function handleEditTask (e) {
+  function handleEditTask (e: React.MouseEvent<HTMLButtonElement>) {
     setShowActionsBox(false);
     setShowEditTask(true);
   }
 
-  const handleUpdateTask = async (subtasks) => {
+  const handleUpdateTask = async (subtasks: [{title: string, isCompleted: boolean}]) => {
     const updatedTasks: [{}] = [...tasks];
     const clonedTaskState = Object.assign({}, taskState);
     clonedTaskState.subtasks = subtasks
@@ -126,6 +131,10 @@ export default function ViewTask(props: Params) {
     } catch (error) {
       throw new Error('Error updating task')
     }
+  }
+
+  function handleDeleteTask(e: React.MouseEvent<HTMLButtonElement>) {
+
   }
 
   // Used to update the task on the database when the status changes

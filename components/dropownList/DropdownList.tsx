@@ -7,10 +7,10 @@ import { useState } from 'react';
 type Options = {
   options: string[],
   selectedOption: string,
-  setSelectedOption: (selectedOption: string) => string,
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>,
   currentFieldName: string,
   state: {title: string, status: string, subtasks: [{title: string, isCompleted: boolean}], description: string},
-  setState: (state: {}) => {}
+  setState: (state: {}) => {} | null
 }
 
 export default function DropdownList(props: Options) {
