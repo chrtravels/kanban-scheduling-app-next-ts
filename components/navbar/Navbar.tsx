@@ -25,14 +25,19 @@ const Navbar = ( props: Params ) => {
   const { theme, setTheme} = useTheme();
   const [mounted, setMounted] = useState (false);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-  // Shows the ellipsis actions menu
+  // Shows the ellipsis actions modal
   const [showActions, setShowActions] = useState(false);
   const [showEditBoardModal, setShowEditBoardModal] = useState(false);
   const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
 
+  const navbarTitle = currentBoard.split(' ').map((word) => {
+    return word.slice(0,1).toUpperCase() + word.slice(1);
+  }).join(' ');
+
+
   // const searchParams = useSearchParams();
   // const boardName = searchParams.get('board');
-  // console.log(boardName)
+
   const contentStyle = {
     transition: "all 0.5s ease-in-out",
 };
@@ -50,8 +55,8 @@ const Navbar = ( props: Params ) => {
     <div className={styles.wrapper}>
       {showActions && (
         <div className={`actions-container ${styles.actionsContainer}`}>
-          <button className='heading-s' value='edit' onClick={(e) => setShowEditBoardModal(true)}>Edit Task</button>
-          <button className='heading-s' value='delete' onClick={(e) => setShowDeleteBoardModal(true)}>Delete Task</button>
+          <button className='heading-s' value='edit' onClick={(e) => setShowEditBoardModal(true)}>Edit Board</button>
+          <button className='heading-s' value='delete' onClick={(e) => setShowDeleteBoardModal(true)}>Delete Board</button>
         </div>
       )}
 
@@ -96,7 +101,7 @@ const Navbar = ( props: Params ) => {
               )
             }
           </div>
-          <div className={sidebarExpanded ? styles.activeSidebar : styles.boardName} style={contentStyle}><h2>Platform Launch</h2></div>
+          <div className={sidebarExpanded ? styles.activeSidebar : styles.boardName} style={contentStyle}><h2>{navbarTitle}</h2></div>
         </div>
 
         <div className={styles.navbarActions}>

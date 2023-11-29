@@ -25,7 +25,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
   const [mounted, setMounted] = useState(false)
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
   const [showAddBoardModal, setShowAddBoardModal] = useState(false);
-
+  console.log(currentBoard)
   useEffect(() => {
     setMounted(true);
   }, []);
