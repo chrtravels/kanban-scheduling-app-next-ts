@@ -23,10 +23,6 @@ export default function SidebarLayout({ children,
   const [boardNames, setBoardNames] = useState<StringArray>([]);
   const [boardCount, setBoardCount] = useState(0)
   const [statusList, setStatusList] = useState([]);
-  // ShowAddTask is passed to Navbar/ & used to activate the AddTask modal
-  // const [showAddTask, setShowAddTask] = useState<boolean>(false);
-  // Passed to Navbar to be able to reload the page on click new task and keep
-  // the currently opened board.
   const [currentBoard, setCurrentBoard] = useState<string>(boardNames[0]);
 
   useEffect(() => {
@@ -79,7 +75,6 @@ export default function SidebarLayout({ children,
     <>
       <Navbar
       sidebarExpanded={sidebarExpanded}
-      // showAddTask={showAddTask} setShowAddTask={setShowAddTask}
       currentBoard={currentBoard}
       setCurrentBoard={setCurrentBoard}
       statusList={statusList}

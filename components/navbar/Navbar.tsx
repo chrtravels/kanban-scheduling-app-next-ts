@@ -13,14 +13,13 @@ import EditBoard from '../board/editBoard/EditBoard';
 type Params = {
   sidebarExpanded: boolean,
   showAddTask: boolean,
-  // setShowAddTask: Dispatch<SetStateAction<boolean>>,
   setCurrentBoard: () => string,
   currentBoard: string,
   statusList: string[],
 }
 
 const Navbar = ( props: Params ) => {
-  const {sidebarExpanded, showAddTask, currentBoard, setCurrentBoard, statusList} = props;
+  const {sidebarExpanded, currentBoard, setCurrentBoard, statusList} = props;
 
   const { theme, setTheme} = useTheme();
   const [mounted, setMounted] = useState (false);
@@ -30,7 +29,8 @@ const Navbar = ( props: Params ) => {
   const [showEditBoardModal, setShowEditBoardModal] = useState(false);
   const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
 
-  const navbarTitle = currentBoard.split(' ').map((word) => {
+  let navbarTitle;
+  if (currentBoard) navbarTitle = currentBoard.split(' ').map((word) => {
     return word.slice(0,1).toUpperCase() + word.slice(1);
   }).join(' ');
 
