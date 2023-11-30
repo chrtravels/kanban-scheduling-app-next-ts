@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Navbar from '../navbar/Navbar';
 
@@ -21,7 +21,6 @@ export default function SidebarLayout({ children,
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(false);
   const [boards, setBoards] = useState([]);
   const [boardNames, setBoardNames] = useState<StringArray>([]);
-  const [boardCount, setBoardCount] = useState(0)
   const [statusList, setStatusList] = useState([]);
   const [currentBoard, setCurrentBoard] = useState<string>(boardNames[0]);
 
@@ -50,7 +49,6 @@ export default function SidebarLayout({ children,
 
     if (boards.length > 0) {
       boards.forEach((el: Board) => {
-        count++;
         if (!boardList.includes(el.board_name)) {
           boardList.push(el.board_name)
         }
@@ -59,7 +57,6 @@ export default function SidebarLayout({ children,
         }
       })
     }
-    setBoardCount(count);
     setBoardNames([...boardList])
     setStatusList([...statusTypes])
   }, [boards, currentBoard])
@@ -68,7 +65,6 @@ export default function SidebarLayout({ children,
   const contentStyle = {
     marginLeft: sidebarExpanded ? "270px" : "0px",
     transition: "all 0.5s ease-in-out",
-    // transition: "margin 0.2s ease"
 };
 
   return (
@@ -82,7 +78,6 @@ export default function SidebarLayout({ children,
 
       <Sidebar
       boardNames={boardNames}
-      boardCount={boardCount}
       sidebarExpanded={sidebarExpanded}
       setSidebarExpanded={setSidebarExpanded}
       currentBoard={currentBoard}

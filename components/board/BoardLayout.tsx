@@ -27,13 +27,11 @@ export default function BoardLayout (props: Params) {
     return board.name;
   }));
 
-
   const bulletColorArray = [
     '#49c4e5',
     '#8471f2',
     '#67e2ae'
   ]
-
 
   return (
     <div className={styles.container}>

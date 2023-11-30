@@ -12,14 +12,13 @@ import CreateBoard from '../board/createBoard/CreateBoard';
 
 type Props = {
   boardNames: string[],
-  boardCount: number,
   sidebarExpanded: Boolean,
   setSidebarExpanded: Dispatch<SetStateAction<Boolean>>,
   setCurrentBoard: Dispatch<SetStateAction<string>>,
   currentBoard: string,
 }
 
-export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard}: Props) {
+export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard}: Props) {
   const { theme, setTheme} = useTheme();
   const [active, setActive] = useState(false);
   const [mounted, setMounted] = useState(false)
@@ -86,7 +85,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
         </div>
 
         <div className={styles.sidebarNavItemsContainer}>
-          <span className={`heading-s ${styles.navItemsHeader}`}>ALL BOARDS ({boardCount})</span>
+          <span className={`heading-s ${styles.navItemsHeader}`}>ALL BOARDS ({boardNames.length})</span>
 
           {boardNames.map((boardName) => {
             const capitalizedBoardName = () => {
