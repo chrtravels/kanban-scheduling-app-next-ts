@@ -11,47 +11,51 @@ async function getData() {
     const result = await conn.query(
       query
     )
-
+    // console.log(result.rows);
     return result.rows;
   } catch (error) {
     throw new Error('Failed to fetch data')
   }
 }
 
+
 // Type Definitions:
 type Board = {
-  [key: string]: any[]
+  // [key: string]: any[]
+  id: number,
+  board_name: string,
+  columns: [{}]
 }
 
 type Params = {
   params: {
-    boardName: Array<string>;
+    boardName: string
   };
 }
 
 // Sort data into separate boards
-async function getBoards() {
-  const boards: Board = {};
-  const getBoards = await getData()
+// async function getBoards() {
+//   const boards: Board = {};
+//   const getBoards = await getData()
 
-  getBoards.forEach((board:{id: number, board_name: string, status: string, tasks: []}) => {
-    const boardName: string = board.board_name;
-    // INCLUDE THE ORIGINAL DATABASE ENTRY ID WITH EACH ENTRY TO boards
-    if (boards[boardName]) {
-      boards[boardName] = [...boards[boardName], {'db_id': board.id, 'status': board.status, 'tasks': board.tasks}]
-    } else {
-      boards[boardName] = [{'db_id': board.id, 'status': board.status, 'tasks': board.tasks}]
-    }
-  })
+//   getBoards.forEach((board:{id: number, board_name: string}) => {
+//     const boardName: string = board.board_name;
+//     // INCLUDE THE ORIGINAL DATABASE ENTRY ID WITH EACH ENTRY TO boards
+//     if (boards[boardName]) {
+//       boards[boardName] = [...boards[boardName], {'db_id': board.id, 'status': board.status, 'tasks': board.tasks}]
+//     } else {
+//       boards[boardName] = [{'db_id': board.id, 'status': board.status, 'tasks': board.tasks}]
+//     }
+//   })
 
-  return boards;
-}
+//   return boards;
+// }
 
 async function generateStaticParams() {
-  const boards = await getBoards();
+  const boards = await getData();
   const params: string[] = [];
 
-  Object.keys(boards).forEach((key) => {
+  Object.keys(boards[0]).forEach((key) => {
     if (!params.includes(key)) {
       params.push(key.split(' ').join('-'));
     }
@@ -63,19 +67,19 @@ async function generateStaticParams() {
 generateStaticParams();
 
 export default async function Home({ params: { boardName } }: Params) {
-  const boards = await getBoards();
+  const boards = await getData();
 
   if (!boardName) {
-    if (Object.keys(boards)[0].includes(' ')) {
-      redirect(`/${Object.keys(boards)[0].split(' ').join('-')}`)
-    } else redirect(`/${Object.keys(boards)[0].replace(/%20/g, " ")}`)
+    if (boards[0].board_name.includes(' ')) {
+      redirect(`/${boards[0].board_name.split(' ').join('-')}`)
+    } else redirect(`/${boards[0].board_name.replace(/%20/g, " ")}`)
   }
 
-  const verifiedBoardName = boardName[0].replace(/%20/g, " ")
+  const UrlBoardName = boardName[0].replace(/%20/g, " ")
 
   return (
     <main className={styles.main}>
-      <BoardLayout boards={boards} boardName={verifiedBoardName} />
+      <BoardLayout boards={boards} UrlBoardName={UrlBoardName} />
     </main>
   )
 }
