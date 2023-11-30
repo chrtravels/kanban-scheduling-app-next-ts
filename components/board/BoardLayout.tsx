@@ -16,25 +16,17 @@ type StatusTypes = string[]
 
 export default function BoardLayout (props: Params) {
   const { boards, UrlBoardName } = props;
-  // console.log('boards: ', boards)
-  // console.log('board name: ', boardName)
+
   const currentBoardName = UrlBoardName.includes('-') ? UrlBoardName.split('-').join(' ') : UrlBoardName;
   const selectedBoard = boards.filter((board) => {
     return board.board_name == currentBoardName;
   })
 
-  // Collect the data for the clicked task card
-  const [clickedTask, setClickedTask] = useState({})
-  const [showEditTask, setShowEditTask] = useState(false);
   // Get the status options for the drop Edit task component drop down list
   const [statusTypes, setStatusTypes] = useState<StatusTypes>(selectedBoard[0].columns.map((board) => {
     return board.name;
   }));
-  console.log(statusTypes)
 
-  useEffect(() => {
-    setShowEditTask(true);
-  }, setClickedTask)
 
   const bulletColorArray = [
     '#49c4e5',
@@ -42,9 +34,6 @@ export default function BoardLayout (props: Params) {
     '#67e2ae'
   ]
 
-  function handleTaskClick(task: {}) {
-    setClickedTask(task)
-  }
 
   return (
     <div className={styles.container}>
