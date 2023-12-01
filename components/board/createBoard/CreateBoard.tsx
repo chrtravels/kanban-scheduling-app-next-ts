@@ -5,7 +5,6 @@ import styles from './createBoard.module.scss'
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import DropdownList from '../../dropownList/DropdownList';
 
 
 type Params = {
@@ -13,10 +12,8 @@ type Params = {
 }
 
 type Board = {
-  title: string,
-  status: string,
-  subtasks: [{title: string, isCompleted: boolean}] | [],
-  description: string
+  name: string,
+  columns: [{name: string, tasks: [{}], description: string}] | [],
 }
 
 type Subtasks = [{
@@ -27,11 +24,10 @@ type Subtasks = [{
 
 export default function CreateBoard(props: Params) {
   const { setShowAddBoardModal } = props;
-  const [rowToUpdate, setRowToUpdate] = useState([{}])
 
   const [newBoard, setNewBoard] = useState({
     name: '',
-    statusList: []
+    columns: []
   })
 
   const [columnNames, setColumnNames]  = useState([]);
@@ -41,7 +37,9 @@ export default function CreateBoard(props: Params) {
   useEffect(() => {
     setNewBoard({
       name: newBoard.name,
-      statusList: [...columnNames],
+      columns: columnNames.map((name) => {
+        return {'name': name, 'tasks': [], description: ''}
+      }),
     });
 
   }, [columnNames])
@@ -61,18 +59,18 @@ export default function CreateBoard(props: Params) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // COLUMN HAS TO BE SUBMITTED TO HANDLE SUBMIT MULTIPLE TIMES TO CREATE ALL OF THE STATUS ROWS
+
     const boardName = newBoard.name;
+    const columns = newBoard.columns;
 
     if (boardName) {
-      columnNames.forEach(async (statusName) => {
         const options = {
           method: 'POST',
           header: {
             'Accept': 'application/json',
             'Content-type': 'application/json',
           },
-          body: JSON.stringify([boardName, statusName])
+          body: JSON.stringify([boardName, columns])
         }
 
         try {
@@ -83,10 +81,8 @@ export default function CreateBoard(props: Params) {
             router.refresh();
           }
         } catch (error) {
-          console.log(error)
           throw new Error('Error updating task')
         }
-      })
       setShowAddBoardModal(false);
       router.refresh();
     }
