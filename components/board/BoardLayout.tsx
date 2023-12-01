@@ -22,17 +22,22 @@ export default function BoardLayout (props: Params) {
     return board.board_name == currentBoardName;
   })
 
+  const currentBoard = boards.filter((board) => {
+    return board.board_name === currentBoardName
+  })[0]
+
   // Get the status options for the drop Edit task component drop down list
   const [statusTypes, setStatusTypes] = useState<StatusTypes>(selectedBoard[0].columns.map((board) => {
     return board.name;
   }));
+
 
   const bulletColorArray = [
     '#49c4e5',
     '#8471f2',
     '#67e2ae'
   ]
-
+  // console.log('current board:', currentBoard)
   return (
     <div className={styles.container}>
 
@@ -56,7 +61,7 @@ export default function BoardLayout (props: Params) {
         )
       })}
 
-      <NewColumn />
+      <NewColumn boardName={currentBoardName} currentBoard={currentBoard} />
     </div>
   )
 }

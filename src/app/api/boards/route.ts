@@ -17,17 +17,36 @@ export async function POST(request: Request) {
   const body = await request.json()
 
   const boardName = body[0]; // result is 'Test
-  const statusName = body[1]; // result is 'col1'
+  const columns = body[1]; // result is 'col1'
 
   try {
     // const query = 'INSERT INTO boards (board_name = $1, status = $2, tasks = $3';
     // const values = [boardName, statusName, []];
     // const query = `INSERT INTO boards (board_name, status) VALUES (${boardName}, ${statusName})`;
-    const query = `INSERT INTO boards (board_name, status) VALUES ('${boardName}', '${statusName}')`;
+    const query = `INSERT INTO boards (board_name, columns) VALUES ('${boardName}, ${columns}')`;
 
     const result = await conn.query(query);
     return NextResponse.json(result);
   } catch (error) {
     throw new Error('Failed to create board')
+  }
+}
+
+export async function PATCH(request: Request) {
+  const body = await request.json()
+
+  const boardName = body[0];
+  const columns = body[1];
+
+  // console.log('body: ', body)
+
+  try {
+    const query = 'Update boards SET columns = $1 WHERE board_name = $2';
+    const values = [JSON.stringify(columns), boardName];
+    const result = await conn.query(query, values);
+
+    return NextResponse.json(result);
+  } catch (error) {
+    throw new Error('Failed to update task')
   }
 }
