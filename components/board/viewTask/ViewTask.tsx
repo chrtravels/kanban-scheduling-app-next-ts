@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './viewTask.module.scss'
 import DropdownList from '../../dropownList/DropdownList';
@@ -10,7 +10,6 @@ import EditTask from '../editTask/EditTask';
 
 
 type Params = {
-  databaseId: number,
   boardName: string,
   boardStatus: string,
   tasks: [{
@@ -31,14 +30,26 @@ type Params = {
 }
 
 export default function ViewTask(props: Params) {
-  const { databaseId, boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask } = props;
+  const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask } = props;
 
+  const [board, setBoard] = useState({})
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
   const [showActionsBox, setShowActionsBox] = useState(false);
   const [showEditTask, setShowEditTask] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(`/api/task?boardName=${boardName}`);
+      const data = await res.json();
+      setBoard(data[0]);
+      return Response.json(data);
+    }
+    fetchData()
+  }, [])
+  // console.log('board: ', board)
 
   type TaskState = {
     title: string,
@@ -81,7 +92,6 @@ export default function ViewTask(props: Params) {
         return index === position ? !checked : checked
       });
       setSubtasksChecked(updatedSubtasksChecked);
-
   }
 
   function handleChange (e, position: number) {
@@ -97,7 +107,7 @@ export default function ViewTask(props: Params) {
       ...taskState, 'subtasks': subTasksCopy
     }))
     // Updates the task on the database when the task is marked completed
-    handleUpdateTask(subTasksCopy)
+    handleUpdateTask(subTasksCopy, position)
   }
 
 
@@ -106,31 +116,88 @@ export default function ViewTask(props: Params) {
     setShowEditTask(true);
   }
 
-  const handleUpdateTask = async (subtasks: [{title: string, isCompleted: boolean}]) => {
+  const handleUpdateTask = async (subtasks: [{title: string, isCompleted: boolean}], position: number) => {
     const updatedTasks: [{}] = [...tasks];
     const clonedTaskState = Object.assign({}, taskState);
     clonedTaskState.subtasks = subtasks
-    updatedTasks[taskId] = clonedTaskState;
 
-    const options = {
-      method: 'PATCH',
-      header: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
-    }
+    if (Object.keys(board).length > 0) {
+      if (boardStatus === taskState.status || taskState.status === '') {
 
-    try {
-      const res = await fetch('/api/task', options);
-      const data = res.json();
+        const taskExistsInColumn = updatedTasks.map((task) => {
+          if (task.title === taskState.title)
+          return true;
+        })
+        // updates tasks in column
+        if (!taskExistsInColumn) updatedTasks[taskId] = clonedTaskState;
 
-      if (res.ok) {
-        router.refresh();
+         // update if same status, otherwise remove from old status and add to new
+        setBoard({
+          id: board.id,
+          board_name: board.board_name,
+          columns: board.columns.map((column) => {
+            if (column.name === boardStatus) {
+              const tempColumn = Object.assign({}, column);
+              tempColumn.tasks = updatedTasks;
+              console.log('updated: ', updatedTasks)
+              return tempColumn;
+            } else return column;
+          })
+        })
+
+      } else {
+        // Remove task from previous status column and add it to the column with the new status
+        setBoard({
+          id: board.id,
+          board_name: board.board_name,
+          columns: board.columns.map((column) => {
+            if (column.name === boardStatus) {
+              const tempColumn = Object.assign({}, column);
+              tempColumn.tasks.splice(position,1)
+              return tempColumn;
+
+            } else if (column.name === taskState.status) {
+              const tempColumn = Object.assign({}, column);
+              const taskExistsInColumn = tempColumn.tasks.map((task) => {
+                if (task.title === taskState.title)
+                return true;
+              })
+
+              if (!taskExistsInColumn[0]) tempColumn.tasks.push(taskState)
+              return tempColumn
+
+            } else return column;
+          })
+        })
       }
-    } catch (error) {
-      throw new Error('Error updating task')
+
+      const updatedColumns = board.columns;
+      console.log(board.columns)
+
+      const options = {
+        method: 'PATCH',
+        header: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify([boardName, updatedColumns])
+      }
+
+      try {
+        const res = await fetch('/api/task', options);
+        const data = res.json();
+
+        if (res.ok) {
+          setShowTask(false);
+          router.refresh();
+        }
+      } catch (error) {
+        throw new Error('Error updating task')
+      }
+
     }
+
+
   }
 
   function handleDeleteTask(e: React.MouseEvent<HTMLButtonElement>) {
@@ -139,15 +206,15 @@ export default function ViewTask(props: Params) {
 
   // Used to update the task on the database when the status changes
   useMemo(() => {
-    handleUpdateTask(taskState.subtasks)
+    handleUpdateTask(taskState.subtasks, taskId)
   }, [taskState])
-
+  console.log('board: ', board)
 
   if (showEditTask) {
     return (
       <div className={styles.container}>
         <div className={`card ${styles.editContainer}`}>
-          <EditTask databaseId={databaseId} boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} statusTypes={statusTypes} setShowTask={setShowTask} />
+          <EditTask boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} statusTypes={statusTypes} setShowTask={setShowTask} />
         </div>
       </div>
     )

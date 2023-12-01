@@ -30,7 +30,6 @@ export default function SidebarLayout({ children,
     }
   }, [boardNames])
 
-  console.log()
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch('/api/boards');
@@ -45,15 +44,16 @@ export default function SidebarLayout({ children,
   useEffect(() => {
     const boardList: Array<string> = [];
     const statusTypes = [];
-    let count = 0;
 
     if (boards.length > 0) {
-      boards.forEach((el: Board) => {
+      boards.forEach((el: Board, idx) => {
         if (!boardList.includes(el.board_name)) {
           boardList.push(el.board_name)
         }
-        if (currentBoard === el.board_name && !statusTypes.includes(el.status)) {
-          statusTypes.push(el.status);
+        if (currentBoard === el.board_name && !statusTypes.includes(el.columns[idx].name)) {
+          statusTypes.push(...el.columns.map((column) => {
+            return column.name;
+          }));
         }
       })
     }

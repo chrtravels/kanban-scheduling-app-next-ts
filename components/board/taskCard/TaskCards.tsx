@@ -14,7 +14,7 @@ type Props = {
   tasks: [{
     title: string,
     status: string,
-    subtasks: [],
+    subtasks: [{title: string, isCompleted: boolean}],
     description: string,
   }],
   statusTypes: string[]
@@ -27,7 +27,6 @@ export default function TaskCards(props: Props) {
   const [clickedId, setClickedId] = useState(0)
   const [showEditTask, setShowEditTask] = useState(false);
   const [showTask, setShowTask] = useState(false);
-  const [showAddTask, setShowAddTask] = useState(false);
 
   return (
     <div className={styles.container}>

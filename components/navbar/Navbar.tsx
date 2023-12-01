@@ -44,7 +44,6 @@ const Navbar = ( props: Params ) => {
 
 // Removes scrollbar when modal open
 useEffect(() => {
-  console.log(showAddTaskModal)
   if (showAddTaskModal || showEditBoardModal || showDeleteBoardModal) {
     document.body.classList.add("overflow-y-hidden")
   } else {

@@ -5,11 +5,10 @@ import { NextRequest } from 'next/server.js';
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const boardName = url.searchParams.get('boardName');
-  const boardStatus = url.searchParams.get('boardStatus');
 
   try {
-    const query = 'SELECT * FROM boards where board_name = $1 and status = $2'
-    const values = [boardName, boardStatus]
+    const query = 'SELECT * FROM boards where board_name = $1'
+    const values = [boardName]
     const result = await conn.query(query, values)
     return NextResponse.json(result.rows);
   } catch (error) {
@@ -20,14 +19,13 @@ export async function GET(request: Request) {
 // Updates existing database entry with a specific id
 export async function PATCH(request: Request) {
   const body = await request.json()
-
-  const databaseId = body[0];
-  const boardStatus = body[1];
-  const updatedTasks = body[2];
+  console.log('body: ', body)
+  const boardName = body[0];
+  const updatedColumns = body[1];
 
   try {
-    const query = 'Update boards SET status = $1, tasks = $2 WHERE id = $3';
-    const values = [boardStatus, JSON.stringify(updatedTasks), databaseId];
+    const query = 'Update boards SET columns = $1 WHERE board_name = $2';
+    const values = [JSON.stringify(updatedColumns), boardName];
     const result = await conn.query(query, values);
 
     return NextResponse.json(result);

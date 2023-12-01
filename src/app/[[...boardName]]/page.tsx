@@ -11,7 +11,6 @@ async function getData() {
     const result = await conn.query(
       query
     )
-    // console.log(result.rows);
     return result.rows;
   } catch (error) {
     throw new Error('Failed to fetch data')

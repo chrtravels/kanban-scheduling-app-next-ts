@@ -48,7 +48,7 @@ export default function BoardLayout (props: Params) {
 
             <div className={styles.columnBody}>
               <div key={`${column.status}-${idx}`}>
-                <TaskCards databaseId={selectedBoard[0].id} boardName={currentBoardName} boardStatus={column.name} tasks={column.tasks} statusTypes={statusTypes} />
+                <TaskCards boardName={currentBoardName} boardStatus={column.name} tasks={column.tasks} statusTypes={statusTypes} />
               </div>
 
             </div>

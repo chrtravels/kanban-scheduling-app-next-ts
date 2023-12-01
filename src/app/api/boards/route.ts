@@ -24,12 +24,10 @@ export async function POST(request: Request) {
     // const values = [boardName, statusName, []];
     // const query = `INSERT INTO boards (board_name, status) VALUES (${boardName}, ${statusName})`;
     const query = `INSERT INTO boards (board_name, status) VALUES ('${boardName}', '${statusName}')`;
-    console.log('query: ', query)
+
     const result = await conn.query(query);
-    console.log('result: ', result)
     return NextResponse.json(result);
   } catch (error) {
-    console.log(error)
     throw new Error('Failed to create board')
   }
 }
