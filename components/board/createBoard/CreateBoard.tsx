@@ -45,7 +45,6 @@ export default function CreateBoard(props: Params) {
 
   }, [columnNames])
 
-  // SET BOARD NAME AND COLUMNS TO BE UNIQUE TO AVOID DUPLICATE ENTRIES
   function handleAddColumn (e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
     setColumnNames([...columnNames, e.target.id]);

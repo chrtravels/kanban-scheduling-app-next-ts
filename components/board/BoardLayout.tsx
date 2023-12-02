@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './boardLayout.module.scss'
 import NewColumn from './newColumn/NewColumn';
 import TaskCards from './taskCard/TaskCards';
@@ -17,18 +18,23 @@ type StatusTypes = string[]
 export default function BoardLayout (props: Params) {
   const { boards, UrlBoardName } = props;
 
+  const router = useRouter();
+
   const currentBoardName = UrlBoardName.includes('-') ? UrlBoardName.split('-').join(' ') : UrlBoardName;
 
-  const selectedBoard = boards.filter((board) => {
+  //return the board in the URL
+  const tempBoard = boards.filter((board) => {
     return board.board_name == currentBoardName || board.board_name === UrlBoardName;
   })
-  console.log('url: ', UrlBoardName)
-  console.log(boards)
+  // redirect back to the first board if the board in the URL does not exist
+  if (tempBoard.length === 0) router.push(`/${boards[0].board_name.split(' ').join('-')}`)
+
+  const selectedBoard = tempBoard.length > 0 ? [...tempBoard] : [boards[0]];
+
   const currentBoard = boards.filter((board) => {
     return board.board_name === currentBoardName
   })[0]
-  console.log('current board name: ', currentBoardName)
-  console.log('selected board: ', selectedBoard)
+
   // Get the status options for the drop Edit task component drop down list
   const [statusTypes, setStatusTypes] = useState<StatusTypes>(selectedBoard[0].columns.map((board) => {
     return board.name;

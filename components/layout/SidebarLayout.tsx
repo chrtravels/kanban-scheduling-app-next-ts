@@ -41,7 +41,8 @@ export default function SidebarLayout({ children,
     fetchData()
   }, [boards])
 
-  useEffect(() => {
+
+  useMemo(() => {
     const boardList: Array<string> = [];
     const statusTypes = [];
 
@@ -50,7 +51,8 @@ export default function SidebarLayout({ children,
         if (!boardList.includes(el.board_name)) {
           boardList.push(el.board_name)
         }
-        if (currentBoard === el.board_name && !statusTypes.includes(el.columns[idx].name)) {
+
+        if (currentBoard === el.board_name) {
           statusTypes.push(...el.columns.map((column) => {
             return column.name;
           }));
@@ -60,6 +62,7 @@ export default function SidebarLayout({ children,
     setBoardNames([...boardList])
     setStatusList([...statusTypes])
   }, [boards, currentBoard])
+
 
   // Changes the content container left margin to move with the side bar
   const contentStyle = {
