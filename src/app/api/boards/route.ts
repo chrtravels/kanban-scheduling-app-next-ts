@@ -46,3 +46,19 @@ export async function PATCH(request: Request) {
     throw new Error('Failed to update task')
   }
 }
+
+export async function DELETE(request: Request) {
+  const body = await request.json()
+
+  const id = body[0]
+  console.log('id: ', id)
+  try {
+    const query = 'DELETE FROM boards WHERE id = $3';
+    const values = [id];
+    const result = await conn.query(query, values);
+
+    return NextResponse.json(result);
+  } catch (error) {
+    throw new Error('Failed to update task')
+  }
+}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Navbar from '../navbar/Navbar';
 
@@ -30,7 +30,7 @@ export default function SidebarLayout({ children,
     }
   }, [boardNames])
 
-  useEffect(() => {
+  useMemo(() => {
     const fetchData = async () => {
       const res = await fetch('/api/boards');
 
@@ -39,7 +39,7 @@ export default function SidebarLayout({ children,
       return Response.json(data);
     }
     fetchData()
-  }, [])
+  }, [boards])
 
   useEffect(() => {
     const boardList: Array<string> = [];

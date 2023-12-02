@@ -61,7 +61,7 @@ export default function CreateBoard(props: Params) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const boardName = newBoard.name;
+    const boardName = newBoard.name.toLowerCase();
     const columns = newBoard.columns;
 
     if (boardName) {
@@ -85,7 +85,7 @@ export default function CreateBoard(props: Params) {
           throw new Error('Error updating task')
         }
       setShowAddBoardModal(false);
-      router.refresh();
+      router.push(`/${boardName.split(' ').join('-')}`);
     }
   }
 
