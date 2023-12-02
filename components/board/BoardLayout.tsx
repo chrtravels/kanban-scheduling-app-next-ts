@@ -35,7 +35,11 @@ export default function BoardLayout (props: Params) {
   const bulletColorArray = [
     '#49c4e5',
     '#8471f2',
-    '#67e2ae'
+    '#67e2ae',
+    '#b30687',
+    '#7c91f9',
+    '#fecc1c',
+    '#f98d3e',
   ]
   // console.log('current board:', currentBoard)
   return (
