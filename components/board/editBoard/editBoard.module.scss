@@ -9,7 +9,7 @@
   z-index: 100;
 }
 
-.addTaskModal {
+.editBoardModal {
   width: 20rem;
   display: flex;
   flex-direction: column;
@@ -73,7 +73,7 @@
   }
 }
 
-.subtaskRow {
+.statusRow {
   display: flex;
   align-items: center;
   gap: 1rem;

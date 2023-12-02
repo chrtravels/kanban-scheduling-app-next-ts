@@ -2,9 +2,9 @@
 
 import styles from './editBoard.module.scss'
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 
 type Params = {
@@ -12,77 +12,77 @@ type Params = {
   currentBoard: string
 }
 
-type Task = {
-  title: string,
-  status: string,
-  subtasks: [{title: string, isCompleted: boolean}] | [],
-  description: string
-}
-
-type Subtasks = [{
-  title: string,
-  isCompleted: boolean
-}]
-
 
 export default function EditBoard(props: Params) {
   const { setShowEditBoardModal, currentBoard } = props;
-  const [rowToUpdate, setRowToUpdate] = useState([{}])
 
   const [newBoard, setNewBoard] = useState({
-    title: '',
-    status: '',
-    subtasks: [],
-    description: ''
+    id: null,
+    name: '',
+    columns: [],
   })
 
-  const [selectedOption, setSelectedOption] = useState(newTask.status);
-  const [subtasks, setSubtasks]  = useState(newTask.subtasks);
+  const [columnNames, setColumnNames]  = useState([]);
 
   const router = useRouter();
 
   useEffect(() => {
-    setNewBoard({
-      title: newTask.title,
-      status: selectedOption,
-      subtasks: subtasks,
-      description: newTask.description
-    });
+    const newColumns = columnNames.map((name, idx) => {
+      return ({
+        name: name,
+        tasks: idx < newBoard.columns.length ? newBoard.columns[idx].tasks : []
+      })
+    })
 
-  }, [subtasks, selectedOption])
+    setNewBoard({
+      id: newBoard.id,
+      name: newBoard.name,
+      columns: [...newColumns]
+    })
+    console.log('new board: ', newBoard)
+  }, [columnNames])
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch('/api/board');
-      const data = await res.json();
-      setRowToUpdate(data);
-      return Response.json(data);
+      try {
+        const res = await fetch('/api/boards');
+        const data = await res.json();
+
+        const boardToEdit = data.filter((board) => {
+          return board.board_name === currentBoard;
+        })[0];
+
+        setNewBoard({
+          id: boardToEdit.id,
+          name: boardToEdit.board_name,
+          columns: boardToEdit.columns
+        })
+
+        setColumnNames(boardToEdit.columns.map((column) => {
+          return column.name;
+        }))
+
+      } catch (error) {
+        throw new Error('Error updating Board')
+      }
     }
     fetchData()
-  }, [selectedOption])
+  }, [])
 
 
   function handleAddColumn (e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
-    setSubtasks([...newTask.subtasks, {'title': '', 'isCompleted': false}]);
+    setColumnNames([...columnNames, e.target.value]);
   }
 
   function handleRemoveColumn (e: React.MouseEvent<HTMLDivElement>, index: number) {
-    const tempSubtasks = [...subtasks];
-    tempSubtasks.splice(index, 1)
-    setSubtasks([...tempSubtasks])
+    const tempColumnNames = [...columnNames];
+    tempColumnNames.splice(index, 1)
+    setColumnNames([...tempColumnNames])
   }
 
-
-  const handleSubmit = async () => {
-    const {id, status, tasks} = rowToUpdate[0];
-
-    const updatedTasks = [...tasks];
-    updatedTasks.push(newTask);
-
-    const databaseId = id;
-    const boardStatus = status;
-
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     const options = {
       method: 'PATCH',
@@ -90,29 +90,32 @@ export default function EditBoard(props: Params) {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
+      body: JSON.stringify([newBoard.name, newBoard.columns, newBoard.id])
     }
 
     try {
-      const res = await fetch('/api/task', options);
+      const res = await fetch('/api/boards', options);
       const data = res.json();
 
       if (res.ok) {
-        router.refresh();
+        setShowEditBoardModal(false);
+        console.log('redirect: ', newBoard.name)
+        router.push(`/${newBoard.name}`)
       }
     } catch (error) {
-      throw new Error('Error updating task')
+      console.log(error)
+      throw new Error('Error updating Board')
     }
   }
 
   return (
     <div className={styles.container}>
-      <div className={`card ${styles.addTaskModal}`}>
+      <div className={`card ${styles.editBoardModal}`}>
         <div className={styles.formWrapper}>
         <div className={styles.header}>
-          <span className='modal-header heading-l'>Add New Board</span>
+          <span className='modal-header heading-l'>Edit Board</span>
           <div className={styles.cancelButton}>
-            <button onClick={() => setShowAddTaskModal(false)}>x</button>
+            <button onClick={() => setShowEditBoardModal(false)}>x</button>
           </div>
         </div>
 
@@ -122,12 +125,13 @@ export default function EditBoard(props: Params) {
               <span className='subtask-header body-m'>Board Name</span>
               <input
                 type='text'
-                id='title'
-                name='title'
-                value={newTask.title}
-                placeholder='e.g. Take coffee break'
-                onChange={(e) => setNewTask((newTask) => ({
-                  ...newTask, [e.target.id]: e.target.value
+                id='name'
+                name='name'
+                value={newBoard.name}
+                placeholder='e.g. Web Design'
+                required
+                onChange={(e) => setNewBoard((board) => ({
+                  ...newBoard, [e.target.id]: e.target.value
                 }))}
               />
             </div>
@@ -135,30 +139,27 @@ export default function EditBoard(props: Params) {
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Board Columns</span>
 
-              {subtasks.map((subtask, index) => {
+              {columnNames.map((name, index) => {
                 return (
-                  <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
+                  <div id={name} className={styles.statusRow}>
                     <input
                       type='text'
-                      id='subtasks'
-                      name='subtasks'
-                      value={subtask.title}
+                      id='columnNames'
+                      name='columnNames'
+                      value={columnNames[index]}
                       onChange={(e) => {
-                        const tempSubtasks = [...subtasks];
-                        let obj = tempSubtasks[index];
-                        obj.title =  e.target.value;
-                        tempSubtasks[index] = obj;
-                        setSubtasks([...tempSubtasks])
-                        }
-                      }
+                        const tempNames = [...columnNames];
+                        tempNames[index] = e.target.value;
+                        setColumnNames([...tempNames]);
+                      }}
                     />
 
-                    <div className={styles.deleteButton} onClick={(e) => handleRemoveSubtask(e, index)}>
+                    <div className={styles.deleteButton} onClick={(e) => handleRemoveColumn(e, index)}>
                       <Image
                       src='/assets/icon-cross.svg'
                       height={15}
                       width={15}
-                      alt='delete subtask button'
+                      alt='delete column button'
                       />
                     </div>
                   </div>
@@ -166,17 +167,16 @@ export default function EditBoard(props: Params) {
               })}
 
               <div className={styles.btnContainer}>
-                <button className='btn-small btn-secondary' onClick={(e) => handleAddTask(e)}>+ Add New Subtask</button>
+                <button className='btn-small btn-secondary' onClick={(e) => handleAddColumn(e)}>+ Add New Column</button>
               </div>
-            </div>
+              </div>
 
 
-            <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={handleSubmit}>Create Task</button>
-            </div>
-          </form>
-        </div>
-
+              <div className={styles.btnContainer}>
+                <button className='btn-small btn-primary' onClick={(e) => handleSubmit(e)}>Save Changes</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 

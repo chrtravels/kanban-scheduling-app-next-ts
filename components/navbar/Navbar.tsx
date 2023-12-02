@@ -64,8 +64,14 @@ useEffect(() => {
     <div className={styles.wrapper}>
       {showActions && (
         <div className={`actions-container ${styles.actionsContainer}`}>
-          <button className='heading-s' value='edit' onClick={(e) => setShowEditBoardModal(true)}>Edit Board</button>
-          <button className='heading-s' value='delete' onClick={(e) => setShowDeleteBoardModal(true)}>Delete Board</button>
+          <button className='heading-s' value='edit' onClick={(e) => {
+            setShowEditBoardModal(true)
+            setShowActions(false)
+          }}>Edit Board</button>
+          <button className='heading-s' value='delete' onClick={(e) => {
+            setShowDeleteBoardModal(true)
+            setShowActions(false)
+          }}>Delete Board</button>
         </div>
       )}
 

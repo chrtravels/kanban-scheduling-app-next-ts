@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import styles from './boardLayout.module.scss'
 import NewColumn from './newColumn/NewColumn';
 import TaskCards from './taskCard/TaskCards';
@@ -18,14 +18,17 @@ export default function BoardLayout (props: Params) {
   const { boards, UrlBoardName } = props;
 
   const currentBoardName = UrlBoardName.includes('-') ? UrlBoardName.split('-').join(' ') : UrlBoardName;
-  const selectedBoard = boards.filter((board) => {
-    return board.board_name == currentBoardName;
-  })
 
+  const selectedBoard = boards.filter((board) => {
+    return board.board_name == currentBoardName || board.board_name === UrlBoardName;
+  })
+  console.log('url: ', UrlBoardName)
+  console.log(boards)
   const currentBoard = boards.filter((board) => {
     return board.board_name === currentBoardName
   })[0]
-
+  console.log('current board name: ', currentBoardName)
+  console.log('selected board: ', selectedBoard)
   // Get the status options for the drop Edit task component drop down list
   const [statusTypes, setStatusTypes] = useState<StatusTypes>(selectedBoard[0].columns.map((board) => {
     return board.name;
@@ -41,7 +44,7 @@ export default function BoardLayout (props: Params) {
     '#fecc1c',
     '#f98d3e',
   ]
-  // console.log('current board:', currentBoard)
+
   return (
     <div className={styles.container}>
 

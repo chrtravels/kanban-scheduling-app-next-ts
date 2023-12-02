@@ -2,9 +2,10 @@
 
 import styles from './createBoard.module.scss'
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+
 
 
 type Params = {

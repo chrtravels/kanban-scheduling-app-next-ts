@@ -18,13 +18,8 @@ export async function POST(request: Request) {
 
   const boardName = body[0];
   const columns = body[1];
-  console.log('board name: ', boardName)
-  console.log('columns: ', columns)
+
   try {
-    // const query = 'INSERT INTO boards (board_name = $1, status = $2, tasks = $3';
-    // const values = [boardName, statusName, []];
-    // const query = `INSERT INTO boards (board_name, status) VALUES (${boardName}, ${statusName})`;
-    // const query = `INSERT INTO boards (board_name, columns) VALUES ('${boardName}, ${columns}')`;
     const query = `INSERT INTO boards (board_name, columns) VALUES ('${boardName}', '${JSON.stringify(columns)}')`;
     const result = await conn.query(query);
 
@@ -39,10 +34,11 @@ export async function PATCH(request: Request) {
 
   const boardName = body[0];
   const columns = body[1];
+  const id = body[2]
 
   try {
-    const query = 'Update boards SET columns = $1 WHERE board_name = $2';
-    const values = [JSON.stringify(columns), boardName];
+    const query = 'Update boards SET board_name = $1, columns = $2 WHERE id = $3';
+    const values = [boardName, JSON.stringify(columns), id];
     const result = await conn.query(query, values);
 
     return NextResponse.json(result);
