@@ -209,7 +209,7 @@ export default function ViewTask(props: Params) {
 
   if (showEditTask) {
     return (
-      <div className={styles.container}>
+      <div className={styles.overlay}>
         <div className={`card ${styles.editContainer}`}>
           <EditTask boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} statusTypes={statusTypes} setShowTask={setShowTask} />
         </div>
@@ -217,7 +217,7 @@ export default function ViewTask(props: Params) {
     )
   } else {
     return (
-      <div className={styles.container}>
+      <div className={styles.overlay}>
         <div className={`card ${styles.taskContainer}`}>
           <div className={styles.header}>
             {showActionsBox && (
