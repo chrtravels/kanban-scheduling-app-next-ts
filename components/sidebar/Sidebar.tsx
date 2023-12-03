@@ -45,7 +45,7 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
   return (
     <div className={styles.main}>
       {showAddBoardModal && (
-        <CreateBoard setShowAddBoardModal={setShowAddBoardModal} />
+        <CreateBoard setShowAddBoardModal={setShowAddBoardModal} setCurrentBoard={setCurrentBoard} />
       )}
 
       <div className={styles.btnContainer}>
@@ -100,7 +100,7 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
             }
 
             return (
-              <div onClick={() => {
+              <div key={boardName} onClick={() => {
                 setCurrentBoard(boardName)
               }}>
                 <Link

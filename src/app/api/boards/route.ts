@@ -50,15 +50,15 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   const body = await request.json()
 
-  const id = body[0]
-  console.log('id: ', id)
+  const boardName = body[0]
+  console.log('board name: ', boardName)
   try {
-    const query = 'DELETE FROM boards WHERE id = $3';
-    const values = [id];
+    const query = 'DELETE FROM boards WHERE board_name = $1';
+    const values = [boardName];
     const result = await conn.query(query, values);
 
     return NextResponse.json(result);
   } catch (error) {
-    throw new Error('Failed to update task')
+    throw new Error('Failed to delete board')
   }
 }

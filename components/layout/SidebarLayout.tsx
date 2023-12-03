@@ -24,13 +24,13 @@ export default function SidebarLayout({ children,
   const [statusList, setStatusList] = useState([]);
   const [currentBoard, setCurrentBoard] = useState<string>(boardNames[0]);
 
-  useEffect(() => {
+  useMemo(() => {
     if (boardNames.length > 0) {
       if (!currentBoard) setCurrentBoard(boardNames[0]);
     }
   }, [boardNames])
 
-  useMemo(() => {
+  useEffect(() => {
     const fetchData = async () => {
       const res = await fetch('/api/boards');
 
@@ -39,7 +39,7 @@ export default function SidebarLayout({ children,
       return Response.json(data);
     }
     fetchData()
-  }, [boards])
+  }, [currentBoard])
 
 
   useMemo(() => {
@@ -77,6 +77,7 @@ export default function SidebarLayout({ children,
       currentBoard={currentBoard}
       setCurrentBoard={setCurrentBoard}
       statusList={statusList}
+      boards={boards}
       />
 
       <Sidebar

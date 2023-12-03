@@ -9,6 +9,7 @@ import { useSearchParams } from 'next/navigation'
 import styles from './navbar.module.scss'
 import AddTask from '../board/addTask/AddTask';
 import EditBoard from '../board/editBoard/EditBoard';
+import DeleteBoard from '../board/deleteBoard/DeleteBoard';
 
 type Params = {
   sidebarExpanded: boolean,
@@ -16,12 +17,13 @@ type Params = {
   setCurrentBoard: () => string,
   currentBoard: string,
   statusList: string[],
+  boards: [{}]
 }
 
 const Navbar = ( props: Params ) => {
-  const {sidebarExpanded, currentBoard, setCurrentBoard, statusList} = props;
+  const {sidebarExpanded, currentBoard, setCurrentBoard, statusList, boards} = props;
 
-  const { theme, setTheme} = useTheme();
+  const {theme, setTheme} = useTheme();
   const [mounted, setMounted] = useState (false);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   // Shows the ellipsis actions modal
@@ -64,11 +66,11 @@ useEffect(() => {
     <div className={styles.wrapper}>
       {showActions && (
         <div className={`actions-container ${styles.actionsContainer}`}>
-          <button className='heading-s' value='edit' onClick={(e) => {
+          <button className='heading-s' value='edit' onClick={() => {
             setShowEditBoardModal(true)
             setShowActions(false)
           }}>Edit Board</button>
-          <button className='heading-s' value='delete' onClick={(e) => {
+          <button className='heading-s' value='delete' onClick={() => {
             setShowDeleteBoardModal(true)
             setShowActions(false)
           }}>Delete Board</button>
@@ -83,9 +85,11 @@ useEffect(() => {
       )}
 
       {showDeleteBoardModal && (
-        <EditBoard
-        setShowEditBoardModal={setShowEditBoardModal}
+        <DeleteBoard
+        setShowDeleteBoardModal={setShowDeleteBoardModal}
         currentBoard={currentBoard}
+        setCurrentBoard={setCurrentBoard}
+        boards={boards}
         />
       )}
 

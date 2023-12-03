@@ -154,7 +154,7 @@ export default function AddTask(props: Params) {
 
               {subtasks.map((subtask, index) => {
                 return (
-                  <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
+                  <div key={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
                     <input
                       type='text'
                       id='subtasks'

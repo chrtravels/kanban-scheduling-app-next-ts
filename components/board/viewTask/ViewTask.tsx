@@ -49,7 +49,6 @@ export default function ViewTask(props: Params) {
     }
     fetchData()
   }, [])
-  // console.log('board: ', board)
 
   type TaskState = {
     title: string,
@@ -139,7 +138,6 @@ export default function ViewTask(props: Params) {
             if (column.name === boardStatus) {
               const tempColumn = Object.assign({}, column);
               tempColumn.tasks = updatedTasks;
-              console.log('updated: ', updatedTasks)
               return tempColumn;
             } else return column;
           })
@@ -172,7 +170,6 @@ export default function ViewTask(props: Params) {
       }
 
       const updatedColumns = board.columns;
-      console.log(board.columns)
 
       const options = {
         method: 'PATCH',
@@ -208,7 +205,7 @@ export default function ViewTask(props: Params) {
   useMemo(() => {
     handleUpdateTask(taskState.subtasks, taskId)
   }, [taskState])
-  console.log('board: ', board)
+
 
   if (showEditTask) {
     return (

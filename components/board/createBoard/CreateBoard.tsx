@@ -10,6 +10,7 @@ import Image from 'next/image';
 
 type Params = {
   setShowAddBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
+  setCurrentBoard: React.Dispatch<React.SetStateAction<string>>
 }
 
 type Board = {
@@ -24,7 +25,7 @@ type Subtasks = [{
 
 
 export default function CreateBoard(props: Params) {
-  const { setShowAddBoardModal } = props;
+  const { setShowAddBoardModal, setCurrentBoard } = props;
 
   const [newBoard, setNewBoard] = useState({
     name: '',
@@ -83,6 +84,7 @@ export default function CreateBoard(props: Params) {
         } catch (error) {
           throw new Error('Error updating task')
         }
+      setCurrentBoard(boardName);
       setShowAddBoardModal(false);
       router.push(`/${boardName.split(' ').join('-')}`);
     }
@@ -121,7 +123,7 @@ export default function CreateBoard(props: Params) {
 
               {columnNames.map((name, index) => {
                 return (
-                  <div id={name} className={styles.statusRow}>
+                  <div key={name} className={styles.statusRow}>
                     <input
                       type='text'
                       id='columnNames'
