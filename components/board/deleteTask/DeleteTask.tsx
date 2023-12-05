@@ -8,6 +8,8 @@ export default function DeleteTask(props) {
   const { boardName, columnName, taskId, setShowDeleteTask, setShowTask } = props;
 
   const [boards, setBoards] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState({});
 
   const router = useRouter();
@@ -18,42 +20,51 @@ export default function DeleteTask(props) {
 
       const data = await res.json();
       setBoards(data);
+
+      data.forEach((board) => {
+        if (boardName == board.board_name) {
+          setColumns(board.columns);
+
+         board.columns.map((column) => {
+            if (columnName === column.name) {
+              setTasks([...column.tasks])
+              setCurrentTask(column.tasks[taskId]);
+            }
+          })
+        }
+      })
+
       return Response.json(data);
     }
     fetchData()
   }, [])
 
-  useEffect(() => {
-    setCurrentTask(boards.filter((board) => {
-      if (boardName == board.board_name) {
+  // Deleting a task is removing it from the board row, so we use PATCH
+  async function handleRemoveTask(e) {
+    e.preventDefault();
 
-        board.columns.map((column) => {
-          if (columnName === column.name) {
-            return column.tasks[taskId];
-          }
-        })
+    const tempTasks = [...tasks]
+    tempTasks.splice(taskId, 1);
 
+    const tempColumns = [...columns];
+
+    tempColumns.forEach((column) => {
+      if (columnName === column.name) {
+        column.tasks = [...tempTasks];
       }
-    }))
-  }, [boards])
-  console.log('board name: ', boardName)
-  console.log('boards: ', boards)
-  console.log('current: ', currentTask)
+    })
 
-  // Deleting a task is actually removing it from the board row, so it's a PATCH
-  async function handleRemoveTask() {
     const options = {
-      method: 'PATCH', // PATCH
+      method: 'PATCH',
       header: {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([boardName])
+      body: JSON.stringify([boardName, tempColumns])
     }
 
     try {
       const res = await fetch('/api/task', options);
-      const data = res.json();
 
       if (res.ok) {
         setShowDeleteTask(false);
@@ -73,7 +84,7 @@ export default function DeleteTask(props) {
         <p className='body-m'>Are you sure you want to delete the '{currentTask.name}' task and it's subtasks? This action cannot be reversed.</p>
 
         <div className={styles.btnContainer}>
-          <button className='btn-small btn-destructive' onClick={handleRemoveTask}>Delete</button>
+          <button className='btn-small btn-destructive' onClick={(e) => handleRemoveTask(e)}>Delete</button>
 
           <button className='btn-small btn-secondary' onClick={() => setShowDeleteTask(false)}>Cancel</button>
         </div>

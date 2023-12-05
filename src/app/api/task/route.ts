@@ -16,10 +16,8 @@ export async function GET(request: Request) {
   }
 }
 
-// Updates existing database entry with a specific id
 export async function PATCH(request: Request) {
   const body = await request.json()
-  console.log('body: ', body)
   const boardName = body[0];
   const updatedColumns = body[1];
 
