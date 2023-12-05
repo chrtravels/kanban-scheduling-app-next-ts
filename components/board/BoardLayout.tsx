@@ -68,7 +68,7 @@ useEffect(() => {
   return (
     <div className={styles.container}>
       {showDeleteTask &&
-        <DeleteTask boardName={currentBoardName} columnName={columnStatus} taskId={clickedId} showDeleteTask={showDeleteTask} setShowDeleteTask={setShowDeleteTask} />
+        <DeleteTask boardName={currentBoardName} columnName={columnStatus} taskId={clickedId} setShowDeleteTask={setShowDeleteTask} />
       }
 
      {selectedBoard[0].columns.map((column, idx) => {

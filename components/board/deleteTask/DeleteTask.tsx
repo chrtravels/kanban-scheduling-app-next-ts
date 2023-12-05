@@ -5,9 +5,8 @@ import { useRouter } from 'next/navigation';
 
 
 export default function DeleteTask(props) {
-  const { boardName, columnName, taskId, setShowDeleteTask, setShowTask } = props;
+  const { boardName, columnName, taskId, setShowDeleteTask } = props;
 
-  const [boards, setBoards] = useState([]);
   const [columns, setColumns] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState({});
