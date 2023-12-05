@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './boardLayout.module.scss'
 import NewColumn from './newColumn/NewColumn';
 import TaskCards from './taskCard/TaskCards';
+import DeleteTask from './deleteTask/DeleteTask';
 
 type Params = {
   boards: {[key: string]: [
@@ -17,6 +18,10 @@ type StatusTypes = string[]
 
 export default function BoardLayout (props: Params) {
   const { boards, UrlBoardName } = props;
+
+  const [showDeleteTask, setShowDeleteTask] = useState(false);
+  const [columnStatus, setColumnStatus] = useState('');
+  const [clickedId, setClickedId] = useState(0);
 
   const router = useRouter();
 
@@ -51,8 +56,20 @@ export default function BoardLayout (props: Params) {
     '#f98d3e',
   ]
 
+  // Removes scrollbar when modal open
+useEffect(() => {
+  if (showDeleteTask) {
+    document.body.classList.add("overflow-y-hidden")
+  } else {
+    document.body.classList.remove("overflow-y-hidden")
+  }
+}, [showDeleteTask])
+
   return (
     <div className={styles.container}>
+      {showDeleteTask &&
+        <DeleteTask boardName={currentBoardName} boardStatus={columnStatus} taskId={clickedId} showDeleteTask={showDeleteTask} setShowDeleteTask={setShowDeleteTask} />
+      }
 
      {selectedBoard[0].columns.map((column, idx) => {
         return (
@@ -66,7 +83,7 @@ export default function BoardLayout (props: Params) {
 
             <div className={styles.columnBody}>
               <div key={`${column.status}-${idx}`}>
-                <TaskCards boardName={currentBoardName} boardStatus={column.name} tasks={column.tasks} statusTypes={statusTypes} />
+                <TaskCards boardName={currentBoardName} boardStatus={column.name} tasks={column.tasks} statusTypes={statusTypes} setColumnStatus={setColumnStatus} clickedId={clickedId} setClickedId={setClickedId} setShowDeleteTask={setShowDeleteTask} />
               </div>
 
             </div>

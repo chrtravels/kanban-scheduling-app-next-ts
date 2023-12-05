@@ -8,7 +8,6 @@ import DropdownList from '../../dropownList/DropdownList';
 import EditTask from '../editTask/EditTask';
 
 
-
 type Params = {
   boardName: string,
   boardStatus: string,
@@ -27,10 +26,11 @@ type Params = {
   },
   statusTypes: string[],
   setShowTask: React.Dispatch<React.SetStateAction<boolean>>,
+  setShowDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export default function ViewTask(props: Params) {
-  const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask } = props;
+  const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask, setShowDeleteTask } = props;
 
   const [board, setBoard] = useState({})
   const [selectedOption, setSelectedOption] = useState(task.status);
@@ -193,19 +193,16 @@ export default function ViewTask(props: Params) {
       }
 
     }
-
-
   }
 
-  function handleDeleteTask(e: React.MouseEvent<HTMLButtonElement>) {
+  // function handleDeleteTask(e: React.MouseEvent<HTMLButtonElement>) {
 
-  }
+  // }
 
   // Used to update the task on the database when the status changes
   useMemo(() => {
     handleUpdateTask(taskState.subtasks, taskId)
   }, [taskState])
-
 
   if (showEditTask) {
     return (
@@ -223,8 +220,11 @@ export default function ViewTask(props: Params) {
             {showActionsBox && (
               <div className={`actions-container ${styles.actionsContainer}`}>
                 <button className='heading-s' value='edit' onClick={(e) => handleEditTask(e)}>Edit Task</button>
-                <button className='heading-s' value='delete' onClick={(e) => handleDeleteTask(e)}>Delete Task</button>
-                <button className='heading-s' value='cancel' onClick={(e) => props.setShowTask(false)}>Cancel</button>
+                <button className='heading-s' value='delete' onClick={() => {
+                  setShowTask(false);
+                  setShowDeleteTask(true);
+                }}>Delete Task</button>
+                <button className='heading-s' value='cancel' onClick={() => setShowTask(false)}>Cancel</button>
               </div>
             )}
 
