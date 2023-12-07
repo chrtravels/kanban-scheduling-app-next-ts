@@ -15,29 +15,22 @@ export default function DeleteTask(props) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const res = await fetch('/api/boards');
-
+      const res = await fetch(`/api/task?boardName=${boardName}&boardStatus=${columnName}`);
       const data = await res.json();
-      setBoards(data);
 
-      data.forEach((board) => {
-        if (boardName == board.board_name) {
-          setColumns(board.columns);
+      setColumns(data[0].columns)
 
-         board.columns.map((column) => {
-            if (columnName === column.name) {
-              setTasks([...column.tasks])
-              setCurrentTask(column.tasks[taskId]);
-            }
-          })
+      data[0].columns.forEach((column) => {
+        if (columnName === column.name) {
+          setTasks([...column.tasks])
+          setCurrentTask(column.tasks[taskId]);
         }
       })
-
       return Response.json(data);
     }
     fetchData()
   }, [])
-
+  console.log(columns)
   // Deleting a task is removing it from the board row, so we use PATCH
   async function handleRemoveTask(e) {
     e.preventDefault();

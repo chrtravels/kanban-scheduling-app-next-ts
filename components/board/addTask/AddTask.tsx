@@ -63,9 +63,7 @@ export default function AddTask(props: Params) {
     }
     fetchData()
   }, [selectedOption])
-  console.log('row: ', rowToUpdate)
-  console.log('option: ', selectedOption)
-  console.log('current board: ', currentBoard)
+
   function handleAddTask (e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
     setSubtasks([...newTask.subtasks, {'title': '', 'isCompleted': false}]);
