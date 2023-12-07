@@ -78,7 +78,9 @@ export default function AddTask(props: Params) {
   }
 
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     const { columns } = rowToUpdate[0];
 
     const updatedColumns = [...columns];
@@ -108,6 +110,7 @@ export default function AddTask(props: Params) {
 
       if (res.ok) {
         router.refresh();
+        setShowAddTaskModal(false);
       }
     } catch (error) {
       throw new Error('Error updating task')
@@ -222,7 +225,7 @@ export default function AddTask(props: Params) {
             </div>
 
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={handleSubmit}>Create Task</button>
+              <button className='btn-small btn-primary' onClick={(e) => handleSubmit(e)}>Create Task</button>
             </div>
           </form>
         </div>
