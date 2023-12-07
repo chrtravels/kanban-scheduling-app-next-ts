@@ -63,8 +63,9 @@ export default function AddTask(props: Params) {
     }
     fetchData()
   }, [selectedOption])
-
-
+  console.log('row: ', rowToUpdate)
+  console.log('option: ', selectedOption)
+  console.log('current board: ', currentBoard)
   function handleAddTask (e: React.MouseEvent<HTMLDivElement>) {
     e.preventDefault();
     setSubtasks([...newTask.subtasks, {'title': '', 'isCompleted': false}]);
@@ -78,14 +79,19 @@ export default function AddTask(props: Params) {
 
 
   const handleSubmit = async () => {
-    const {id, status, tasks} = rowToUpdate[0];
+    const { columns } = rowToUpdate[0];
 
-    const updatedTasks = [...tasks];
-    updatedTasks.push(newTask);
+    const updatedColumns = [...columns];
+    // updatedTasks.push(newTask);
 
-    const databaseId = id;
-    const boardStatus = status;
+    updatedColumns.map((column) => {
+      if (selectedOption === column.name) {
+        column.tasks.push(newTask);
+        return column;
+      } else return column;
+    })
 
+    console.log('updated columns: ', updatedColumns)
 
     const options = {
       method: 'PATCH',
@@ -93,7 +99,7 @@ export default function AddTask(props: Params) {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
+      body: JSON.stringify([currentBoard, updatedColumns])
     }
 
     try {
