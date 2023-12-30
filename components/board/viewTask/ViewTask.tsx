@@ -32,7 +32,8 @@ type Params = {
 export default function ViewTask(props: Params) {
   const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask, setShowDeleteTask } = props;
 
-  const [board, setBoard] = useState({})
+  const [board, setBoard] = useState({});
+  const [columns, setColumns] = useState([]);
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
   const [showActionsBox, setShowActionsBox] = useState(false);
@@ -45,6 +46,7 @@ export default function ViewTask(props: Params) {
       const res = await fetch(`/api/task?boardName=${boardName}`);
       const data = await res.json();
       setBoard(data[0]);
+      setColumns(data[0].columns);
       return Response.json(data);
     }
     fetchData()
@@ -66,6 +68,7 @@ export default function ViewTask(props: Params) {
 
   type TasksCompleted = () => number;
 
+  // Calculates the # of tasks completed for the subtasks header
   const tasksCompleted: TasksCompleted = () => {
     let numCompleted= 0;
 
@@ -78,131 +81,192 @@ export default function ViewTask(props: Params) {
     return numCompleted;
   }
 
-  // Setup array to contain the state of the check boxes
+  // Setup array to contain the boolean checked state of the check boxes
   const [subtasksChecked, setSubtasksChecked] = useState(
     subtasks.map((subtask) => {
       return subtask.isCompleted
     })
   );
 
-  function handleSelected (e, position: number) {
+  useEffect(() => {
     // Handle the checkbox state changes
-      const updatedSubtasksChecked = subtasksChecked.map((checked, index) => {
-        return index === position ? !checked : checked
-      });
-      setSubtasksChecked(updatedSubtasksChecked);
-  }
+    setSubtasksChecked(() => {
+      const checkedSubtasks = subtasks.map((subtask) => {
+        return subtask.isCompleted;
+      })
+      return [...checkedSubtasks];
+    })
+  }, [subtasks])
 
-  function handleChange (e, position: number) {
-    const subTasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
+  function handleSelected (e, position) {
+    e.preventDefault();
 
-    subTasksCopy[position] = subtasks[position].isCompleted ?
+
+    const subtasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
+
+    subtasksCopy[position] = subtasks[position].isCompleted ?
     {'title': subtasks[position].title, 'isCompleted': false} :
     {'title': subtasks[position].title, 'isCompleted': true}
     // Update subTasks completed status
-    setSubtasks(subTasksCopy)
-
+    setSubtasks([...subtasksCopy])
     setTaskState((taskState) => ({
-      ...taskState, 'subtasks': subTasksCopy
+      ...taskState, 'subtasks': subtasksCopy
     }))
-    // Updates the task on the database when the task is marked completed
-    handleUpdateTask(subTasksCopy, position)
   }
 
+  async function handleUpdateTask () {
+    // Updates the task on the database when the task is marked completed
+    // handleUpdateTask(subTasksCopy, position)
+    const updatedTasks: [{}] = [...tasks];
+    const clonedTask = Object.assign({}, taskState);
+    const updatedColumns = [...columns];
+    // console.log('cloned task: ', clonedTask)
+    // console.log('updated columns: ', updatedColumns)
+
+    // if (boardStatus === taskState.status || taskState.status === '') {
+    //   // Checks if the task status has been changed to see if we should switch columns
+    //   // console.log('tasks exists? ', taskExistsInColumn)
+    //   updatedTasks[taskId] = clonedTask;
+
+    //   updatedColumns.forEach((column) => {
+    //   if (boardStatus === column.name) {
+    //     column.tasks = [...updatedTasks];
+    //     return column;
+    //   } else return column;
+    //   setColumns([...updatedColumns]);
+    // })
+    // } else {
+    //   // const taskExistsInColumn = updatedTasks.map((task) => {
+    //   //   if (task.title === taskState.title)
+    //   //   return true;
+    //   // })
+
+    //   updatedColumns.map((column) => {
+    //     if (column.name === boardStatus) {
+    //       return column.tasks.splice(taskId,1)
+    //     } else if (column.name === taskState.status) {
+    //       return column.tasks.push(clonedTask);
+    //     } else return column;
+    //   })
+    //   setColumns([...updatedColumns]);
+    // }
+    // console.log('task state: ', taskState)
+    // console.log('updated columns: ', updatedColumns)
+
+    // const options = {
+    //   method: 'PATCH',
+    //   header: {
+    //     'Accept': 'application/json',
+    //     'Content-type': 'application/json',
+    //   },
+    //   body: JSON.stringify([boardName, updatedColumns])
+    // }
+
+    // try {
+    //   const res = await fetch('/api/task', options);
+    //   const data = res.json();
+
+    //   if (res.ok) {
+    //     // setShowTask(false);
+    //     router.refresh();
+    //   }
+    // } catch (error) {
+    //   throw new Error('Error updating task')
+    // }
+
+  }
+
+
+  // const handleUpdateTask = async (subtasks: [{title: string, isCompleted: boolean}], position: number) => {
+  //   const updatedTasks: [{}] = [...tasks];
+  //   // const clonedTaskState = Object.assign({}, taskState);
+  //   // clonedTaskState.subtasks = subtasks
+
+  //   if (Object.keys(board).length > 0) {
+  //     if (boardStatus === taskState.status || taskState.status === '') {
+
+  //       const taskExistsInColumn = updatedTasks.map((task) => {
+  //         if (task.title === taskState.title)
+  //         return true;
+  //       })
+  //       // updates tasks in column
+  //       if (!taskExistsInColumn) updatedTasks[taskId] = clonedTaskState;
+
+  //        // update if same status, otherwise remove from old status and add to new
+  //       setBoard({
+  //         id: board.id,
+  //         board_name: board.board_name,
+  //         columns: board.columns.map((column) => {
+  //           if (column.name === boardStatus) {
+  //             const tempColumn = Object.assign({}, column);
+  //             tempColumn.tasks = updatedTasks;
+  //             return tempColumn;
+  //           } else return column;
+  //         })
+  //       })
+
+  //     } else {
+  //       // Remove task from previous status column and add it to the column with the new status
+  //       setBoard({
+  //         id: board.id,
+  //         board_name: board.board_name,
+  //         columns: board.columns.map((column) => {
+  //           if (column.name === boardStatus) {
+  //             const tempColumn = Object.assign({}, column);
+  //             tempColumn.tasks.splice(position,1)
+  //             return tempColumn;
+
+  //           } else if (column.name === taskState.status) {
+  //             const tempColumn = Object.assign({}, column);
+  //             const taskExistsInColumn = tempColumn.tasks.map((task) => {
+  //               if (task.title === taskState.title)
+  //               return true;
+  //             })
+
+  //             if (!taskExistsInColumn[0]) tempColumn.tasks.push(taskState)
+  //             return tempColumn
+
+  //           } else return column;
+  //         })
+  //       })
+  //     }
+
+  //     const updatedColumns = board.columns;
+
+  //     const options = {
+  //       method: 'PATCH',
+  //       header: {
+  //         'Accept': 'application/json',
+  //         'Content-type': 'application/json',
+  //       },
+  //       body: JSON.stringify([boardName, updatedColumns])
+  //     }
+
+  //     try {
+  //       const res = await fetch('/api/task', options);
+  //       const data = res.json();
+
+  //       if (res.ok) {
+  //         setShowTask(false);
+  //         router.refresh();
+  //       }
+  //     } catch (error) {
+  //       throw new Error('Error updating task')
+  //     }
+
+  //   }
+  // }
 
   function handleEditTask (e: React.MouseEvent<HTMLButtonElement>) {
     setShowActionsBox(false);
     setShowEditTask(true);
   }
 
-  const handleUpdateTask = async (subtasks: [{title: string, isCompleted: boolean}], position: number) => {
-    const updatedTasks: [{}] = [...tasks];
-    const clonedTaskState = Object.assign({}, taskState);
-    clonedTaskState.subtasks = subtasks
-
-    if (Object.keys(board).length > 0) {
-      if (boardStatus === taskState.status || taskState.status === '') {
-
-        const taskExistsInColumn = updatedTasks.map((task) => {
-          if (task.title === taskState.title)
-          return true;
-        })
-        // updates tasks in column
-        if (!taskExistsInColumn) updatedTasks[taskId] = clonedTaskState;
-
-         // update if same status, otherwise remove from old status and add to new
-        setBoard({
-          id: board.id,
-          board_name: board.board_name,
-          columns: board.columns.map((column) => {
-            if (column.name === boardStatus) {
-              const tempColumn = Object.assign({}, column);
-              tempColumn.tasks = updatedTasks;
-              return tempColumn;
-            } else return column;
-          })
-        })
-
-      } else {
-        // Remove task from previous status column and add it to the column with the new status
-        setBoard({
-          id: board.id,
-          board_name: board.board_name,
-          columns: board.columns.map((column) => {
-            if (column.name === boardStatus) {
-              const tempColumn = Object.assign({}, column);
-              tempColumn.tasks.splice(position,1)
-              return tempColumn;
-
-            } else if (column.name === taskState.status) {
-              const tempColumn = Object.assign({}, column);
-              const taskExistsInColumn = tempColumn.tasks.map((task) => {
-                if (task.title === taskState.title)
-                return true;
-              })
-
-              if (!taskExistsInColumn[0]) tempColumn.tasks.push(taskState)
-              return tempColumn
-
-            } else return column;
-          })
-        })
-      }
-
-      const updatedColumns = board.columns;
-
-      const options = {
-        method: 'PATCH',
-        header: {
-          'Accept': 'application/json',
-          'Content-type': 'application/json',
-        },
-        body: JSON.stringify([boardName, updatedColumns])
-      }
-
-      try {
-        const res = await fetch('/api/task', options);
-        const data = res.json();
-
-        if (res.ok) {
-          setShowTask(false);
-          router.refresh();
-        }
-      } catch (error) {
-        throw new Error('Error updating task')
-      }
-
-    }
-  }
-
-  // function handleDeleteTask(e: React.MouseEvent<HTMLButtonElement>) {
-
-  // }
 
   // Used to update the task on the database when the status changes
   useMemo(() => {
-    handleUpdateTask(taskState.subtasks, taskId)
-  }, [taskState])
+    handleUpdateTask()
+  }, [taskState, subtasks])
 
   if (showEditTask) {
     return (
@@ -252,10 +316,7 @@ export default function ViewTask(props: Params) {
                   type='checkbox'
                   value='status'
                   checked={subtasksChecked[idx]}
-                  onChange={(e) => {
-                    handleSelected(e, idx)
-                    handleChange(e, idx)
-                  }}
+                  onChange={(e) => handleSelected(e, idx)}
                   />
                   <span className={subtasksChecked[idx] ? styles.completedSubtask : ''}>{subtask.title}</span>
                   </div>
