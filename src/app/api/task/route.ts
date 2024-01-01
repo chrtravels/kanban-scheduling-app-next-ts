@@ -1,6 +1,5 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import conn from '../../../../lib/db';
-import { NextRequest } from 'next/server.js';
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -28,6 +27,7 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
+    console.log(error)
     throw new Error('Failed to update tasks')
   }
 }

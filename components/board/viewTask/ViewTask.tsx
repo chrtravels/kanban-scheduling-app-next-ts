@@ -101,7 +101,6 @@ export default function ViewTask(props: Params) {
   function handleSelected (e, position) {
     e.preventDefault();
 
-
     const subtasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
 
     subtasksCopy[position] = subtasks[position].isCompleted ?
@@ -116,63 +115,52 @@ export default function ViewTask(props: Params) {
 
   async function handleUpdateTask () {
     // Updates the task on the database when the task is marked completed
-    // handleUpdateTask(subTasksCopy, position)
     const updatedTasks: [{}] = [...tasks];
     const clonedTask = Object.assign({}, taskState);
     const updatedColumns = [...columns];
-    // console.log('cloned task: ', clonedTask)
-    // console.log('updated columns: ', updatedColumns)
 
-    // if (boardStatus === taskState.status || taskState.status === '') {
-    //   // Checks if the task status has been changed to see if we should switch columns
-    //   // console.log('tasks exists? ', taskExistsInColumn)
-    //   updatedTasks[taskId] = clonedTask;
+    if (boardStatus === taskState.status || taskState.status === '') {
+      // Checks if the task status has been changed to see if we should switch columns
+      updatedTasks[taskId] = clonedTask;
 
-    //   updatedColumns.forEach((column) => {
-    //   if (boardStatus === column.name) {
-    //     column.tasks = [...updatedTasks];
-    //     return column;
-    //   } else return column;
-    //   setColumns([...updatedColumns]);
-    // })
-    // } else {
-    //   // const taskExistsInColumn = updatedTasks.map((task) => {
-    //   //   if (task.title === taskState.title)
-    //   //   return true;
-    //   // })
+      updatedColumns.forEach((column) => {
+      if (boardStatus === column.name) {
+        column.tasks = [...updatedTasks];
+        return column;
+      } else return column;
+      setColumns([...updatedColumns]);
+    })
+    } else {
+      updatedColumns.forEach((column) => {
+        if (column.name === boardStatus) {
+          column.tasks.splice(taskId,1)
+        } else if (column.name === taskState.status) {
+          column.tasks.push(clonedTask);
+        }
+      })
+      setColumns([...updatedColumns]);
+    }
+    console.log('task state: ', taskState)
+    console.log('updated columns: ', updatedColumns)
 
-    //   updatedColumns.map((column) => {
-    //     if (column.name === boardStatus) {
-    //       return column.tasks.splice(taskId,1)
-    //     } else if (column.name === taskState.status) {
-    //       return column.tasks.push(clonedTask);
-    //     } else return column;
-    //   })
-    //   setColumns([...updatedColumns]);
-    // }
-    // console.log('task state: ', taskState)
-    // console.log('updated columns: ', updatedColumns)
+    const options = {
+      method: 'PATCH',
+      header: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify([boardName, updatedColumns])
+    }
 
-    // const options = {
-    //   method: 'PATCH',
-    //   header: {
-    //     'Accept': 'application/json',
-    //     'Content-type': 'application/json',
-    //   },
-    //   body: JSON.stringify([boardName, updatedColumns])
-    // }
+    try {
+      const res = await fetch('/api/task', options);
 
-    // try {
-    //   const res = await fetch('/api/task', options);
-    //   const data = res.json();
-
-    //   if (res.ok) {
-    //     // setShowTask(false);
-    //     router.refresh();
-    //   }
-    // } catch (error) {
-    //   throw new Error('Error updating task')
-    // }
+      if (res.ok) {
+        router.refresh();
+      }
+    } catch (error) {
+      throw new Error('Error updating task')
+    }
 
   }
 
@@ -262,12 +250,6 @@ export default function ViewTask(props: Params) {
     setShowEditTask(true);
   }
 
-
-  // Used to update the task on the database when the status changes
-  useMemo(() => {
-    handleUpdateTask()
-  }, [taskState, subtasks])
-
   if (showEditTask) {
     return (
       <div className={styles.overlay}>
@@ -293,7 +275,10 @@ export default function ViewTask(props: Params) {
             )}
 
             <h3>{task.title}</h3>
-            <div className={styles.actionsButton} onClick={() => setShowActionsBox(!showActionsBox)}>
+            <div className={styles.actionsButton} onClick={() => {
+              handleUpdateTask ()
+              setShowActionsBox(!showActionsBox)}
+            }>
               <Image
               src='/assets/icon-vertical-ellipsis.svg'
               height={20}
@@ -309,7 +294,7 @@ export default function ViewTask(props: Params) {
           <div className={styles.subtasks}>
             {task.subtasks.map((subtask, idx) => {
               return (
-                <div className={`subtask body-l ${styles.subtask}`}>
+                <div key={subtask.title} className={`subtask body-l ${styles.subtask}`}>
                   <input
                   className='checkbox'
                   id={subtask.title}
