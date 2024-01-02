@@ -140,8 +140,6 @@ export default function ViewTask(props: Params) {
       })
       setColumns([...updatedColumns]);
     }
-    console.log('task state: ', taskState)
-    console.log('updated columns: ', updatedColumns)
 
     const options = {
       method: 'PATCH',
@@ -173,7 +171,7 @@ export default function ViewTask(props: Params) {
     return (
       <div className={styles.overlay}>
         <div className={`card ${styles.editContainer}`}>
-          <EditTask boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} statusTypes={statusTypes} setShowTask={setShowTask} />
+          <EditTask boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} columns={columns} setColumns={setColumns} statusTypes={statusTypes} setShowTask={setShowTask} />
         </div>
       </div>
     )
