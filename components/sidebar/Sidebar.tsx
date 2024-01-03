@@ -20,7 +20,7 @@ type Props = {
 
 export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard}: Props) {
   const { theme, setTheme} = useTheme();
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(true);
   const [mounted, setMounted] = useState(false)
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
   const [showAddBoardModal, setShowAddBoardModal] = useState(false);

@@ -18,7 +18,7 @@ export default function SidebarLayout({ children,
 }: {
   children: React.ReactNode
 }) {
-  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(false);
+  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(true);
   const [boards, setBoards] = useState([]);
   const [boardNames, setBoardNames] = useState<StringArray>([]);
   const [statusList, setStatusList] = useState([]);
