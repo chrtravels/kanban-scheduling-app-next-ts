@@ -27,19 +27,6 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json(result);
   } catch (error) {
-    console.log(error)
     throw new Error('Failed to update tasks')
   }
 }
-
-// export async function DELETE(request: Request) {
-//   try {
-//     const query = 'DELETE * FROM boards'
-//     const result = await conn.query(
-//       query
-//     )
-//     return NextResponse.json(result.rows);
-//   } catch (error) {
-//     throw new Error('Failed to fetch data')
-//   }
-// }
