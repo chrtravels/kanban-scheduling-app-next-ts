@@ -82,7 +82,6 @@ export default function AddTask(props: Params) {
     const { columns } = rowToUpdate[0];
 
     const updatedColumns = [...columns];
-    // updatedTasks.push(newTask);
 
     updatedColumns.map((column) => {
       if (selectedOption === column.name) {
