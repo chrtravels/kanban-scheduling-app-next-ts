@@ -31,12 +31,17 @@ export default function SidebarLayout({ children,
   }, [boardNames])
 
   useEffect(() => {
+    const controller = new AbortController;
+
     const fetchData = async () => {
-      const res = await fetch('/api/boards');
+      const res = await fetch('/api/boards', {
+        signal: controller.signal
+      });
 
       const data = await res.json();
       setBoards(data);
-      return Response.json(data);
+
+      return () => controller.abort();
     }
     fetchData()
   }, [currentBoard])

@@ -41,6 +41,8 @@ export default function ViewTask(props: Params) {
   const router = useRouter();
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchData = async () => {
       const res = await fetch(`/api/task?boardName=${boardName}`);
       const data = await res.json();
