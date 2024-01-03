@@ -32,7 +32,6 @@ type Params = {
 export default function ViewTask(props: Params) {
   const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask, setShowDeleteTask } = props;
 
-  const [board, setBoard] = useState({});
   const [columns, setColumns] = useState([]);
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
@@ -45,7 +44,6 @@ export default function ViewTask(props: Params) {
     const fetchData = async () => {
       const res = await fetch(`/api/task?boardName=${boardName}`);
       const data = await res.json();
-      setBoard(data[0]);
       setColumns(data[0].columns);
       return Response.json(data);
     }
