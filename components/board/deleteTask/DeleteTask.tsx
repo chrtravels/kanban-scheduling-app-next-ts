@@ -30,7 +30,7 @@ export default function DeleteTask(props) {
     }
     fetchData()
   }, [])
-  console.log(columns)
+
   // Deleting a task is removing it from the board row, so we use PATCH
   async function handleRemoveTask(e) {
     e.preventDefault();
