@@ -49,7 +49,6 @@ export default function EditTask(props: Params) {
 
   const [selectedOption, setSelectedOption] = useState(currentTask.status);
   const [subtasks, setSubtasks] = useState<Subtasks>(currentTask.subtasks);
-  // const [newSubtask, setNewSubtask] = useState(false)
 
   const router = useRouter();
 
@@ -121,7 +120,6 @@ export default function EditTask(props: Params) {
         router.refresh();
       }
     } catch (error) {
-      console.log('error: ', error)
       throw new Error('Error updating task')
     }
   }
