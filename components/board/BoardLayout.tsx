@@ -9,12 +9,23 @@ import DeleteTask from './deleteTask/DeleteTask';
 
 type Params = {
   boards: {[key: string]: [
-    {db_id: number, status: 'string', tasks: []}
+    {id: number, board_name: string, columns: [{}]}
   ]},
   UrlBoardName: string,
 }
 
+type Board = {
+  id: number,
+  board_name: string,
+  columns: [{}]
+}
+
 type StatusTypes = string[]
+
+type Column = {
+  name: string,
+  tasks: [{}]
+}
 
 export default function BoardLayout (props: Params) {
   const { boards, UrlBoardName } = props;
@@ -22,13 +33,14 @@ export default function BoardLayout (props: Params) {
   const [showDeleteTask, setShowDeleteTask] = useState(false);
   const [columnStatus, setColumnStatus] = useState('');
   const [clickedId, setClickedId] = useState(0);
+  console.log('boards: ', boards[0])
 
   const router = useRouter();
 
   const currentBoardName = UrlBoardName.includes('-') ? UrlBoardName.split('-').join(' ') : UrlBoardName;
 
   //return the board in the URL
-  const tempBoard = boards.filter((board) => {
+  const tempBoard = (boards as any).filter((board: Board) => {
     return board.board_name == currentBoardName || board.board_name === UrlBoardName;
   })
   // redirect back to the first board if the board in the URL does not exist
@@ -36,16 +48,16 @@ export default function BoardLayout (props: Params) {
 
   const selectedBoard = tempBoard.length > 0 ? [...tempBoard] : [boards[0]];
 
-  const currentBoard = boards.filter((board) => {
+  const currentBoard = (boards as any).filter((board: Board) => {
     return board.board_name === currentBoardName
   })[0]
 
   // Get the status options for the drop Edit task component drop down list
-  const [statusTypes, setStatusTypes] = useState<StatusTypes>(selectedBoard[0].columns.map((board) => {
-    return board.name;
+  const [statusTypes, setStatusTypes] = useState<StatusTypes>(selectedBoard[0].columns.map((column: Column) => {
+    return column.name;
   }));
 
-
+  console.log('selected board 0: ', selectedBoard[0])
   const bulletColorArray = [
     '#49c4e5',
     '#8471f2',
@@ -71,7 +83,7 @@ useEffect(() => {
         <DeleteTask boardName={currentBoardName} columnName={columnStatus} taskId={clickedId} setShowDeleteTask={setShowDeleteTask} />
       }
 
-     {selectedBoard[0].columns.map((column, idx) => {
+     {selectedBoard[0].columns.map((column: Column, idx: number) => {
         return (
           <div key={column.name} className={styles.column}>
             <div className={styles.columnHeader}>
@@ -82,7 +94,7 @@ useEffect(() => {
             </div>
 
             <div className={styles.columnBody}>
-              <div key={`${column.status}-${idx}`}>
+              <div key={`${column.name}-${idx}`}>
                 <TaskCards boardName={currentBoardName} boardStatus={column.name} tasks={column.tasks} statusTypes={statusTypes} setColumnStatus={setColumnStatus} clickedId={clickedId} setClickedId={setClickedId} setShowDeleteTask={setShowDeleteTask} />
               </div>
 

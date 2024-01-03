@@ -96,7 +96,7 @@ export default function ViewTask(props: Params) {
     })
   }, [subtasks])
 
-  function handleSelected (e, position) {
+  function handleSelected (e: React.ChangeEvent<HTMLInputElement>, position: number) {
     e.preventDefault();
 
     const subtasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
