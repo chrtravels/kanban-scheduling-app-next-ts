@@ -24,7 +24,7 @@ type StatusTypes = string[]
 
 type Column = {
   name: string,
-  tasks: [{}]
+  tasks: [{title: string, status: string, subtasks:[{title: string, isCompleted: boolean}], description: string}]
 }
 
 export default function BoardLayout (props: Params) {
