@@ -32,24 +32,6 @@ type Params = {
   };
 }
 
-// Sort data into separate boards
-// async function getBoards() {
-//   const boards: Board = {};
-//   const getBoards = await getData()
-
-//   getBoards.forEach((board:{id: number, board_name: string}) => {
-//     const boardName: string = board.board_name;
-//     // INCLUDE THE ORIGINAL DATABASE ENTRY ID WITH EACH ENTRY TO boards
-//     if (boards[boardName]) {
-//       boards[boardName] = [...boards[boardName], {'db_id': board.id, 'status': board.status, 'tasks': board.tasks}]
-//     } else {
-//       boards[boardName] = [{'db_id': board.id, 'status': board.status, 'tasks': board.tasks}]
-//     }
-//   })
-
-//   return boards;
-// }
-
 async function generateStaticParams() {
   const boards = await getData();
   const params: string[] = [];
