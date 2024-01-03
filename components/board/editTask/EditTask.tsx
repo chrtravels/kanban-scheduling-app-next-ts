@@ -9,7 +9,6 @@ import DropdownList from '../../dropownList/DropdownList';
 
 
 type Params = {
-  databaseId: number,
   boardStatus: string,
   boardName: string,
   tasks: [],
@@ -20,8 +19,10 @@ type Params = {
     subtasks: [{title: string, isCompleted: boolean}],
     description: string
   },
+  columns: [{}],
+  setColumns: React.Dispatch<React.SetStateAction<Array<{}>>>,
   statusTypes: string[],
-  setShowTask: () => boolean
+  setShowTask: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 type Task = {
@@ -37,7 +38,7 @@ type Subtasks = [{
 }]
 
 export default function EditTask(props: Params) {
-  const { databaseId, boardStatus, boardName, taskId, tasks, task, statusTypes, setShowTask } = props;
+  const { boardStatus, boardName, taskId, tasks, task, columns, setColumns, statusTypes, setShowTask } = props;
 
   const [currentTask, setCurrentTask] = useState<Task>({
     title: task.title,
@@ -75,8 +76,34 @@ export default function EditTask(props: Params) {
   }
 
   const handleSubmit = async () => {
+    // Updates the task on the database when the task is marked completed
     const updatedTasks: [{}] = [...tasks];
-    updatedTasks[taskId] = currentTask;
+    const clonedTask = Object.assign({}, currentTask);
+    const updatedColumns = [...columns];
+
+    if (boardStatus === currentTask.status || currentTask.status === '') {
+      // Checks if the task status has been changed to see if we should switch columns
+      updatedTasks[taskId] = clonedTask;
+
+      updatedColumns.forEach((column) => {
+      if (boardStatus === column.name) {
+        column.tasks = [...updatedTasks];
+        return column;
+      } else return column;
+      setColumns([...updatedColumns]);
+    })
+    } else {
+      updatedColumns.forEach((column) => {
+        if (column.name === boardStatus) {
+          column.tasks.splice(taskId,1)
+        } else if (column.name === currentTask.status) {
+          column.tasks.push(clonedTask);
+        }
+      })
+      setColumns([...updatedColumns]);
+    }
+    console.log('current Task: ', currentTask)
+    console.log('updated columns: ', updatedColumns)
 
     const options = {
       method: 'PATCH',
@@ -84,17 +111,17 @@ export default function EditTask(props: Params) {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
+      body: JSON.stringify([boardName, updatedColumns])
     }
 
     try {
       const res = await fetch('/api/task', options);
-      const data = res.json();
 
       if (res.ok) {
         router.refresh();
       }
     } catch (error) {
+      console.log('error: ', error)
       throw new Error('Error updating task')
     }
   }
@@ -142,7 +169,7 @@ export default function EditTask(props: Params) {
 
             {subtasks.map((subtask, index) => {
               return (
-                <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
+                <div key={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
                   <input
                     type='text'
                     id='subtasks'
@@ -188,7 +215,7 @@ export default function EditTask(props: Params) {
                   ...currentTask, [e.target.id]: e.target.value
                 }))}>
                 {props.statusTypes.map((option) => {
-                  return <option value={option}>{option}</option>
+                  return <option key={option} value={option}>{option}</option>
                 })}
               </select>
 

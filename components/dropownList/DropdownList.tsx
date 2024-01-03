@@ -10,7 +10,7 @@ type Options = {
   setSelectedOption: React.Dispatch<React.SetStateAction<string>>,
   currentFieldName: string,
   state: {title: string, status: string, subtasks: [{title: string, isCompleted: boolean}], description: string},
-  setState: (state: {}) => {} | null
+  setState: React.Dispatch<React.SetStateAction<{}>>
 }
 
 export default function DropdownList(props: Options) {
