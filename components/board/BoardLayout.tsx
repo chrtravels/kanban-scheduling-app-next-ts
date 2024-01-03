@@ -33,7 +33,6 @@ export default function BoardLayout (props: Params) {
   const [showDeleteTask, setShowDeleteTask] = useState(false);
   const [columnStatus, setColumnStatus] = useState('');
   const [clickedId, setClickedId] = useState(0);
-  console.log('boards: ', boards[0])
 
   const router = useRouter();
 

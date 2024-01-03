@@ -55,11 +55,16 @@ export default function AddTask(props: Params) {
   }, [subtasks, selectedOption])
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchData = async () => {
-      const res = await fetch(`/api/task?boardName=${currentBoard}&boardStatus=${selectedOption}`);
+      const res = await fetch(`/api/task?boardName=${currentBoard}&boardStatus=${selectedOption}`, {
+        signal: controller.signal
+      });
       const data = await res.json();
       setRowToUpdate(data);
-      return Response.json(data);
+
+      return () => controller.abort();
     }
     fetchData()
   }, [selectedOption])
