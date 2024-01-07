@@ -17,7 +17,25 @@ type Params = {
   setCurrentBoard: () => string,
   currentBoard: string,
   statusList: string[],
-  boards: [{}]
+  boards: [{
+    id: number,
+    board_name: string,
+    columns: [{
+      id: number,
+      column_name: string,
+      tasks: [{
+        id: number,
+        title: string,
+        status: string,
+        subtasks: [{
+          id: number,
+          title: string,
+          isCompleted: boolean
+        }] | [],
+        description: string
+      }]
+    }]
+  }]
 }
 
 const Navbar = ( props: Params ) => {
@@ -35,7 +53,6 @@ const Navbar = ( props: Params ) => {
   if (currentBoard) navbarTitle = currentBoard.split(' ').map((word) => {
     return word.slice(0,1).toUpperCase() + word.slice(1);
   }).join(' ');
-
 
   // const searchParams = useSearchParams();
   // const boardName = searchParams.get('board');

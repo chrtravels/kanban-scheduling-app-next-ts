@@ -11,7 +11,12 @@ import DropdownList from '../../dropownList/DropdownList';
 type Params = {
   boardStatus: string,
   boardName: string,
-  tasks: [],
+  tasks: [{
+    title: string,
+    status: string,
+    subtasks: [{title: string, isCompleted: boolean}],
+    description: string
+  }]
   taskId: number,
   task: {
     title: string,
@@ -19,8 +24,17 @@ type Params = {
     subtasks: [{title: string, isCompleted: boolean}],
     description: string
   },
-  columns: [{}],
-  setColumns: React.Dispatch<React.SetStateAction<Array<{}>>>,
+  columns: [{
+    name: string,
+    tasks: [{
+      title: string,
+      status: string,
+      subtasks: [{title: string, isCompleted: boolean}],
+      description: string
+    }]
+    description: string
+  }]
+  setColumns: React.Dispatch<React.SetStateAction<Column[]>>,
   statusTypes: string[],
   setShowTask: React.Dispatch<React.SetStateAction<boolean>>
 }
@@ -36,6 +50,17 @@ type Subtasks = [{
   title: string,
   isCompleted: boolean
 }]
+
+type Column = {
+  name: string,
+  tasks: [{
+    title: string,
+    status: string,
+    subtasks: [{title: string, isCompleted: boolean}],
+    description: string
+  }],
+  description: string
+}
 
 export default function EditTask(props: Params) {
   const { boardStatus, boardName, taskId, tasks, task, columns, setColumns, statusTypes, setShowTask } = props;
@@ -63,55 +88,56 @@ export default function EditTask(props: Params) {
   }, [subtasks])
 
 
-  function handleAddTask (e) {
+  function handleAddTask (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setSubtasks([...currentTask.subtasks, {'title': '', 'isCompleted': false}]);
   }
 
-  function handleRemoveSubtask (e, index) {
-    const tempSubtasks = [...subtasks];
+  function handleRemoveSubtask (e: React.MouseEvent<HTMLDivElement>, index: number) {
+    const tempSubtasks: Subtasks = [...subtasks];
     tempSubtasks.splice(index, 1)
     setSubtasks([...tempSubtasks])
   }
 
   const handleSubmit = async () => {
     // Updates the task on the database when the task is marked completed
-    const updatedTasks: [{}] = [...tasks];
-    const clonedTask = Object.assign({}, currentTask);
-    const updatedColumns = [...columns];
+    const updatedTasks: Task[] = [...tasks];
+    const clonedTask = { ...currentTask };
+    const updatedColumns: Column[] = [...columns];
 
     if (boardStatus === currentTask.status || currentTask.status === '') {
       // Checks if the task status has been changed to see if we should switch columns
       updatedTasks[taskId] = clonedTask;
 
       updatedColumns.forEach((column) => {
-      if (boardStatus === column.name) {
-        column.tasks = [...updatedTasks];
-        return column;
-      } else return column;
-      setColumns([...updatedColumns]);
-    })
+        if (boardStatus === column.name) {
+          column.tasks = [...updatedTasks];
+          return column;
+        } else return column;
+      });
+      setColumns(updatedColumns);
     } else {
       updatedColumns.forEach((column) => {
         if (column.name === boardStatus) {
-          column.tasks.splice(taskId,1)
+          column.tasks.splice(taskId, 1);
         } else if (column.name === currentTask.status) {
           column.tasks.push(clonedTask);
         }
-      })
-      setColumns([...updatedColumns]);
+      });
+      setColumns(updatedColumns);
     }
-    console.log('current Task: ', currentTask)
-    console.log('updated columns: ', updatedColumns)
+
+    console.log('current Task: ', currentTask);
+    console.log('updated columns: ', updatedColumns);
 
     const options = {
       method: 'PATCH',
-      header: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify([boardName, updatedColumns])
-    }
+      body: JSON.stringify([boardName, updatedColumns]),
+    };
 
     try {
       const res = await fetch('/api/task', options);
@@ -120,9 +146,10 @@ export default function EditTask(props: Params) {
         router.refresh();
       }
     } catch (error) {
-      throw new Error('Error updating task')
+      throw new Error('Error updating task');
     }
-  }
+  };
+
 
   return (
     <div className={styles.formWrapper}>

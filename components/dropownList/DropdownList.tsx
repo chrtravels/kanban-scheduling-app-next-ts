@@ -4,17 +4,17 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 
-type Options = {
+type Props = {
   options: string[],
   selectedOption: string,
-  setSelectedOption: React.Dispatch<React.SetStateAction<string>>,
+  setSelectedOption: React.Dispatch<React.SetStateAction<string | null>>,
   currentFieldName: string,
   state: {title: string, status: string, subtasks: [{title: string, isCompleted: boolean}], description: string},
   setState: React.Dispatch<React.SetStateAction<{}>>
 }
 
-export default function DropdownList(props: Options) {
-  const [showDropdown, setShowDropdown] = useState(false);
+export default function DropdownList(props: Props) {
+  const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const {options, selectedOption, setSelectedOption, currentFieldName, state, setState} = props;
 
   const handleCategoryDropdown = () => {

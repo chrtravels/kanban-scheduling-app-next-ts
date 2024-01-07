@@ -3,8 +3,15 @@ import styles from './deleteTask.module.scss'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+interface Props {
+  boardName: string,
+  columnName: string,
+  taskId: number,
+  setShowDeleteTask: React.Dispatch<React.SetStateAction<boolean>>,
+}
 
-export default function DeleteTask(props) {
+
+export default function DeleteTask(props: Props) {
   const { boardName, columnName, taskId, setShowDeleteTask } = props;
 
   const [columns, setColumns] = useState([]);

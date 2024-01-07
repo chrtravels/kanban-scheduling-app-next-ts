@@ -25,14 +25,14 @@ type Task = {
 type Subtasks = [{
   title: string,
   isCompleted: boolean
-}]
+}]| []
 
 
 export default function AddTask(props: Params) {
   const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList } = props;
   const [rowToUpdate, setRowToUpdate] = useState([{}])
 
-  const [newTask, setNewTask] = useState({
+  const [newTask, setNewTask] = useState<Task>({
     title: '',
     status: '',
     subtasks: [],
@@ -40,7 +40,7 @@ export default function AddTask(props: Params) {
   })
 
   const [selectedOption, setSelectedOption] = useState(newTask.status);
-  const [subtasks, setSubtasks]  = useState(newTask.subtasks);
+  const [subtasks, setSubtasks]  = useState<Subtasks>(newTask.subtasks);
 
   const router = useRouter();
 
@@ -69,9 +69,9 @@ export default function AddTask(props: Params) {
     fetchData()
   }, [selectedOption])
 
-  function handleAddTask (e: React.MouseEvent<HTMLDivElement>) {
+  function handleAddTask (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setSubtasks([...newTask.subtasks, {'title': '', 'isCompleted': false}]);
+    setSubtasks([...newTask.subtasks, {title: '', isCompleted: false}]);
   }
 
   function handleRemoveSubtask (e: React.MouseEvent<HTMLDivElement>, index: number) {
@@ -81,7 +81,7 @@ export default function AddTask(props: Params) {
   }
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const { columns } = rowToUpdate[0];
@@ -94,8 +94,6 @@ export default function AddTask(props: Params) {
         return column;
       } else return column;
     })
-
-    console.log('updated columns: ', updatedColumns)
 
     const options = {
       method: 'PATCH',
@@ -131,7 +129,7 @@ export default function AddTask(props: Params) {
         </div>
 
         <div className={styles.formContainer}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => handleSubmit(e)}>
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Title</span>
               <input

@@ -7,22 +7,22 @@ import NewColumn from './newColumn/NewColumn';
 import TaskCards from './taskCard/TaskCards';
 import DeleteTask from './deleteTask/DeleteTask';
 
-type Params = {
+interface Params {
   boards: {[key: string]: [
     {id: number, board_name: string, columns: [{}]}
   ]},
   UrlBoardName: string,
 }
 
-type Board = {
-  id: number,
+interface Board {
+  id: number;
   board_name: string,
   columns: [{}]
 }
 
 type StatusTypes = string[]
 
-type Column = {
+interface Column {
   name: string,
   tasks: [{title: string, status: string, subtasks:[{title: string, isCompleted: boolean}], description: string}]
 }
@@ -50,13 +50,11 @@ export default function BoardLayout (props: Params) {
   const currentBoard = (boards as any).filter((board: Board) => {
     return board.board_name === currentBoardName
   })[0]
-
   // Get the status options for the drop Edit task component drop down list
   const [statusTypes, setStatusTypes] = useState<StatusTypes>(selectedBoard[0].columns.map((column: Column) => {
     return column.name;
   }));
 
-  console.log('selected board 0: ', selectedBoard[0])
   const bulletColorArray = [
     '#49c4e5',
     '#8471f2',

@@ -13,9 +13,9 @@ type Params = {
   setCurrentBoard: React.Dispatch<React.SetStateAction<string>>
 }
 
-type Board = {
+interface Board {
   name: string,
-  columns: [{name: string, tasks: [{}], description: string}] | [],
+  columns: Columns | [],
 }
 
 type Subtasks = [{
@@ -23,32 +23,45 @@ type Subtasks = [{
   isCompleted: boolean
 }]
 
+interface Columns {
+  name: string,
+  tasks: [{}],
+  description: string
+}
+
 
 export default function CreateBoard(props: Params) {
   const { setShowAddBoardModal, setCurrentBoard } = props;
 
-  const [newBoard, setNewBoard] = useState({
+  const [newBoard, setNewBoard] = useState<Board>({
     name: '',
     columns: []
   })
 
-  const [columnNames, setColumnNames]  = useState([]);
+  const [columnNames, setColumnNames]  = useState<string[]>([]);
 
   const router = useRouter();
 
   useEffect(() => {
     setNewBoard({
       name: newBoard.name,
-      columns: columnNames.map((name) => {
+      columns: (columnNames as any).map((name: string) => {
         return {'name': name, 'tasks': [], description: ''}
       }),
     });
 
   }, [columnNames])
 
-  function handleAddColumn (e: React.MouseEvent<HTMLDivElement>) {
+  function handleAddColumn (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setColumnNames([...columnNames, e.target.id]);
+    setColumnNames([...columnNames, '']);
+  }
+
+  function handleChange (e, index) {
+    e.preventDefault();
+    const tempColumns = [...columnNames];
+    tempColumns[index] = e.target.value;
+    setColumnNames([...tempColumns]);
   }
 
   function handleRemoveColumn (e: React.MouseEvent<HTMLElement>, index: number) {
@@ -58,7 +71,7 @@ export default function CreateBoard(props: Params) {
   }
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const boardName = newBoard.name.toLowerCase();
@@ -112,7 +125,7 @@ export default function CreateBoard(props: Params) {
                 value={newBoard.name}
                 placeholder='e.g. Web Design'
                 required
-                onChange={(e) => setNewBoard((board) => ({
+                onChange={(e) => setNewBoard((newBoard) => ({
                   ...newBoard, [e.target.id]: e.target.value
                 }))}
               />
@@ -130,9 +143,10 @@ export default function CreateBoard(props: Params) {
                       name='columnNames'
                       value={columnNames[index]}
                       onChange={(e) => {
+                        e.preventDefault();
                         const tempColumns = [...columnNames];
                         tempColumns[index] = e.target.value;
-                        setColumnNames([...tempColumns])
+                        setColumnNames([...tempColumns]);
                       }}
                     />
 

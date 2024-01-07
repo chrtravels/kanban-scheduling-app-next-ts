@@ -8,7 +8,15 @@ type Board = {
   id: number,
   board_name: string,
   status: string,
-  tasks: []
+  tasks: [{
+    title: string,
+    status: string,
+    subtasks: [{
+      title: string,
+      isCompleted: boolean
+    }] | [],
+    description: string
+  }]
 }
 
 type StringArray = string[]
@@ -49,7 +57,7 @@ export default function SidebarLayout({ children,
 
   useMemo(() => {
     const boardList: Array<string> = [];
-    const statusTypes = [];
+    const statusTypes: Array<string> = [];
 
     if (boards.length > 0) {
       boards.forEach((el: Board, idx) => {

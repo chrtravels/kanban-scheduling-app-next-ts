@@ -29,10 +29,28 @@ type Params = {
   setShowDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
 }
 
+type Task = {
+  title: string,
+  status: string,
+  subtasks: [{title: string, isCompleted: boolean}] | [],
+  description: string
+}
+
+type Columns = [{
+  name: string,
+  tasks: [{
+    title: string,
+    status: string,
+    subtasks: [{title: string, isCompleted: boolean}],
+    description: string
+  }],
+  description: string
+}] | []
+
 export default function ViewTask(props: Params) {
   const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask, setShowDeleteTask } = props;
 
-  const [columns, setColumns] = useState([]);
+  const [columns, setColumns] = useState<Columns>([]);
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
   const [showActionsBox, setShowActionsBox] = useState(false);
@@ -52,14 +70,7 @@ export default function ViewTask(props: Params) {
     fetchData()
   }, [])
 
-  type TaskState = {
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }
-
-  const [taskState, setTaskState] = useState<TaskState>({
+  const [taskState, setTaskState] = useState<Task>({
     title: task.title,
     status: task.status,
     subtasks: subtasks,
@@ -115,9 +126,9 @@ export default function ViewTask(props: Params) {
 
   async function handleUpdateTask () {
     // Updates the task on the database when the task is marked completed
-    const updatedTasks: [{}] = [...tasks];
-    const clonedTask = Object.assign({}, taskState);
-    const updatedColumns = [...columns];
+    const updatedTasks: [Task] = [...tasks];
+    const clonedTask: Task = Object.assign({}, taskState);
+    const updatedColumns: Columns = [...columns];
 
     if (boardStatus === taskState.status || taskState.status === '') {
       // Checks if the task status has been changed to see if we should switch columns
