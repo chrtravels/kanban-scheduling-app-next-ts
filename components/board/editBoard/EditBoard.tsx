@@ -7,22 +7,34 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 
-type Params = {
+interface Params {
   setShowEditBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
   currentBoard: string
 }
+
+interface Board {
+  id: number | null,
+  name: string,
+  columns: Columns,
+}
+
+type Columns = [{
+  name: string,
+  tasks: [{}],
+  description: string
+}] | any[]
 
 
 export default function EditBoard(props: Params) {
   const { setShowEditBoardModal, currentBoard } = props;
 
-  const [newBoard, setNewBoard] = useState({
+  const [newBoard, setNewBoard] = useState<Board>({
     id: null,
     name: '',
     columns: [],
   })
 
-  const [columnNames, setColumnNames]  = useState([]);
+  const [columnNames, setColumnNames]  = useState<Columns>([]);
 
   const router = useRouter();
 
@@ -48,7 +60,7 @@ export default function EditBoard(props: Params) {
         const res = await fetch('/api/boards');
         const data = await res.json();
 
-        const boardToEdit = data.filter((board) => {
+        const boardToEdit = data.filter((board: any) => {
           return board.board_name === currentBoard;
         })[0];
 
@@ -58,7 +70,7 @@ export default function EditBoard(props: Params) {
           columns: boardToEdit.columns
         })
 
-        setColumnNames(boardToEdit.columns.map((column) => {
+        setColumnNames(boardToEdit.columns.map((column: any) => {
           return column.name;
         }))
 
@@ -81,8 +93,7 @@ export default function EditBoard(props: Params) {
     setColumnNames([...tempColumnNames])
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
 
     const options = {
       method: 'PATCH',
@@ -99,7 +110,6 @@ export default function EditBoard(props: Params) {
 
       if (res.ok) {
         setShowEditBoardModal(false);
-        console.log('redirect: ', newBoard.name)
         router.push(`/${newBoard.name}`)
       }
     } catch (error) {

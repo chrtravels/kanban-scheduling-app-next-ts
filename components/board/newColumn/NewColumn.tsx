@@ -12,6 +12,7 @@ export default function NewColumn(props) {
     updatedBoard.columns.push({'name': 'New Column', 'tasks': []})
 
     const updatedColumns = updatedBoard.columns;
+    const boardId = currentBoard.id;
 
     const options = {
       method: 'PATCH',
@@ -19,7 +20,7 @@ export default function NewColumn(props) {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([boardName, updatedColumns])
+      body: JSON.stringify([boardName, updatedColumns, boardId])
     }
 
     try {
@@ -27,7 +28,7 @@ export default function NewColumn(props) {
       const data = res.json();
 
       if (res.ok) {
-        router.refresh();
+        router.push(`/${boardName}`)
       }
     } catch (error) {
       throw new Error('Error updating task')
