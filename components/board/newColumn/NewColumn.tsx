@@ -2,7 +2,26 @@ import styles from './newColumn.module.scss'
 
 import { useRouter } from 'next/navigation';
 
-export default function NewColumn(props) {
+type Props = {
+  boardName: string,
+  currentBoard: [{
+    name: string,
+    columns: [{
+      name: string,
+      tasks: [{
+        title: string,
+        status: string,
+        subtasks: [{
+          title: string,
+          status: string
+        }],
+        description: string
+      }]
+    }]
+  }] | []
+}
+
+export default function NewColumn(props: Props) {
   const { boardName, currentBoard } = props;
 
   const router = useRouter();
