@@ -15,7 +15,7 @@ interface Params {
 interface Board {
   id: number,
   board_name: string,
-  columns: [{}]
+  columns: Column
 }
 
 type StatusTypes = string[]
@@ -41,7 +41,7 @@ export default function BoardLayout (props: Params) {
     return board.board_name == currentBoardName || board.board_name === UrlBoardName;
   })
   // redirect back to the first board if the board in the URL does not exist
-  if (tempBoard.length === 0) router.push(`/${boards[0].board_name.split(' ').join('-')}`)
+  if (tempBoard.length === 0) router.push(`/${(boards[0]).board_name.split(' ').join('-')}`)
 
   const selectedBoard = tempBoard.length > 0 ? [...tempBoard] : [boards[0]];
 
