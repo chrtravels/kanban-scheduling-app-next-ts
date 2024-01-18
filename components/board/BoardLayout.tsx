@@ -15,7 +15,7 @@ interface Params {
 }
 
 interface Board {
-  id: number;
+  id: number,
   board_name: string,
   columns: [{}]
 }
