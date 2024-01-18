@@ -18,7 +18,7 @@ type Params = {
 type Task = {
   title: string,
   status: string,
-  subtasks: [{title: string, isCompleted: boolean}] | [],
+  subtasks: Subtasks | [],
   description: string
 }
 
@@ -27,10 +27,16 @@ type Subtasks = [{
   isCompleted: boolean
 }]| []
 
+type Columns = {
+  name: string,
+  tasks: [{}],
+  description: string
+}
+
 
 export default function AddTask(props: Params) {
   const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList } = props;
-  const [rowToUpdate, setRowToUpdate] = useState([{}])
+  const [rowToUpdate, setRowToUpdate] = useState([])
 
   const [newTask, setNewTask] = useState<Task>({
     title: '',
@@ -40,7 +46,7 @@ export default function AddTask(props: Params) {
   })
 
   const [selectedOption, setSelectedOption] = useState(newTask.status);
-  const [subtasks, setSubtasks]  = useState<Subtasks>(newTask.subtasks);
+  const [subtasks, setSubtasks]  = useState<Subtasks>(newTask.subtasks)
 
   const router = useRouter();
 
@@ -71,11 +77,13 @@ export default function AddTask(props: Params) {
 
   function handleAddTask (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    setSubtasks([...newTask.subtasks, {title: '', isCompleted: false}]);
+
+    const tempNewSubtasks = [...newTask.subtasks, {title: '', isCompleted: false}];
+    setSubtasks([...tempNewSubtasks]);
   }
 
   function handleRemoveSubtask (e: React.MouseEvent<HTMLDivElement>, index: number) {
-    const tempSubtasks = [...subtasks];
+    const tempSubtasks: Subtasks = [...subtasks];
     tempSubtasks.splice(index, 1)
     setSubtasks([...tempSubtasks])
   }
@@ -88,7 +96,7 @@ export default function AddTask(props: Params) {
 
     const updatedColumns = [...columns];
 
-    updatedColumns.map((column) => {
+    updatedColumns.map((column: Columns) => {
       if (selectedOption === column.name) {
         column.tasks.push(newTask);
         return column;
