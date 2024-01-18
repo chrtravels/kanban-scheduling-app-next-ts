@@ -2,15 +2,16 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import SidebarLayout from '../layout/SidebarLayout';
 
 
 type Props = {
   options: string[],
   selectedOption: string,
-  setSelectedOption: React.Dispatch<React.SetStateAction<string | null>>,
+  setSelectedOption: React.Dispatch<React.SetStateAction<string | any>>,
   currentFieldName: string,
   state: {title: string, status: string, subtasks: [{title: string, isCompleted: boolean}], description: string},
-  setState: React.Dispatch<React.SetStateAction<{}>>
+  setState: React.Dispatch<React.SetStateAction<{title: string, status: string, subtasks: {name: string, isCompleted: boolean}, description: string}>>
 }
 
 export default function DropdownList(props: Props) {

@@ -18,14 +18,14 @@ type Params = {
 type Task = {
   title: string,
   status: string,
-  subtasks: Subtasks | [],
+  subtasks: Subtasks,
   description: string
 }
 
 type Subtasks = [{
-  title: string,
+  name: string,
   isCompleted: boolean
-}]| []
+}] | any
 
 type Columns = {
   name: string,
@@ -45,7 +45,7 @@ export default function AddTask(props: Params) {
     description: ''
   })
 
-  const [selectedOption, setSelectedOption] = useState(newTask.status);
+  const [selectedOption, setSelectedOption] = useState<string>(newTask.status);
   const [subtasks, setSubtasks]  = useState<Subtasks>(newTask.subtasks)
 
   const router = useRouter();
@@ -78,7 +78,7 @@ export default function AddTask(props: Params) {
   function handleAddTask (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
-    const tempNewSubtasks = [...newTask.subtasks, {title: '', isCompleted: false}];
+    const tempNewSubtasks = [...newTask.subtasks, {name: '', isCompleted: false}];
     setSubtasks([...tempNewSubtasks]);
   }
 
@@ -169,9 +169,9 @@ export default function AddTask(props: Params) {
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Subtasks</span>
 
-              {subtasks.map((subtask, index) => {
+              {subtasks.map((subtask, index: number) => {
                 return (
-                  <div key={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
+                  <div key={`${subtask.title}-${index}`} className={styles.subtaskRow}>
                     <input
                       type='text'
                       id='subtasks'
@@ -233,7 +233,7 @@ export default function AddTask(props: Params) {
             </div>
 
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={(e) => handleSubmit(e)}>Create Task</button>
+              <button className='btn-small btn-primary'>Create Task</button>
             </div>
           </form>
         </div>
