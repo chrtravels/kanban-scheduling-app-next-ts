@@ -6,8 +6,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-
-
 type Params = {
   setShowAddBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
   setCurrentBoard: React.Dispatch<React.SetStateAction<string>>
@@ -17,11 +15,6 @@ interface Board {
   name: string,
   columns: Columns | [],
 }
-
-type Subtasks = [{
-  title: string,
-  isCompleted: boolean
-}]
 
 interface Columns {
   name: string,
@@ -55,13 +48,6 @@ export default function CreateBoard(props: Params) {
   function handleAddColumn (e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
     setColumnNames([...columnNames, '']);
-  }
-
-  function handleChange (e, index) {
-    e.preventDefault();
-    const tempColumns = [...columnNames];
-    tempColumns[index] = e.target.value;
-    setColumnNames([...tempColumns]);
   }
 
   function handleRemoveColumn (e: React.MouseEvent<HTMLElement>, index: number) {
@@ -167,9 +153,8 @@ export default function CreateBoard(props: Params) {
               </div>
             </div>
 
-
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={(e) => handleSubmit(e)}>Create New Board</button>
+              <button className='btn-small btn-primary' >Create New Board</button>
             </div>
           </form>
         </div>
