@@ -8,9 +8,7 @@ import TaskCards from './taskCard/TaskCards';
 import DeleteTask from './deleteTask/DeleteTask';
 
 interface Params {
-  boards: {[key: string]: [
-    {id: number, board_name: string, columns: [{}]}
-  ]},
+  boards: [{id: number, board_name: string, columns: [{}]}],
   UrlBoardName: string,
 }
 
