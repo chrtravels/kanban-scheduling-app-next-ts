@@ -5,41 +5,20 @@ import styles from './taskCards.module.scss'
 import { useState } from 'react';
 import ViewTask from '../viewTask/ViewTask';
 
-
-type Props = {
-  boardName: string,
-  boardStatus: string,
-  tasks: [{
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string,
-  }],
-  statusTypes: string[],
-  setColumnStatus: React.Dispatch<React.SetStateAction<string>>,
-  setShowDeleteTask: React.Dispatch<React.SetStateAction<boolean>>,
-  clickedId: number,
-  setClickedId: React.Dispatch<React.SetStateAction<number>>,
-}
-
-export default function TaskCards(props: Props) {
+export default function TaskCards(props) {
   const { boardName, boardStatus, tasks, statusTypes, setColumnStatus, setShowDeleteTask, clickedId, setClickedId } = props;
 
   const [clickedTask, setClickedTask] = useState(tasks[0])
-  // const [clickedId, setClickedId] = useState(0)
   const [showTask, setShowTask] = useState(false);
-  // const [showDeleteTask, setShowDeleteTask] = useState(false);
 
   return (
     <div className={styles.container}>
       {tasks.map((task, idx) => {
         // Get the number of subtasks completed
-        type TasksCompleted = () => number;
-
-        const tasksCompleted: TasksCompleted = () => {
+        const tasksCompleted = () => {
           let numCompleted= 0;
 
-          task.subtasks.forEach((subtask: {title: string, isCompleted: boolean}) => {
+          task.subtasks.forEach((subtask) => {
             if (subtask.isCompleted) {
               numCompleted++;
             }

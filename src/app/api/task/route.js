@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import conn from '../../../../lib/db';
 
-export async function GET(request: Request) {
+export async function GET(request) {
   const url = new URL(request.url);
   const boardName = url.searchParams.get('boardName');
 
@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request) {
   const body = await request.json()
   const boardName = body[0];
   const updatedColumns = body[1];

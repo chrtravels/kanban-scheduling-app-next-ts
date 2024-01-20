@@ -18,23 +18,9 @@ async function getData() {
 }
 
 
-// Type Definitions:
-type Board = {
-  // [key: string]: any[]
-  id: number,
-  board_name: string,
-  columns: [{}]
-}
-
-type Params = {
-  params: {
-    boardName: string
-  };
-}
-
 async function generateStaticParams() {
   const boards = await getData();
-  const params: string[] = [];
+  const params = [];
 
   Object.keys(boards[0]).forEach((key) => {
     if (!params.includes(key)) {
@@ -47,7 +33,7 @@ async function generateStaticParams() {
 
 generateStaticParams();
 
-export default async function Home({ params: { boardName } }: Params) {
+export default async function Home({ boardName }) {
   const boards = await getData();
 
   if (!boardName) {

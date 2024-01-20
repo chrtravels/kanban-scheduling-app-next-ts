@@ -5,35 +5,14 @@ import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation'
+// import { useSearchParams } from 'next/navigation'
 import styles from './navbar.module.scss'
 import AddTask from '../board/addTask/AddTask';
 import EditBoard from '../board/editBoard/EditBoard';
 import DeleteBoard from '../board/deleteBoard/DeleteBoard';
 
-type Params = {
-  sidebarExpanded: boolean,
-  setCurrentBoard: Dispatch<SetStateAction<string | undefined>>,
-  currentBoard: string | undefined,
-  statusList: string[],
-  boards: [{
-    id: number,
-    board_name: string,
-    columns: [{
-      name: string,
-      tasks: [{
-        title: string,
-        status: string,
-        subtasks: [{
-          title: string,
-          isCompleted: boolean
-        }]
-      }]
-    }]
-  }] | []
-}
 
-const Navbar = ( props: Params ) => {
+const Navbar = ( props ) => {
   const {sidebarExpanded, currentBoard, setCurrentBoard, statusList, boards} = props;
 
   const {theme, setTheme} = useTheme();

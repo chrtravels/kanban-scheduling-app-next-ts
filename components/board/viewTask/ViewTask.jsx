@@ -1,56 +1,17 @@
 'use client'
 
 import Image from 'next/image';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './viewTask.module.scss'
 import DropdownList from '../../dropownList/DropdownList';
 import EditTask from '../editTask/EditTask';
 
 
-type Params = {
-  boardName: string,
-  boardStatus: string,
-  tasks: [{
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }],
-  taskId: number,
-  task: {
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}] | [],
-    description: string
-  },
-  statusTypes: string[],
-  setShowTask: React.Dispatch<React.SetStateAction<boolean>>,
-  setShowDeleteTask: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-type Task = {
-  title: string,
-  status: string,
-  subtasks: [{title: string, isCompleted: boolean}] | [],
-  description: string
-}
-
-type Columns = [{
-  name: string,
-  tasks: [{
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }],
-  description: string
-}] | []
-
-export default function ViewTask(props: Params) {
+export default function ViewTask(props) {
   const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask, setShowDeleteTask } = props;
 
-  const [columns, setColumns] = useState<Columns>([]);
+  const [columns, setColumns] = useState([]);
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
   const [showActionsBox, setShowActionsBox] = useState(false);
@@ -70,20 +31,19 @@ export default function ViewTask(props: Params) {
     fetchData()
   }, [])
 
-  const [taskState, setTaskState] = useState<Task>({
+  const [taskState, setTaskState] = useState({
     title: task.title,
     status: task.status,
     subtasks: subtasks,
     description: task.description
   })
 
-  type TasksCompleted = () => number;
 
   // Calculates the # of tasks completed for the subtasks header
-  const tasksCompleted: TasksCompleted = () => {
+  const tasksCompleted = () => {
     let numCompleted= 0;
 
-    subtasks.forEach((subtask: {title: string, isCompleted: boolean}) => {
+    subtasks.forEach((subtask) => {
       if (subtask.isCompleted) {
         numCompleted++;
       }
@@ -109,10 +69,10 @@ export default function ViewTask(props: Params) {
     })
   }, [subtasks])
 
-  function handleSelected (e: React.ChangeEvent<HTMLInputElement>, position: number) {
+  function handleSelected (e, position) {
     e.preventDefault();
 
-    const subtasksCopy: [{title: string, isCompleted: boolean}] | [] = [...subtasks];
+    const subtasksCopy = [...subtasks];
 
     subtasksCopy[position] = subtasks[position].isCompleted ?
     {'title': subtasks[position].title, 'isCompleted': false} :
@@ -126,9 +86,9 @@ export default function ViewTask(props: Params) {
 
   async function handleUpdateTask () {
     // Updates the task on the database when the task is marked completed
-    const updatedTasks: [Task] = [...tasks];
-    const clonedTask: Task = Object.assign({}, taskState);
-    const updatedColumns: Columns = [...columns];
+    const updatedTasks = [...tasks];
+    const clonedTask = Object.assign({}, taskState);
+    const updatedColumns = [...columns];
 
     if (boardStatus === taskState.status || taskState.status === '') {
       // Checks if the task status has been changed to see if we should switch columns
@@ -173,7 +133,7 @@ export default function ViewTask(props: Params) {
 
   }
 
-  function handleEditTask (e: React.MouseEvent<HTMLButtonElement>) {
+  function handleEditTask (e) {
     setShowActionsBox(false);
     setShowEditTask(true);
   }

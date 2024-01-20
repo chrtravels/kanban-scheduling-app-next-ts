@@ -13,7 +13,7 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request) {
   const body = await request.json()
 
   const boardName = body[0];
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
   }
 }
 
-export async function PATCH(request: Request) {
+export async function PATCH(request) {
   const body = await request.json()
 
   const boardName = body[0];
@@ -47,7 +47,7 @@ export async function PATCH(request: Request) {
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE(request) {
   const body = await request.json()
 
   const boardName = body[0]

@@ -7,34 +7,16 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 
-interface Params {
-  setShowEditBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
-  currentBoard: string | undefined
-}
-
-interface Board {
-  id: number | null,
-  name: string,
-  columns: Columns,
-}
-
-type Columns = [{
-  name: string,
-  tasks: [{}],
-  description: string
-}] | any[]
-
-
-export default function EditBoard(props: Params) {
+export default function EditBoard(props) {
   const { setShowEditBoardModal, currentBoard } = props;
 
-  const [newBoard, setNewBoard] = useState<Board>({
+  const [newBoard, setNewBoard] = useState({
     id: null,
     name: '',
     columns: [],
   })
 
-  const [columnNames, setColumnNames]  = useState<Columns>([]);
+  const [columnNames, setColumnNames]  = useState([]);
 
   const router = useRouter();
 
@@ -60,7 +42,7 @@ export default function EditBoard(props: Params) {
         const res = await fetch('/api/boards');
         const data = await res.json();
 
-        const boardToEdit = data.filter((board: any) => {
+        const boardToEdit = data.filter((board) => {
           return board.board_name === currentBoard;
         })[0];
 
@@ -70,7 +52,7 @@ export default function EditBoard(props: Params) {
           columns: boardToEdit.columns
         })
 
-        setColumnNames(boardToEdit.columns.map((column: any) => {
+        setColumnNames(boardToEdit.columns.map((column) => {
           return column.name;
         }))
 
@@ -82,12 +64,12 @@ export default function EditBoard(props: Params) {
   }, [])
 
 
-  function handleAddColumn (e: React.MouseEvent<HTMLDivElement>) {
+  function handleAddColumn (e) {
     e.preventDefault();
     setColumnNames([...columnNames, e.target.value]);
   }
 
-  function handleRemoveColumn (e: React.MouseEvent<HTMLDivElement>, index: number) {
+  function handleRemoveColumn (e, index) {
     const tempColumnNames = [...columnNames];
     tempColumnNames.splice(index, 1)
     setColumnNames([...tempColumnNames])

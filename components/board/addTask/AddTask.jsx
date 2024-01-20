@@ -8,39 +8,11 @@ import { useEffect, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
 
 
-type Params = {
-  currentBoard: string,
-  setCurrentBoard: () => string,
-  setShowAddTaskModal: React.Dispatch<React.SetStateAction<boolean>>,
-  statusList: string[]
-}
-
-type Task = {
-  title: string,
-  status: string,
-  subtasks: Subtasks,
-  description: string
-}
-
-type Subtasks = [{
-  title: string,
-  isCompleted: boolean
-}] | any
-
-type Columns = {
-  name: string,
-  tasks: [{}]
-} | {}
-
-type Board = [{
-  id: Number, board_name: string, columns: []
-}] | []
-
-export default function AddTask(props: Params) {
+export default function AddTask(props) {
   const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList } = props;
-  const [rowToUpdate, setRowToUpdate] = useState<Board>([])
+  const [rowToUpdate, setRowToUpdate] = useState([])
 
-  const [newTask, setNewTask] = useState<Task>({
+  const [newTask, setNewTask] = useState({
     title: '',
     status: '',
     subtasks: [],
@@ -48,7 +20,7 @@ export default function AddTask(props: Params) {
   })
 //() => void
   const [selectedOption, setSelectedOption] = useState<string>(newTask.status);
-  const [subtasks, setSubtasks]  = useState<Subtasks>(newTask.subtasks)
+  const [subtasks, setSubtasks]  = useState(newTask.subtasks)
 
   const router = useRouter();
 
@@ -77,28 +49,28 @@ export default function AddTask(props: Params) {
     fetchData()
   }, [selectedOption])
 
-  function handleAddTask (e: React.MouseEvent<HTMLButtonElement>) {
+  function handleAddTask (e) {
     e.preventDefault();
 
     const tempNewSubtasks = [...newTask.subtasks, {name: '', isCompleted: false}];
     setSubtasks([...tempNewSubtasks]);
   }
 
-  function handleRemoveSubtask (e: React.MouseEvent<HTMLDivElement>, index: number) {
-    const tempSubtasks: Subtasks = [...subtasks];
+  function handleRemoveSubtask (e, index) {
+    const tempSubtasks = [...subtasks];
     tempSubtasks.splice(index, 1)
     setSubtasks([...tempSubtasks])
   }
 
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const { columns }: any = rowToUpdate[0];
+    const { columns } = rowToUpdate[0];
 
     const updatedColumns = [...columns];
 
-    updatedColumns.map((column: any) => {
+    updatedColumns.map((column) => {
       if (selectedOption === column.name) {
         column.tasks.push(newTask);
         return column;
@@ -171,7 +143,7 @@ export default function AddTask(props: Params) {
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Subtasks</span>
 
-              {subtasks.map((subtask: {title: string, isCompleted: boolean}, index: number) => {
+              {subtasks.map((subtask, index) => {
                 return (
                   <div key={`${subtask.title}-${index}`} className={styles.subtaskRow}>
                     <input

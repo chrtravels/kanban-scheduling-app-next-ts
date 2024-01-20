@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import { Inter, Plus_Jakarta_Sans } from 'next/font/google'
 import './globals.css'
 import Providers from '../../context/Providers';
@@ -15,16 +14,12 @@ const plus_jakarta_sans = Plus_Jakarta_Sans({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
+export const metadata = {
   title: 'Kanban Boards',
   description: 'Scheduling App',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${plus_jakarta_sans.variable}`}>

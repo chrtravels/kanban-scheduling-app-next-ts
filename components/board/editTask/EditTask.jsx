@@ -8,64 +8,10 @@ import { useEffect, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
 
 
-type Params = {
-  boardStatus: string,
-  boardName: string,
-  tasks: [{
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }]
-  taskId: number,
-  task: {
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  },
-  columns: [{
-    name: string,
-    tasks: [{
-      title: string,
-      status: string,
-      subtasks: [{title: string, isCompleted: boolean}],
-      description: string
-    }]
-    description: string
-  }]
-  setColumns: React.Dispatch<React.SetStateAction<Column[]>>,
-  statusTypes: string[],
-  setShowTask: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-type Task = {
-  title: string,
-  status: string,
-  subtasks: [{title: string, isCompleted: boolean}],
-  description: string
-}
-
-type Subtasks = [{
-  title: string,
-  isCompleted: boolean
-}]
-
-type Column = {
-  name: string,
-  tasks: [{
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }],
-  description: string
-}
-
-export default function EditTask(props: Params) {
+export default function EditTask(props) {
   const { boardStatus, boardName, taskId, tasks, task, columns, setColumns, statusTypes, setShowTask } = props;
 
-  const [currentTask, setCurrentTask] = useState<Task>({
+  const [currentTask, setCurrentTask] = useState<({
     title: task.title,
     status: task.status,
     subtasks: task.subtasks,
@@ -73,7 +19,7 @@ export default function EditTask(props: Params) {
   })
 
   const [selectedOption, setSelectedOption] = useState(currentTask.status);
-  const [subtasks, setSubtasks] = useState<Subtasks>(currentTask.subtasks);
+  const [subtasks, setSubtasks] = useState(currentTask.subtasks);
 
   const router = useRouter();
 
@@ -88,22 +34,22 @@ export default function EditTask(props: Params) {
   }, [subtasks])
 
 
-  function handleAddTask (e: React.MouseEvent<HTMLButtonElement>) {
+  function handleAddTask (e) {
     e.preventDefault();
     setSubtasks([...currentTask.subtasks, {'title': '', 'isCompleted': false}]);
   }
 
-  function handleRemoveSubtask (e: React.MouseEvent<HTMLDivElement>, index: number) {
-    const tempSubtasks: Subtasks = [...subtasks];
+  function handleRemoveSubtask (e, index) {
+    const tempSubtasks = [...subtasks];
     tempSubtasks.splice(index, 1)
     setSubtasks([...tempSubtasks])
   }
 
   const handleSubmit = async () => {
     // Updates the task on the database when the task is marked completed
-    const updatedTasks: Task[] = [...tasks];
+    const updatedTasks = [...tasks];
     const clonedTask = { ...currentTask };
-    const updatedColumns: Column[] = [...columns];
+    const updatedColumns = [...columns];
 
     if (boardStatus === currentTask.status || currentTask.status === '') {
       // Checks if the task status has been changed to see if we should switch columns

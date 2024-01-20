@@ -2,28 +2,8 @@ import styles from './deleteBoard.module.scss'
 
 import { useRouter } from 'next/navigation';
 
-interface Props {
-  currentBoard: string | undefined,
-  setCurrentBoard: React.Dispatch<React.SetStateAction<string> | undefined>,
-  setShowDeleteBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
-  boards: [{
-    id: number,
-    board_name: string,
-    columns: [{
-      name: string,
-      tasks: [{
-        title: string,
-        status: string,
-        subtasks: [{
-          title: string,
-          isCompleted: boolean
-        }]
-      }]
-    }]
-  }] | []
-}
 
-export default function DeleteBoard(props: Props) {
+export default function DeleteBoard(props) {
   const { currentBoard, setCurrentBoard, setShowDeleteBoardModal, boards } = props;
 
   const router = useRouter();

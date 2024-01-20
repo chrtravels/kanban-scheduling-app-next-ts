@@ -3,45 +3,13 @@ import styles from './deleteTask.module.scss'
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface Props {
-  boardName: string,
-  columnName: string,
-  taskId: number,
-  setShowDeleteTask: React.Dispatch<React.SetStateAction<boolean>>,
-}
 
-type Tasks = [{
-  title: string,
-  status: string,
-  subtasks: [{
-    title: string,
-    isCompleted: boolean
-  }],
-  description: string
-}] | []
-
-type Task = {
-  title: string,
-  description: string,
-  status: string,
-  subtasks: [{
-    title: string,
-    isCompleted: boolean
-  }]
-} | {}
-
-type Columns = [{
-  name: string,
-  tasks: Tasks
-}] | []
-
-
-export default function DeleteTask(props: Props) {
+export default function DeleteTask(props) {
   const { boardName, columnName, taskId, setShowDeleteTask } = props;
 
-  const [columns, setColumns] = useState<Columns>([]);
-  const [tasks, setTasks] = useState<Tasks>([]); // set type here for error on line 32
-  const [currentTask, setCurrentTask] = useState<Task>({});
+  const [columns, setColumns] = useState([]);
+  const [tasks, setTasks] = useState([]); // set type here for error on line 32
+  const [currentTask, setCurrentTask] = useState({});
   console.log('current task: ', currentTask)
   const router = useRouter();
 
@@ -52,9 +20,9 @@ export default function DeleteTask(props: Props) {
 
       setColumns(data[0].columns)
 
-      data[0].columns.forEach((column: any) => {
+      data[0].columns.forEach((column) => {
         if (columnName === column.name) {
-          const tempTasks: any = [...column.tasks]
+          const tempTasks = [...column.tasks]
           setTasks(tempTasks)
           setCurrentTask(column.tasks[taskId]);
         }
@@ -65,7 +33,7 @@ export default function DeleteTask(props: Props) {
   }, [])
 
   // Deleting a task is removing it from the board row, so we use PATCH
-  async function handleRemoveTask(e: React.MouseEvent<HTMLButtonElement>) {
+  async function handleRemoveTask(e) {
     e.preventDefault();
 
     const tempTasks = [...tasks]
@@ -75,7 +43,7 @@ export default function DeleteTask(props: Props) {
 
     tempColumns.forEach((column) => {
       if (columnName === column.name) {
-        const tempNewTasks: any = [...tempTasks]
+        const tempNewTasks = [...tempTasks]
         column.tasks = tempNewTasks;
       }
     })

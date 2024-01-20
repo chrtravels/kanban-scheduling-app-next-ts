@@ -10,15 +10,8 @@ import Link from 'next/link';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 import CreateBoard from '../board/createBoard/CreateBoard';
 
-type Props = {
-  boardNames: string[],
-  sidebarExpanded: boolean,
-  setSidebarExpanded: Dispatch<SetStateAction<boolean>>,
-  setCurrentBoard: Dispatch<SetStateAction<string | undefined>>,
-  currentBoard: string | undefined,
-}
 
-export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard}: Props) {
+export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard }) {
   const { theme, setTheme} = useTheme();
   const [active, setActive] = useState(true);
   const [mounted, setMounted] = useState(false)
@@ -90,7 +83,7 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
           {boardNames.map((boardName) => {
             const capitalizedBoardName = () => {
               if (!boardName.includes(' ')) {
-                const capitalizedWords: string[] = [];
+                const capitalizedWords = [];
                 const words = boardName.split(' ')
                 words.forEach((word) => {
                   capitalizedWords.push(word[0].toUpperCase() + word.slice(1))

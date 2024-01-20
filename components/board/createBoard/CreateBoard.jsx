@@ -6,58 +6,42 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-type Params = {
-  setShowAddBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
-  setCurrentBoard: React.Dispatch<React.SetStateAction<string>>
-}
 
-interface Board {
-  name: string,
-  columns: Columns | [],
-}
-
-interface Columns {
-  name: string,
-  tasks: [{}],
-  description: string
-}
-
-
-export default function CreateBoard(props: Params) {
+export default function CreateBoard(props) {
   const { setShowAddBoardModal, setCurrentBoard } = props;
 
-  const [newBoard, setNewBoard] = useState<Board>({
+  const [newBoard, setNewBoard] = useState({
     name: '',
     columns: []
   })
 
-  const [columnNames, setColumnNames]  = useState<string[]>([]);
+  const [columnNames, setColumnNames]  = useState([]);
 
   const router = useRouter();
 
   useEffect(() => {
     setNewBoard({
       name: newBoard.name,
-      columns: (columnNames as any).map((name: string) => {
+      columns: columnNames.map((name) => {
         return {'name': name, 'tasks': [], description: ''}
       }),
     });
 
   }, [columnNames])
 
-  function handleAddColumn (e: React.MouseEvent<HTMLButtonElement>) {
+  function handleAddColumn (e) {
     e.preventDefault();
     setColumnNames([...columnNames, '']);
   }
 
-  function handleRemoveColumn (e: React.MouseEvent<HTMLElement>, index: number) {
+  function handleRemoveColumn (e, index) {
     const tempColumns = [...columnNames];
     tempColumns.splice(index, 1)
     setColumnNames([...tempColumns])
   }
 
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     const boardName = newBoard.name.toLowerCase();

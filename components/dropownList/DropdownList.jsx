@@ -2,20 +2,10 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import SidebarLayout from '../layout/SidebarLayout';
 
 
-type Props = {
-  options: string[],
-  selectedOption: string,
-  setSelectedOption: React.Dispatch<React.SetStateAction<string | any>>,
-  currentFieldName: string,
-  state: {title: string, status: string, subtasks: [{title: string, isCompleted: boolean}], description: string},
-  setState: React.Dispatch<React.SetStateAction<{title: string, status: string, subtasks: {name: string, isCompleted: boolean}, description: string}>>
-}
-
-export default function DropdownList(props: Props) {
-  const [showDropdown, setShowDropdown] = useState<boolean>(false);
+export default function DropdownList() {
+  const [showDropdown, setShowDropdown] = useState(false);
   const {options, selectedOption, setSelectedOption, currentFieldName, state, setState} = props;
 
   const handleCategoryDropdown = () => {
@@ -23,7 +13,7 @@ export default function DropdownList(props: Props) {
     setShowDropdown(showDropdown ? false : true);
   }
 
-  const handleSelect = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSelect = (e) => {
     // handle selecting dropdown options
     const value = e.currentTarget.getAttribute('data-value')
     setSelectedOption(value);
