@@ -7,19 +7,41 @@ import Navbar from '../navbar/Navbar';
 type Board = {
   id: number,
   board_name: string,
-  status: string,
-  tasks: [{
-    title: string,
-    status: string,
-    subtasks: [{
+  columns: [{
+    name: string,
+    tasks: [{
       title: string,
-      isCompleted: boolean
-    }] | [],
+      status: string,
+      subtasks: [{
+        title: string,
+        isCompleted: boolean
+      }],
+      description: string
+    }],
     description: string
   }]
 }
 
-type StringArray = string[]
+type Boards = [{
+  id: number,
+  board_name: string,
+  columns: [{
+    name: string,
+    tasks: [{
+      title: string,
+      status: string,
+      subtasks: [{
+        title: string,
+        isCompleted: boolean
+      }],
+      description: string
+    }],
+    description: string
+  }]
+}] | []
+
+
+type StringArray = string[] | []
 
 
 export default function SidebarLayout({ children,
@@ -27,10 +49,11 @@ export default function SidebarLayout({ children,
   children: React.ReactNode
 }) {
   const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(true);
-  const [boards, setBoards] = useState([]);
+  const [boards, setBoards] = useState<Boards>([]);
+  console.log('boards: ', boards)
   const [boardNames, setBoardNames] = useState<StringArray>([]);
-  const [statusList, setStatusList] = useState([]);
-  const [currentBoard, setCurrentBoard] = useState<string>(boardNames[0]);
+  const [statusList, setStatusList] = useState<StringArray>([]);
+  const [currentBoard, setCurrentBoard] = useState(boardNames[0]);
 
   useMemo(() => {
     if (boardNames.length > 0) {

@@ -23,20 +23,22 @@ type Task = {
 }
 
 type Subtasks = [{
-  name: string,
+  title: string,
   isCompleted: boolean
 }] | any
 
 type Columns = {
   name: string,
-  tasks: [{}],
-  description: string
-}
+  tasks: [{}]
+} | {}
 
+type Board = [{
+  id: Number, board_name: string, columns: []
+}] | []
 
 export default function AddTask(props: Params) {
   const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList } = props;
-  const [rowToUpdate, setRowToUpdate] = useState([])
+  const [rowToUpdate, setRowToUpdate] = useState<Board>([])
 
   const [newTask, setNewTask] = useState<Task>({
     title: '',
@@ -44,7 +46,7 @@ export default function AddTask(props: Params) {
     subtasks: [],
     description: ''
   })
-
+//() => void
   const [selectedOption, setSelectedOption] = useState<string>(newTask.status);
   const [subtasks, setSubtasks]  = useState<Subtasks>(newTask.subtasks)
 
@@ -92,11 +94,11 @@ export default function AddTask(props: Params) {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const { columns } = rowToUpdate[0];
+    const { columns }: any = rowToUpdate[0];
 
     const updatedColumns = [...columns];
 
-    updatedColumns.map((column: Columns) => {
+    updatedColumns.map((column: any) => {
       if (selectedOption === column.name) {
         column.tasks.push(newTask);
         return column;
@@ -169,7 +171,7 @@ export default function AddTask(props: Params) {
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Subtasks</span>
 
-              {subtasks.map((subtask, index: number) => {
+              {subtasks.map((subtask: {title: string, isCompleted: boolean}, index: number) => {
                 return (
                   <div key={`${subtask.title}-${index}`} className={styles.subtaskRow}>
                     <input

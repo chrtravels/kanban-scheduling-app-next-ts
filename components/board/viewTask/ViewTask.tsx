@@ -21,7 +21,7 @@ type Params = {
   task: {
     title: string,
     status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
+    subtasks: [{title: string, isCompleted: boolean}] | [],
     description: string
   },
   statusTypes: string[],
@@ -112,7 +112,7 @@ export default function ViewTask(props: Params) {
   function handleSelected (e: React.ChangeEvent<HTMLInputElement>, position: number) {
     e.preventDefault();
 
-    const subtasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
+    const subtasksCopy: [{title: string, isCompleted: boolean}] | [] = [...subtasks];
 
     subtasksCopy[position] = subtasks[position].isCompleted ?
     {'title': subtasks[position].title, 'isCompleted': false} :
@@ -251,7 +251,7 @@ export default function ViewTask(props: Params) {
                 }))
               }>
                 {props.statusTypes.map((option) => {
-                  return <option value={option}>{option}</option>
+                  return <option key={option} value={option}>{option}</option>
                 })}
               </select>
 

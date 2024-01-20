@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 interface Params {
   setShowEditBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
-  currentBoard: string
+  currentBoard: string | undefined
 }
 
 interface Board {

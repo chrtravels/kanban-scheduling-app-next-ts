@@ -13,29 +13,24 @@ import DeleteBoard from '../board/deleteBoard/DeleteBoard';
 
 type Params = {
   sidebarExpanded: boolean,
-  showAddTask: boolean,
-  setCurrentBoard: () => string,
-  currentBoard: string,
+  setCurrentBoard: Dispatch<SetStateAction<string | undefined>>,
+  currentBoard: string | undefined,
   statusList: string[],
   boards: [{
     id: number,
     board_name: string,
     columns: [{
-      id: number,
-      column_name: string,
+      name: string,
       tasks: [{
-        id: number,
         title: string,
         status: string,
         subtasks: [{
-          id: number,
           title: string,
           isCompleted: boolean
-        }] | [],
-        description: string
+        }]
       }]
     }]
-  }]
+  }] | []
 }
 
 const Navbar = ( props: Params ) => {

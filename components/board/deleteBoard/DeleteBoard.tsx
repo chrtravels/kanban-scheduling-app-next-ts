@@ -3,28 +3,24 @@ import styles from './deleteBoard.module.scss'
 import { useRouter } from 'next/navigation';
 
 interface Props {
-  currentBoard: string,
-  setCurrentBoard: React.Dispatch<React.SetStateAction<string>>,
+  currentBoard: string | undefined,
+  setCurrentBoard: React.Dispatch<React.SetStateAction<string> | undefined>,
   setShowDeleteBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
   boards: [{
     id: number,
     board_name: string,
     columns: [{
-      id: number,
-      column_name: string,
+      name: string,
       tasks: [{
-        id: number,
         title: string,
         status: string,
         subtasks: [{
-          id: number,
           title: string,
           isCompleted: boolean
-        }] | [],
-        description: string
+        }]
       }]
     }]
-  }]
+  }] | []
 }
 
 export default function DeleteBoard(props: Props) {

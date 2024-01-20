@@ -12,10 +12,10 @@ import CreateBoard from '../board/createBoard/CreateBoard';
 
 type Props = {
   boardNames: string[],
-  sidebarExpanded: Boolean,
-  setSidebarExpanded: Dispatch<SetStateAction<Boolean>>,
-  setCurrentBoard: Dispatch<SetStateAction<string>>,
-  currentBoard: string,
+  sidebarExpanded: boolean,
+  setSidebarExpanded: Dispatch<SetStateAction<boolean>>,
+  setCurrentBoard: Dispatch<SetStateAction<string | undefined>>,
+  currentBoard: string | undefined,
 }
 
 export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard}: Props) {

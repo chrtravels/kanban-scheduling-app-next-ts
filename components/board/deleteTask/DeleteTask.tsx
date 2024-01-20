@@ -10,14 +10,39 @@ interface Props {
   setShowDeleteTask: React.Dispatch<React.SetStateAction<boolean>>,
 }
 
+type Tasks = [{
+  title: string,
+  status: string,
+  subtasks: [{
+    title: string,
+    isCompleted: boolean
+  }],
+  description: string
+}] | []
+
+type Task = {
+  title: string,
+  description: string,
+  status: string,
+  subtasks: [{
+    title: string,
+    isCompleted: boolean
+  }]
+} | {}
+
+type Columns = [{
+  name: string,
+  tasks: Tasks
+}] | []
+
 
 export default function DeleteTask(props: Props) {
   const { boardName, columnName, taskId, setShowDeleteTask } = props;
 
-  const [columns, setColumns] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [currentTask, setCurrentTask] = useState({});
-
+  const [columns, setColumns] = useState<Columns>([]);
+  const [tasks, setTasks] = useState<Tasks>([]); // set type here for error on line 32
+  const [currentTask, setCurrentTask] = useState<Task>({});
+  console.log('current task: ', currentTask)
   const router = useRouter();
 
   useEffect(() => {
@@ -27,9 +52,10 @@ export default function DeleteTask(props: Props) {
 
       setColumns(data[0].columns)
 
-      data[0].columns.forEach((column) => {
+      data[0].columns.forEach((column: any) => {
         if (columnName === column.name) {
-          setTasks([...column.tasks])
+          const tempTasks: any = [...column.tasks]
+          setTasks(tempTasks)
           setCurrentTask(column.tasks[taskId]);
         }
       })
@@ -39,7 +65,7 @@ export default function DeleteTask(props: Props) {
   }, [])
 
   // Deleting a task is removing it from the board row, so we use PATCH
-  async function handleRemoveTask(e) {
+  async function handleRemoveTask(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
 
     const tempTasks = [...tasks]
@@ -49,7 +75,8 @@ export default function DeleteTask(props: Props) {
 
     tempColumns.forEach((column) => {
       if (columnName === column.name) {
-        column.tasks = [...tempTasks];
+        const tempNewTasks: any = [...tempTasks]
+        column.tasks = tempNewTasks;
       }
     })
 
@@ -80,7 +107,7 @@ export default function DeleteTask(props: Props) {
       <div className={`card ${styles.modal}`}>
         <span className='heading-m'>Delete this task?</span>
 
-        <p className='body-m'>Are you sure you want to delete the '{currentTask.name}' task and it's subtasks? This action cannot be reversed.</p>
+        <p className='body-m'>Are you sure you want to delete the '{currentTask.title}' task and it's subtasks? This action cannot be reversed.</p>
 
         <div className={styles.btnContainer}>
           <button className='btn-small btn-destructive' onClick={(e) => handleRemoveTask(e)}>Delete</button>
