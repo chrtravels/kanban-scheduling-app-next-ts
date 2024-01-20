@@ -51,7 +51,7 @@ export default function EditBoard(props: Params) {
       name: newBoard.name,
       columns: [...newColumns]
     })
-    console.log('new board: ', newBoard)
+
   }, [columnNames])
 
   useEffect(() => {
@@ -93,7 +93,7 @@ export default function EditBoard(props: Params) {
     setColumnNames([...tempColumnNames])
   }
 
-  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleSubmit = async () => {
 
     const options = {
       method: 'PATCH',
@@ -112,8 +112,8 @@ export default function EditBoard(props: Params) {
         setShowEditBoardModal(false);
         router.push(`/${newBoard.name}`)
       }
+
     } catch (error) {
-      console.log(error)
       throw new Error('Error updating Board')
     }
   }
@@ -151,7 +151,7 @@ export default function EditBoard(props: Params) {
 
               {columnNames.map((name, index) => {
                 return (
-                  <div id={name} className={styles.statusRow}>
+                  <div key={name} className={styles.statusRow}>
                     <input
                       type='text'
                       id='columnNames'
@@ -183,7 +183,7 @@ export default function EditBoard(props: Params) {
 
 
               <div className={styles.btnContainer}>
-                <button className='btn-small btn-primary' onClick={(e) => handleSubmit(e)}>Save Changes</button>
+                <button className='btn-small btn-primary' >Save Changes</button>
               </div>
             </form>
           </div>
