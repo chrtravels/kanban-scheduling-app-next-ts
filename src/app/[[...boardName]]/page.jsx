@@ -1,9 +1,9 @@
-import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import styles from './page.module.css'
 
 import conn from '../../../lib/db'
 import BoardLayout from '../../../components/board/BoardLayout';
+
 
 async function getData() {
   try {
@@ -33,20 +33,23 @@ async function generateStaticParams() {
 
 generateStaticParams();
 
-export default async function Home({ boardName }) {
+export default async function Home({ params }) {
+  let boardName = params.boardName ? params.boardName[0].replace(/%20/g, " "): '';
+
   const boards = await getData();
 
   if (!boardName) {
+    console.log('test')
     if (boards[0].board_name.includes(' ')) {
       redirect(`/${boards[0].board_name.split(' ').join('-')}`)
     } else redirect(`/${boards[0].board_name.replace(/%20/g, " ")}`)
+  } else if (boardName.includes(' ')) {
+    redirect(`/${boardName.split(' ').join('-')}`)
   }
-
-  const UrlBoardName = boardName[0].replace(/%20/g, " ")
 
   return (
     <main className={styles.main}>
-      <BoardLayout boards={boards} UrlBoardName={UrlBoardName} />
+      <BoardLayout boards={boards} UrlBoardName={boardName} />
     </main>
   )
 }

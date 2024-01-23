@@ -1,9 +1,10 @@
 'use client'
 
+import ViewTask from '../viewTask/ViewTask';
 import styles from './taskCards.module.scss'
 
 import { useState } from 'react';
-import ViewTask from '../viewTask/ViewTask';
+
 
 export default function TaskCards(props) {
   const { boardName, boardStatus, tasks, statusTypes, setColumnStatus, setShowDeleteTask, clickedId, setClickedId } = props;

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 
-export default function DropdownList() {
+export default function DropdownList( props ) {
   const [showDropdown, setShowDropdown] = useState(false);
   const {options, selectedOption, setSelectedOption, currentFieldName, state, setState} = props;
 

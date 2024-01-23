@@ -3,6 +3,7 @@ import './globals.css'
 import Providers from '../../context/Providers';
 import SidebarLayout from '../../components/layout/SidebarLayout';
 
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter'

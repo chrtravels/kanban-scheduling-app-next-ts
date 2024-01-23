@@ -11,6 +11,7 @@ import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 import CreateBoard from '../board/createBoard/CreateBoard';
 
 
+
 export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard }) {
   const { theme, setTheme} = useTheme();
   const [active, setActive] = useState(true);

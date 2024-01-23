@@ -4,55 +4,13 @@ import { useEffect, useMemo, useState } from 'react';
 import Sidebar from '../sidebar/Sidebar';
 import Navbar from '../navbar/Navbar';
 
-type Board = {
-  id: number,
-  board_name: string,
-  columns: [{
-    name: string,
-    tasks: [{
-      title: string,
-      status: string,
-      subtasks: [{
-        title: string,
-        isCompleted: boolean
-      }],
-      description: string
-    }],
-    description: string
-  }]
-}
 
-type Boards = [{
-  id: number,
-  board_name: string,
-  columns: [{
-    name: string,
-    tasks: [{
-      title: string,
-      status: string,
-      subtasks: [{
-        title: string,
-        isCompleted: boolean
-      }],
-      description: string
-    }],
-    description: string
-  }]
-}] | []
+export default function SidebarLayout({ children }) {
+  const [sidebarExpanded, setSidebarExpanded] = useState(true);
+  const [boards, setBoards] = useState([]);
 
-
-type StringArray = string[] | []
-
-
-export default function SidebarLayout({ children,
-}: {
-  children: React.ReactNode
-}) {
-  const [sidebarExpanded, setSidebarExpanded] = useState<boolean>(true);
-  const [boards, setBoards] = useState<Boards>([]);
-  console.log('boards: ', boards)
-  const [boardNames, setBoardNames] = useState<StringArray>([]);
-  const [statusList, setStatusList] = useState<StringArray>([]);
+  const [boardNames, setBoardNames] = useState([]);
+  const [statusList, setStatusList] = useState([]);
   const [currentBoard, setCurrentBoard] = useState(boardNames[0]);
 
   useMemo(() => {
@@ -79,11 +37,11 @@ export default function SidebarLayout({ children,
 
 
   useMemo(() => {
-    const boardList: Array<string> = [];
-    const statusTypes: Array<string> = [];
+    const boardList = [];
+    const statusTypes = [];
 
     if (boards.length > 0) {
-      boards.forEach((el: Board, idx) => {
+      boards.forEach((el, idx) => {
         if (!boardList.includes(el.board_name)) {
           boardList.push(el.board_name)
         }
