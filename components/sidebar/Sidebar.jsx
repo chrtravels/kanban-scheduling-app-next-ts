@@ -16,6 +16,7 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
   const { theme, setTheme} = useTheme();
   const [active, setActive] = useState(true);
   const [mounted, setMounted] = useState(false)
+  // get urlparams from props to see if the page is being reloaded. If so keep current board active in sidebar
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
   const [showAddBoardModal, setShowAddBoardModal] = useState(false);
 

@@ -18,24 +18,9 @@ async function getData() {
 }
 
 
-async function generateStaticParams() {
-  const boards = await getData();
-  const params = [];
-
-  Object.keys(boards[0]).forEach((key) => {
-    if (!params.includes(key)) {
-      params.push(key.split(' ').join('-'));
-    }
-  })
-
-  return params;
-}
-
-generateStaticParams();
-
 export default async function Home({ params }) {
   let boardName = params.boardName ? params.boardName[0].replace(/%20/g, " "): '';
-
+  console.log(params)
   const boards = await getData();
 
   if (!boardName) {
