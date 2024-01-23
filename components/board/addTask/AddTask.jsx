@@ -18,8 +18,8 @@ export default function AddTask(props) {
     subtasks: [],
     description: ''
   })
-//() => void
-  const [selectedOption, setSelectedOption] = useState<string>(newTask.status);
+
+  const [selectedOption, setSelectedOption] = useState(newTask.status);
   const [subtasks, setSubtasks]  = useState(newTask.subtasks)
 
   const router = useRouter();
@@ -191,7 +191,7 @@ export default function AddTask(props) {
                     ...newTask, [e.target.id]: e.target.value
                   }))}>
                   {props.statusList.map((option) => {
-                    return <option value={option}>{option}</option>
+                    return <option key={option} value={option}>{option}</option>
                   })}
                 </select>
 

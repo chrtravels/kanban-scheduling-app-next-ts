@@ -12,7 +12,7 @@ import DropdownList from '../../dropownList/DropdownList';
 export default function EditTask(props) {
   const { boardStatus, boardName, taskId, tasks, task, columns, setColumns, statusTypes, setShowTask } = props;
 
-  const [currentTask, setCurrentTask] = useState<({
+  const [currentTask, setCurrentTask] = useState({
     title: task.title,
     status: task.status,
     subtasks: task.subtasks,
