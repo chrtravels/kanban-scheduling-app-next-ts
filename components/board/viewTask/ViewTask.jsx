@@ -1,7 +1,7 @@
 'use client'
 
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './viewTask.module.scss'
 import DropdownList from '../../dropownList/DropdownList';
@@ -9,30 +9,11 @@ import EditTask from '../editTask/EditTask';
 
 
 
-type Params = {
-  databaseId: number,
-  boardName: string,
-  boardStatus: string,
-  tasks: [{
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }],
-  taskId: number,
-  task: {
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  },
-  statusTypes: string[],
-  setShowTask: React.Dispatch<React.SetStateAction<boolean>>,
-}
 
-export default function ViewTask(props: Params) {
-  const { databaseId, boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask } = props;
+export default function ViewTask(props) {
+  const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask, setShowDeleteTask } = props;
 
+  const [columns, setColumns] = useState([]);
   const [selectedOption, setSelectedOption] = useState(task.status);
   const [subtasks, setSubtasks] = useState(task.subtasks);
   const [showActionsBox, setShowActionsBox] = useState(false);
@@ -40,26 +21,31 @@ export default function ViewTask(props: Params) {
 
   const router = useRouter();
 
-  type TaskState = {
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  }
+  useEffect(() => {
+    const controller = new AbortController();
 
-  const [taskState, setTaskState] = useState<TaskState>({
+    const fetchData = async () => {
+      const res = await fetch(`/api/task?boardName=${boardName}`);
+      const data = await res.json();
+      setColumns(data[0].columns);
+      return Response.json(data);
+    }
+    fetchData()
+  }, [])
+
+  const [taskState, setTaskState] = useState({
     title: task.title,
     status: task.status,
     subtasks: subtasks,
     description: task.description
   })
 
-  type TasksCompleted = () => number;
 
-  const tasksCompleted: TasksCompleted = () => {
+  // Calculates the # of tasks completed for the subtasks header
+  const tasksCompleted = () => {
     let numCompleted= 0;
 
-    subtasks.forEach((subtask: {title: string, isCompleted: boolean}) => {
+    subtasks.forEach((subtask) => {
       if (subtask.isCompleted) {
         numCompleted++;
       }
@@ -68,49 +54,65 @@ export default function ViewTask(props: Params) {
     return numCompleted;
   }
 
-  // Setup array to contain the state of the check boxes
+  // Setup array to contain the boolean checked state of the check boxes
   const [subtasksChecked, setSubtasksChecked] = useState(
     subtasks.map((subtask) => {
       return subtask.isCompleted
     })
   );
 
-  function handleSelected (e, position: number) {
+  useEffect(() => {
     // Handle the checkbox state changes
-      const updatedSubtasksChecked = subtasksChecked.map((checked, index) => {
-        return index === position ? !checked : checked
-      });
-      setSubtasksChecked(updatedSubtasksChecked);
+    setSubtasksChecked(() => {
+      const checkedSubtasks = subtasks.map((subtask) => {
+        return subtask.isCompleted;
+      })
+      return [...checkedSubtasks];
+    })
+  }, [subtasks])
 
-  }
+  function handleSelected (e, position) {
+    e.preventDefault();
 
-  function handleChange (e, position: number) {
-    const subTasksCopy: [{title: string, isCompleted: boolean}] = [...subtasks];
+    const subtasksCopy = [...subtasks];
 
-    subTasksCopy[position] = subtasks[position].isCompleted ?
+    subtasksCopy[position] = subtasks[position].isCompleted ?
     {'title': subtasks[position].title, 'isCompleted': false} :
     {'title': subtasks[position].title, 'isCompleted': true}
     // Update subTasks completed status
-    setSubtasks(subTasksCopy)
-
+    setSubtasks([...subtasksCopy])
     setTaskState((taskState) => ({
-      ...taskState, 'subtasks': subTasksCopy
+      ...taskState, 'subtasks': subtasksCopy
     }))
+  }
+
+  async function handleUpdateTask () {
     // Updates the task on the database when the task is marked completed
-    handleUpdateTask(subTasksCopy)
-  }
+    const updatedTasks = [...tasks];
+    const clonedTask = Object.assign({}, taskState);
+    const updatedColumns = [...columns];
 
+    if (boardStatus === taskState.status || taskState.status === '') {
+      // Checks if the task status has been changed to see if we should switch columns
+      updatedTasks[taskId] = clonedTask;
 
-  function handleEditTask (e: React.MouseEvent<HTMLButtonElement>) {
-    setShowActionsBox(false);
-    setShowEditTask(true);
-  }
-
-  const handleUpdateTask = async (subtasks: [{title: string, isCompleted: boolean}]) => {
-    const updatedTasks: [{}] = [...tasks];
-    const clonedTaskState = Object.assign({}, taskState);
-    clonedTaskState.subtasks = subtasks
-    updatedTasks[taskId] = clonedTaskState;
+      updatedColumns.forEach((column) => {
+      if (boardStatus === column.name) {
+        column.tasks = [...updatedTasks];
+        return column;
+      } else return column;
+      setColumns([...updatedColumns]);
+    })
+    } else {
+      updatedColumns.forEach((column) => {
+        if (column.name === boardStatus) {
+          column.tasks.splice(taskId,1)
+        } else if (column.name === taskState.status) {
+          column.tasks.push(clonedTask);
+        }
+      })
+      setColumns([...updatedColumns]);
+    }
 
     const options = {
       method: 'PATCH',
@@ -118,12 +120,11 @@ export default function ViewTask(props: Params) {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
+      body: JSON.stringify([boardName, updatedColumns])
     }
 
     try {
       const res = await fetch('/api/task', options);
-      const data = res.json();
 
       if (res.ok) {
         router.refresh();
@@ -131,41 +132,43 @@ export default function ViewTask(props: Params) {
     } catch (error) {
       throw new Error('Error updating task')
     }
-  }
-
-  function handleDeleteTask(e: React.MouseEvent<HTMLButtonElement>) {
 
   }
 
-  // Used to update the task on the database when the status changes
-  useMemo(() => {
-    handleUpdateTask(taskState.subtasks)
-  }, [taskState])
-
+  function handleEditTask (e) {
+    setShowActionsBox(false);
+    setShowEditTask(true);
+  }
 
   if (showEditTask) {
     return (
-      <div className={styles.container}>
+      <div className={styles.overlay}>
         <div className={`card ${styles.editContainer}`}>
-          <EditTask databaseId={databaseId} boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} statusTypes={statusTypes} setShowTask={setShowTask} />
+          <EditTask boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} columns={columns} setColumns={setColumns} statusTypes={statusTypes} setShowTask={setShowTask} />
         </div>
       </div>
     )
   } else {
     return (
-      <div className={styles.container}>
+      <div className={styles.overlay}>
         <div className={`card ${styles.taskContainer}`}>
           <div className={styles.header}>
             {showActionsBox && (
               <div className={`actions-container ${styles.actionsContainer}`}>
                 <button className='heading-s' value='edit' onClick={(e) => handleEditTask(e)}>Edit Task</button>
-                <button className='heading-s' value='delete' onClick={(e) => handleDeleteTask(e)}>Delete Task</button>
-                <button className='heading-s' value='cancel' onClick={(e) => props.setShowTask(false)}>Cancel</button>
+                <button className='heading-s' value='delete' onClick={() => {
+                  setShowTask(false);
+                  setShowDeleteTask(true);
+                }}>Delete Task</button>
+                <button className='heading-s' value='cancel' onClick={() => setShowTask(false)}>Cancel</button>
               </div>
             )}
 
             <h3>{task.title}</h3>
-            <div className={styles.actionsButton} onClick={() => setShowActionsBox(!showActionsBox)}>
+            <div className={styles.actionsButton} onClick={() => {
+              handleUpdateTask ()
+              setShowActionsBox(!showActionsBox)}
+            }>
               <Image
               src='/assets/icon-vertical-ellipsis.svg'
               height={20}
@@ -181,17 +184,14 @@ export default function ViewTask(props: Params) {
           <div className={styles.subtasks}>
             {task.subtasks.map((subtask, idx) => {
               return (
-                <div className={`subtask body-l ${styles.subtask}`}>
+                <div key={subtask.title} className={`subtask body-l ${styles.subtask}`}>
                   <input
                   className='checkbox'
                   id={subtask.title}
                   type='checkbox'
                   value='status'
                   checked={subtasksChecked[idx]}
-                  onChange={(e) => {
-                    handleSelected(e, idx)
-                    handleChange(e, idx)
-                  }}
+                  onChange={(e) => handleSelected(e, idx)}
                   />
                   <span className={subtasksChecked[idx] ? styles.completedSubtask : ''}>{subtask.title}</span>
                   </div>
@@ -213,7 +213,7 @@ export default function ViewTask(props: Params) {
                 }))
               }>
                 {props.statusTypes.map((option) => {
-                  return <option value={option}>{option}</option>
+                  return <option key={option} value={option}>{option}</option>
                 })}
               </select>
 

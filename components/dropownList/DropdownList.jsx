@@ -4,16 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 
-type Options = {
-  options: string[],
-  selectedOption: string,
-  setSelectedOption: React.Dispatch<React.SetStateAction<string>>,
-  currentFieldName: string,
-  state: {title: string, status: string, subtasks: [{title: string, isCompleted: boolean}], description: string},
-  setState: (state: {}) => {} | null
-}
-
-export default function DropdownList(props: Options) {
+export default function DropdownList( props ) {
   const [showDropdown, setShowDropdown] = useState(false);
   const {options, selectedOption, setSelectedOption, currentFieldName, state, setState} = props;
 
@@ -22,7 +13,7 @@ export default function DropdownList(props: Options) {
     setShowDropdown(showDropdown ? false : true);
   }
 
-  const handleSelect = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleSelect = (e) => {
     // handle selecting dropdown options
     const value = e.currentTarget.getAttribute('data-value')
     setSelectedOption(value);

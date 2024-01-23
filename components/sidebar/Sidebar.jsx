@@ -10,19 +10,13 @@ import Link from 'next/link';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 import CreateBoard from '../board/createBoard/CreateBoard';
 
-type Props = {
-  boardNames: string[],
-  boardCount: number,
-  sidebarExpanded: Boolean,
-  setSidebarExpanded: Dispatch<SetStateAction<Boolean>>,
-  setCurrentBoard: Dispatch<SetStateAction<string>>,
-  currentBoard: string,
-}
 
-export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard}: Props) {
+
+export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard }) {
   const { theme, setTheme} = useTheme();
-  const [active, setActive] = useState(false);
+  const [active, setActive] = useState(true);
   const [mounted, setMounted] = useState(false)
+  // get urlparams from props to see if the page is being reloaded. If so keep current board active in sidebar
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
   const [showAddBoardModal, setShowAddBoardModal] = useState(false);
 
@@ -46,7 +40,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
   return (
     <div className={styles.main}>
       {showAddBoardModal && (
-        <CreateBoard setShowAddBoardModal={setShowAddBoardModal} />
+        <CreateBoard setShowAddBoardModal={setShowAddBoardModal} setCurrentBoard={setCurrentBoard} />
       )}
 
       <div className={styles.btnContainer}>
@@ -86,12 +80,12 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
         </div>
 
         <div className={styles.sidebarNavItemsContainer}>
-          <span className={`heading-s ${styles.navItemsHeader}`}>ALL BOARDS ({boardCount})</span>
+          <span className={`heading-s ${styles.navItemsHeader}`}>ALL BOARDS ({boardNames.length})</span>
 
           {boardNames.map((boardName) => {
             const capitalizedBoardName = () => {
               if (!boardName.includes(' ')) {
-                const capitalizedWords: string[] = [];
+                const capitalizedWords = [];
                 const words = boardName.split(' ')
                 words.forEach((word) => {
                   capitalizedWords.push(word[0].toUpperCase() + word.slice(1))
@@ -101,7 +95,7 @@ export default function Sidebar({ boardNames, boardCount, sidebarExpanded, setSi
             }
 
             return (
-              <div onClick={() => {
+              <div key={boardName} onClick={() => {
                 setCurrentBoard(boardName)
               }}>
                 <Link

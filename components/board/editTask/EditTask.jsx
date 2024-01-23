@@ -8,38 +8,11 @@ import { useEffect, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
 
 
-type Params = {
-  databaseId: number,
-  boardStatus: string,
-  boardName: string,
-  tasks: [],
-  taskId: number,
-  task: {
-    title: string,
-    status: string,
-    subtasks: [{title: string, isCompleted: boolean}],
-    description: string
-  },
-  statusTypes: string[],
-  setShowTask: () => boolean
-}
 
-type Task = {
-  title: string,
-  status: string,
-  subtasks: [{title: string, isCompleted: boolean}],
-  description: string
-}
+export default function EditTask(props) {
+  const { boardStatus, boardName, taskId, tasks, task, columns, setColumns, statusTypes, setShowTask } = props;
 
-type Subtasks = [{
-  title: string,
-  isCompleted: boolean
-}]
-
-export default function EditTask(props: Params) {
-  const { databaseId, boardStatus, boardName, taskId, tasks, task, statusTypes, setShowTask } = props;
-
-  const [currentTask, setCurrentTask] = useState<Task>({
+  const [currentTask, setCurrentTask] = useState({
     title: task.title,
     status: task.status,
     subtasks: task.subtasks,
@@ -47,8 +20,7 @@ export default function EditTask(props: Params) {
   })
 
   const [selectedOption, setSelectedOption] = useState(currentTask.status);
-  const [subtasks, setSubtasks] = useState<Subtasks>(currentTask.subtasks);
-  // const [newSubtask, setNewSubtask] = useState(false)
+  const [subtasks, setSubtasks] = useState(currentTask.subtasks);
 
   const router = useRouter();
 
@@ -75,29 +47,56 @@ export default function EditTask(props: Params) {
   }
 
   const handleSubmit = async () => {
-    const updatedTasks: [{}] = [...tasks];
-    updatedTasks[taskId] = currentTask;
+    // Updates the task on the database when the task is marked completed
+    const updatedTasks = [...tasks];
+    const clonedTask = { ...currentTask };
+    const updatedColumns = [...columns];
+
+    if (boardStatus === currentTask.status || currentTask.status === '') {
+      // Checks if the task status has been changed to see if we should switch columns
+      updatedTasks[taskId] = clonedTask;
+
+      updatedColumns.forEach((column) => {
+        if (boardStatus === column.name) {
+          column.tasks = [...updatedTasks];
+          return column;
+        } else return column;
+      });
+      setColumns(updatedColumns);
+    } else {
+      updatedColumns.forEach((column) => {
+        if (column.name === boardStatus) {
+          column.tasks.splice(taskId, 1);
+        } else if (column.name === currentTask.status) {
+          column.tasks.push(clonedTask);
+        }
+      });
+      setColumns(updatedColumns);
+    }
+
+    console.log('current Task: ', currentTask);
+    console.log('updated columns: ', updatedColumns);
 
     const options = {
       method: 'PATCH',
-      header: {
-        'Accept': 'application/json',
-        'Content-type': 'application/json',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
-    }
+      body: JSON.stringify([boardName, updatedColumns]),
+    };
 
     try {
       const res = await fetch('/api/task', options);
-      const data = res.json();
 
       if (res.ok) {
         router.refresh();
       }
     } catch (error) {
-      throw new Error('Error updating task')
+      throw new Error('Error updating task');
     }
-  }
+  };
+
 
   return (
     <div className={styles.formWrapper}>
@@ -142,7 +141,7 @@ export default function EditTask(props: Params) {
 
             {subtasks.map((subtask, index) => {
               return (
-                <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
+                <div key={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
                   <input
                     type='text'
                     id='subtasks'
@@ -188,7 +187,7 @@ export default function EditTask(props: Params) {
                   ...currentTask, [e.target.id]: e.target.value
                 }))}>
                 {props.statusTypes.map((option) => {
-                  return <option value={option}>{option}</option>
+                  return <option key={option} value={option}>{option}</option>
                 })}
               </select>
 

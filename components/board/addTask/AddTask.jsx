@@ -8,29 +8,9 @@ import { useEffect, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
 
 
-type Params = {
-  currentBoard: string,
-  setCurrentBoard: () => string,
-  setShowAddTaskModal: React.Dispatch<React.SetStateAction<boolean>>,
-  statusList: string[]
-}
-
-type Task = {
-  title: string,
-  status: string,
-  subtasks: [{title: string, isCompleted: boolean}] | [],
-  description: string
-}
-
-type Subtasks = [{
-  title: string,
-  isCompleted: boolean
-}]
-
-
-export default function AddTask(props: Params) {
+export default function AddTask(props) {
   const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList } = props;
-  const [rowToUpdate, setRowToUpdate] = useState([{}])
+  const [rowToUpdate, setRowToUpdate] = useState([])
 
   const [newTask, setNewTask] = useState({
     title: '',
@@ -40,7 +20,7 @@ export default function AddTask(props: Params) {
   })
 
   const [selectedOption, setSelectedOption] = useState(newTask.status);
-  const [subtasks, setSubtasks]  = useState(newTask.subtasks);
+  const [subtasks, setSubtasks]  = useState(newTask.subtasks)
 
   const router = useRouter();
 
@@ -55,37 +35,47 @@ export default function AddTask(props: Params) {
   }, [subtasks, selectedOption])
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchData = async () => {
-      const res = await fetch(`/api/task?boardName=${currentBoard}&boardStatus=${selectedOption}`);
+      const res = await fetch(`/api/task?boardName=${currentBoard}&boardStatus=${selectedOption}`, {
+        signal: controller.signal
+      });
       const data = await res.json();
       setRowToUpdate(data);
-      return Response.json(data);
+
+      return () => controller.abort();
     }
     fetchData()
   }, [selectedOption])
 
-
-  function handleAddTask (e: React.MouseEvent<HTMLDivElement>) {
+  function handleAddTask (e) {
     e.preventDefault();
-    setSubtasks([...newTask.subtasks, {'title': '', 'isCompleted': false}]);
+
+    const tempNewSubtasks = [...newTask.subtasks, {name: '', isCompleted: false}];
+    setSubtasks([...tempNewSubtasks]);
   }
 
-  function handleRemoveSubtask (e: React.MouseEvent<HTMLDivElement>, index: number) {
+  function handleRemoveSubtask (e, index) {
     const tempSubtasks = [...subtasks];
     tempSubtasks.splice(index, 1)
     setSubtasks([...tempSubtasks])
   }
 
 
-  const handleSubmit = async () => {
-    const {id, status, tasks} = rowToUpdate[0];
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    const updatedTasks = [...tasks];
-    updatedTasks.push(newTask);
+    const { columns } = rowToUpdate[0];
 
-    const databaseId = id;
-    const boardStatus = status;
+    const updatedColumns = [...columns];
 
+    updatedColumns.map((column) => {
+      if (selectedOption === column.name) {
+        column.tasks.push(newTask);
+        return column;
+      } else return column;
+    })
 
     const options = {
       method: 'PATCH',
@@ -93,7 +83,7 @@ export default function AddTask(props: Params) {
         'Accept': 'application/json',
         'Content-type': 'application/json',
       },
-      body: JSON.stringify([databaseId, boardStatus, updatedTasks])
+      body: JSON.stringify([currentBoard, updatedColumns])
     }
 
     try {
@@ -102,6 +92,7 @@ export default function AddTask(props: Params) {
 
       if (res.ok) {
         router.refresh();
+        setShowAddTaskModal(false);
       }
     } catch (error) {
       throw new Error('Error updating task')
@@ -120,7 +111,7 @@ export default function AddTask(props: Params) {
         </div>
 
         <div className={styles.formContainer}>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(e) => handleSubmit(e)}>
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Title</span>
               <input
@@ -154,7 +145,7 @@ export default function AddTask(props: Params) {
 
               {subtasks.map((subtask, index) => {
                 return (
-                  <div id={`${subtask.title[0]}-${index}`} className={styles.subtaskRow}>
+                  <div key={`${subtask.title}-${index}`} className={styles.subtaskRow}>
                     <input
                       type='text'
                       id='subtasks'
@@ -200,7 +191,7 @@ export default function AddTask(props: Params) {
                     ...newTask, [e.target.id]: e.target.value
                   }))}>
                   {props.statusList.map((option) => {
-                    return <option value={option}>{option}</option>
+                    return <option key={option} value={option}>{option}</option>
                   })}
                 </select>
 
@@ -216,7 +207,7 @@ export default function AddTask(props: Params) {
             </div>
 
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={handleSubmit}>Create Task</button>
+              <button className='btn-small btn-primary'>Create Task</button>
             </div>
           </form>
         </div>

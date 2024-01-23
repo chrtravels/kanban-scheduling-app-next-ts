@@ -2,36 +2,17 @@
 
 import styles from './createBoard.module.scss'
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import DropdownList from '../../dropownList/DropdownList';
 
 
-type Params = {
-  setShowAddBoardModal: React.Dispatch<React.SetStateAction<boolean>>,
-}
-
-type Board = {
-  title: string,
-  status: string,
-  subtasks: [{title: string, isCompleted: boolean}] | [],
-  description: string
-}
-
-type Subtasks = [{
-  title: string,
-  isCompleted: boolean
-}]
-
-
-export default function CreateBoard(props: Params) {
-  const { setShowAddBoardModal } = props;
-  const [rowToUpdate, setRowToUpdate] = useState([{}])
+export default function CreateBoard(props) {
+  const { setShowAddBoardModal, setCurrentBoard } = props;
 
   const [newBoard, setNewBoard] = useState({
     name: '',
-    statusList: []
+    columns: []
   })
 
   const [columnNames, setColumnNames]  = useState([]);
@@ -41,18 +22,19 @@ export default function CreateBoard(props: Params) {
   useEffect(() => {
     setNewBoard({
       name: newBoard.name,
-      statusList: [...columnNames],
+      columns: columnNames.map((name) => {
+        return {'name': name, 'tasks': [], description: ''}
+      }),
     });
 
   }, [columnNames])
 
-  // SET BOARD NAME AND COLUMNS TO BE UNIQUE TO AVOID DUPLICATE ENTRIES
-  function handleAddColumn (e: React.MouseEvent<HTMLDivElement>) {
+  function handleAddColumn (e) {
     e.preventDefault();
-    setColumnNames([...columnNames, e.target.id]);
+    setColumnNames([...columnNames, '']);
   }
 
-  function handleRemoveColumn (e: React.MouseEvent<HTMLElement>, index: number) {
+  function handleRemoveColumn (e, index) {
     const tempColumns = [...columnNames];
     tempColumns.splice(index, 1)
     setColumnNames([...tempColumns])
@@ -61,18 +43,18 @@ export default function CreateBoard(props: Params) {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    // COLUMN HAS TO BE SUBMITTED TO HANDLE SUBMIT MULTIPLE TIMES TO CREATE ALL OF THE STATUS ROWS
-    const boardName = newBoard.name;
+
+    const boardName = newBoard.name.toLowerCase();
+    const columns = newBoard.columns;
 
     if (boardName) {
-      columnNames.forEach(async (statusName) => {
         const options = {
           method: 'POST',
           header: {
             'Accept': 'application/json',
             'Content-type': 'application/json',
           },
-          body: JSON.stringify([boardName, statusName])
+          body: JSON.stringify([boardName, columns])
         }
 
         try {
@@ -83,12 +65,11 @@ export default function CreateBoard(props: Params) {
             router.refresh();
           }
         } catch (error) {
-          console.log(error)
           throw new Error('Error updating task')
         }
-      })
+      setCurrentBoard(boardName);
       setShowAddBoardModal(false);
-      router.refresh();
+      router.push(`/${boardName.split(' ').join('-')}`);
     }
   }
 
@@ -114,7 +95,7 @@ export default function CreateBoard(props: Params) {
                 value={newBoard.name}
                 placeholder='e.g. Web Design'
                 required
-                onChange={(e) => setNewBoard((board) => ({
+                onChange={(e) => setNewBoard((newBoard) => ({
                   ...newBoard, [e.target.id]: e.target.value
                 }))}
               />
@@ -125,16 +106,17 @@ export default function CreateBoard(props: Params) {
 
               {columnNames.map((name, index) => {
                 return (
-                  <div id={name} className={styles.statusRow}>
+                  <div key={name} className={styles.statusRow}>
                     <input
                       type='text'
                       id='columnNames'
                       name='columnNames'
                       value={columnNames[index]}
                       onChange={(e) => {
+                        e.preventDefault();
                         const tempColumns = [...columnNames];
                         tempColumns[index] = e.target.value;
-                        setColumnNames([...tempColumns])
+                        setColumnNames([...tempColumns]);
                       }}
                     />
 
@@ -155,9 +137,8 @@ export default function CreateBoard(props: Params) {
               </div>
             </div>
 
-
             <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary' onClick={(e) => handleSubmit(e)}>Create New Board</button>
+              <button className='btn-small btn-primary' >Create New Board</button>
             </div>
           </form>
         </div>
