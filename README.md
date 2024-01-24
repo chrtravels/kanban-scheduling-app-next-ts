@@ -1,6 +1,6 @@
 ## Kanban Scheduling App
 
-
+Kanban Task Scheduling Application. For tracking the progression of tasks through to completion.
 
 ## Table of contents:
 - [Kanban Scheduling App](#kanban-scheduling-app)
@@ -49,12 +49,12 @@ We provide the data in a local `data.json` file, so use that to populate the con
 
 ## Screenshot
 
-- [Dashboard - Dark Mode](./public/demoImages/Kanban-Boards.png)
-- [Dashboard - Light Mode](./public/demoImages/Kanban-Boards-light.png)
-- [View Task](./public/demoImages/kanban-view-task.png)
-- [Add Task](./public/demoImages/kanban-add-task.png)
-- [Edit Task](./public/demoImages/kanban-edit.png)
-- [Delete](./public/demoImages/kanban-delete.png)
+![Dashboard - Dark Mode](./public/demoImages/Kanban-Boards.png)
+![Dashboard - Light Mode](./public/demoImages/Kanban-Boards-light.png)
+![View Task](./public/demoImages/kanban-view-task.png)
+![Add Task](./public/demoImages/kanban-add-task.png)
+![Edit Task](./public/demoImages/kanban-edit.png)
+![Delete](./public/demoImages/kanban-delete.png)
 
 ## Tech Stack
 
