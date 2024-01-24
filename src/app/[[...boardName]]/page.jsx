@@ -17,14 +17,11 @@ async function getData() {
   }
 }
 
-
 export default async function Home({ params }) {
   let boardName = params.boardName ? params.boardName[0].replace(/%20/g, " "): '';
-  console.log(params)
   const boards = await getData();
 
   if (!boardName) {
-    console.log('test')
     if (boards[0].board_name.includes(' ')) {
       redirect(`/${boards[0].board_name.split(' ').join('-')}`)
     } else redirect(`/${boards[0].board_name.replace(/%20/g, " ")}`)

@@ -7,7 +7,7 @@ Kanban Task Scheduling Application. For tracking the progression of tasks throug
 - [Table of contents:](#table-of-contents)
 - [Task](#task)
 - [Expected Behaviour](#expected-behaviour)
-- [Screenshot](#screenshot)
+- [Screenshots](#screenshots)
 - [Tech Stack](#tech-stack)
 - [What I learned](#what-i-learned)
 - [Deploy on Vercel](#deploy-on-vercel)
@@ -47,7 +47,7 @@ We provide the data in a local `data.json` file, so use that to populate the con
   - Adding a new task adds it to the bottom of the relevant column.
   - Updating a task's status will move the task to the relevant column. If you're taking on the drag and drop bonus, dragging a task to a different column will also update the status.
 
-## Screenshot
+## Screenshots
 
 ![Dashboard - Dark Mode](./public/demoImages/Kanban-Boards.png)
 ![Dashboard - Light Mode](./public/demoImages/Kanban-Boards-light.png)
