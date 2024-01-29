@@ -34,7 +34,6 @@ export default function EditTask(props) {
 
   }, [subtasks])
 
-
   function handleAddTask (e) {
     e.preventDefault();
     setSubtasks([...currentTask.subtasks, {'title': '', 'isCompleted': false}]);
@@ -46,10 +45,18 @@ export default function EditTask(props) {
     setSubtasks([...tempSubtasks])
   }
 
+  function handleChange (e) {
+    const { name, value } = e.target;
+    setCurrentTask({
+     ...currentTask,
+      [name]: value
+    });
+  }
+
   const handleSubmit = async () => {
     // Updates the task on the database when the task is marked completed
     const updatedTasks = [...tasks];
-    const clonedTask = { ...currentTask };
+    const clonedTask = {...currentTask};
     const updatedColumns = [...columns];
 
     if (boardStatus === currentTask.status || currentTask.status === '') {
@@ -73,9 +80,6 @@ export default function EditTask(props) {
       });
       setColumns(updatedColumns);
     }
-
-    console.log('current Task: ', currentTask);
-    console.log('updated columns: ', updatedColumns);
 
     const options = {
       method: 'PATCH',
