@@ -38,7 +38,7 @@ export default function NewColumn(props) {
 
   return (
     <div className={`new-column ${styles.container}`}>
-      <span className='heading-l' onClick={(addNewColumn)}>+ New Column</span>
+      <span className='heading-xl' onClick={(addNewColumn)}>+ New Column</span>
     </div>
   )
 }
