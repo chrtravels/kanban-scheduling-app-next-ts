@@ -3,6 +3,7 @@
 Kanban Task Scheduling Application. For tracking the progression of tasks through to completion.
 
 ## Table of contents:
+
 - [Kanban Scheduling App](#kanban-scheduling-app)
 - [Table of contents:](#table-of-contents)
 - [Task](#task)
@@ -11,7 +12,7 @@ Kanban Task Scheduling Application. For tracking the progression of tasks throug
 - [Tech Stack](#tech-stack)
 - [What I learned](#what-i-learned)
 - [Deploy on Vercel](#deploy-on-vercel)
-
+  - [UPDATE 8/6/24](#update-8624)
 
 ## Task
 
@@ -69,3 +70,8 @@ With every app I work on, I am continually reminded of the importance of plannin
 ## Deploy on Vercel
 
 https://kanban-scheduling-app-next-ts-git-convert-to-js-chrtravels.vercel.app/
+
+### UPDATE 8/6/24
+
+I have learned quite a bit since building this app and am in the process of refactoring the code, to change the data flow and
+implementation of the modals and new board feature. Currenly some things are broken and in the process of being fixed.
