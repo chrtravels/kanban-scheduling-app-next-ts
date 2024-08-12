@@ -13,15 +13,20 @@ import CreateBoard from '../board/createBoard/CreateBoard';
 
 
 export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard }) {
-  const { theme, setTheme} = useTheme();
+  const { theme } = useTheme();
+  const [isDarkTheme, setIsDarkTheme] = useState(false)
   const [active, setActive] = useState(true);
   const [mounted, setMounted] = useState(false)
   // get urlparams from props to see if the page is being reloaded. If so keep current board active in sidebar
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
   const [showAddBoardModal, setShowAddBoardModal] = useState(false);
 
-  // Removes scrollbar when modal open
   useEffect(() => {
+    // Checks if system them is dark mode
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      setIsDarkTheme(true)
+    }
+    // Removes scrollbar when modal open
     if (showAddBoardModal) {
       document.body.classList.add("overflow-y-hidden")
     } else {
@@ -60,7 +65,7 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
 
       <div className={active ? `sidebar ${styles.sideNav} ${styles.activeSideNav}` : `${styles.sideNav} ${styles.collapsedSideNav}`}>
         <div className={`sidebar ${styles.logo}`}>
-          {theme === 'dark' ? (
+          {isDarkTheme || theme === 'dark' ? (
             <Image
             src='/assets/logo-light.svg'
             height={26}
