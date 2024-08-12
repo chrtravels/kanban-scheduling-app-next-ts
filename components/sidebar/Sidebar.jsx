@@ -65,7 +65,7 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
 
       <div className={active ? `sidebar ${styles.sideNav} ${styles.activeSideNav}` : `${styles.sideNav} ${styles.collapsedSideNav}`}>
         <div className={`sidebar ${styles.logo}`}>
-          {isDarkTheme || theme === 'dark' ? (
+          {theme === 'system' && isDarkTheme || theme === 'dark' ? (
             <Image
             src='/assets/logo-light.svg'
             height={26}
