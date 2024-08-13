@@ -9,14 +9,16 @@ import Link from 'next/link';
 
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 import CreateBoard from '../board/createBoard/CreateBoard';
+import { usePathname } from 'next/navigation';
 
-
+// Take url params and set active link based on that
 
 export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard }) {
   const { theme } = useTheme();
   const [isDarkTheme, setIsDarkTheme] = useState(false)
   const [active, setActive] = useState(true);
   const [mounted, setMounted] = useState(false)
+  const pathname = usePathname().slice(1)
   // get urlparams from props to see if the page is being reloaded. If so keep current board active in sidebar
   // const [selected, setSelected] = useState(currentBoard == null ? boardNames[0] : currentBoard)
   const [showAddBoardModal, setShowAddBoardModal] = useState(false);
@@ -105,14 +107,11 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
               }}>
                 <Link
                 key={boardName}
-                href={{
-                  pathname: `/${boardName.split(' ').join('-')}`,
-                  query: { board: boardName }
-                }}
+                href={`/${boardName.split(' ').join('-')}`}
                 style={{ textDecoration: 'none'}}
                 >
                   <div
-                  className={`${boardName === currentBoard ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}
+                  className={`${boardName.split(' ').join('-') === pathname ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}
                   >
                     <Image
                       src='/assets/icon-board.svg'

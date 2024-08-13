@@ -2,7 +2,7 @@
   --primary: #645fc7;
   --primary-hover: #a7a4ff;
   --destructive: #ea5555;
-  --destructive-hover: #FF9898;
+  --destructive-hover: #ff9898;
 }
 
 html,
@@ -13,12 +13,15 @@ body {
   font-family: var(--font-plus-jakarta-sans);
 }
 
-input, textarea, option, select {
+input,
+textarea,
+option,
+select {
   font-family: var(--font-plus-jakarta-sans);
 }
 
 /* Set the dark mode variables... */
-[data-theme="dark"] {
+[data-theme='dark'] {
   --background: #21212c;
   --secondary-background: #2b2c37;
   --title-text: white;
@@ -37,7 +40,7 @@ input, textarea, option, select {
 }
 
 /* Set the light mode variables... */
-[data-theme="light"] {
+[data-theme='light'] {
   --background: #f4f7fd;
   --secondary-background: #ffffff;
   --title-text: black;
@@ -96,7 +99,7 @@ input, textarea, option, select {
 
 .btn-small {
   /* width: 100%; */
-  padding: .5rem 0;
+  padding: 0.5rem 0;
   -webkit-border-radius: 1em;
   -moz-border-radius: 1em;
   border-radius: 500px;
@@ -140,14 +143,13 @@ input, textarea, option, select {
 
 /* Text Fields */
 
-
 /* Dropdown */
 .nativeSelect,
 .customSelect {
   position: relative;
   width: 100%;
   height: 2.3rem;
-  font-size: .8em;
+  font-size: 0.8em;
   border: 1px solid var(--dropdown-border);
   border-radius: 4px;
   background: none;
@@ -174,7 +176,7 @@ input, textarea, option, select {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: .5rem 1.3rem;
+  padding: 0.5rem 1.3rem;
   color: white;
 }
 
@@ -214,7 +216,7 @@ input, textarea, option, select {
 }
 
 .customSelectOption:not(:last-of-type)::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: 0;
   left: 0;
@@ -223,7 +225,7 @@ input, textarea, option, select {
 }
 
 .customSelectOption.isActive::before {
-  content: "✓";
+  content: '✓';
   position: absolute;
   left: 0.8rem;
 }
@@ -243,7 +245,7 @@ input, textarea, option, select {
 
 /* Active */
 .drop-down:active {
-  border: 1px solid var(--primary);;
+  border: 1px solid var(--primary);
 }
 
 /* Menu */
@@ -286,7 +288,7 @@ input, textarea, option, select {
   line-height: 15px;
   font-weight: 700;
   kerning: 2.4px;
-  color: #828fa3
+  color: #828fa3;
 }
 
 .body-l {
@@ -319,7 +321,7 @@ input, textarea, option, select {
 }
 
 .subtask-header {
-  color: var(--subtask-header)
+  color: var(--subtask-header);
 }
 
 .new-column {
@@ -331,7 +333,7 @@ input, textarea, option, select {
 }
 
 .modal-header {
-  color: var(--modal-header-text)
+  color: var(--modal-header-text);
 }
 
 .overflow-y-hidden {
