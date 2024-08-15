@@ -8,8 +8,6 @@ import DropdownList from '../../dropownList/DropdownList';
 import EditTask from '../editTask/EditTask';
 
 
-
-
 export default function ViewTask(props) {
   const { boardName, boardStatus, tasks, taskId, task, statusTypes, setShowTask, setShowDeleteTask } = props;
 
@@ -140,6 +138,12 @@ export default function ViewTask(props) {
     setShowEditTask(true);
   }
 
+  // Updates any subtask change & closes task modal
+  function handleOutsideClick() {
+    handleUpdateTask()
+    setShowTask(false)
+  }
+
   if (showEditTask) {
     return (
       <div className={styles.overlay}>
@@ -150,8 +154,8 @@ export default function ViewTask(props) {
     )
   } else {
     return (
-      <div className={styles.overlay}>
-        <div className={`card ${styles.taskContainer}`}>
+      <div className={styles.overlay} onClick={handleOutsideClick}>
+        <div className={`card ${styles.taskContainer}`} onClick={e => e.stopPropagation()}>
           <div className={styles.header}>
             {showActionsBox && (
               <div className={`actions-container ${styles.actionsContainer}`}>
@@ -166,7 +170,7 @@ export default function ViewTask(props) {
 
             <h3>{task.title}</h3>
             <div className={styles.actionsButton} onClick={() => {
-              handleUpdateTask ()
+              handleUpdateTask()
               setShowActionsBox(!showActionsBox)}
             }>
               <Image
@@ -231,5 +235,4 @@ export default function ViewTask(props) {
       </div>
     )
   }
-
 }
