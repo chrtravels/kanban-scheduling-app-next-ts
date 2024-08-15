@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import styles from './viewTask.module.scss'
 import DropdownList from '../../dropownList/DropdownList';
 import EditTask from '../editTask/EditTask';
+import { isEqual } from 'lodash';
 
 
 export default function ViewTask(props) {
@@ -140,14 +141,18 @@ export default function ViewTask(props) {
 
   // Updates any subtask change & closes task modal
   function handleOutsideClick() {
-    handleUpdateTask()
+    if (!isEqual(taskState, task)) {
+      handleUpdateTask()
+    }
+    setShowEditTask(false)
     setShowTask(false)
   }
 
+
   if (showEditTask) {
     return (
-      <div className={styles.overlay}>
-        <div className={`card ${styles.editContainer}`}>
+      <div className={styles.overlay} onClick={handleOutsideClick}>
+        <div className={`card ${styles.editContainer}`} onClick={e => e.stopPropagation()}>
           <EditTask boardStatus={boardStatus} boardName={boardName} tasks={tasks} taskId={taskId} task={taskState} columns={columns} setColumns={setColumns} statusTypes={statusTypes} setShowTask={setShowTask} />
         </div>
       </div>

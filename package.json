@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/pg": "^8.10.9",
+    "lodash": "^4.17.21",
     "next": "14.0.2",
     "next-themes": "^0.2.1",
     "pg": "^8.11.3",
