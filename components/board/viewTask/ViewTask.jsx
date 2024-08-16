@@ -174,10 +174,7 @@ export default function ViewTask(props) {
             )}
 
             <h3>{task.title}</h3>
-            <div className={styles.actionsButton} onClick={() => {
-              handleUpdateTask()
-              setShowActionsBox(!showActionsBox)}
-            }>
+            <div className={styles.actionsButton} onClick={() => {setShowActionsBox(!showActionsBox)}}>
               <Image
               src='/assets/icon-vertical-ellipsis.svg'
               height={20}

@@ -306,6 +306,11 @@ select {
 /* Edit Task Component */
 .actions-container {
   background-color: var(--subtask-dropdown-selection);
+  border: 1px solid var(--border);
+
+  button {
+    cursor: pointer;
+  }
 }
 
 .subtask {
