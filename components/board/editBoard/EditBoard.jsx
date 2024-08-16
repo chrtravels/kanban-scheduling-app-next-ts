@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 
 export default function EditBoard(props) {
-  const { setShowEditBoardModal, currentBoard } = props;
+  const { setShowEditBoardModal, currentBoard, handleOutsideClick } = props;
 
   const [newBoard, setNewBoard] = useState({
     id: null,
@@ -101,8 +101,8 @@ export default function EditBoard(props) {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={`card ${styles.editBoardModal}`}>
+    <div className={styles.container} id='showEditBoardModal' onClick={(e) => handleOutsideClick(e)}>
+      <div className={`card ${styles.editBoardModal}`} onClick={e => e.stopPropagation()}>
         <div className={styles.formWrapper}>
         <div className={styles.header}>
           <span className='modal-header heading-l'>Edit Board</span>

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 
 
 export default function DeleteBoard(props) {
-  const { currentBoard, setCurrentBoard, setShowDeleteBoardModal, boards } = props;
+  const { currentBoard, setCurrentBoard, setShowDeleteBoardModal, boards, handleOutsideClick } = props;
 
   const router = useRouter();
 
@@ -35,8 +35,8 @@ export default function DeleteBoard(props) {
 
 
   return (
-    <div className={styles.overlay}>
-      <div className={`card ${styles.modal}`}>
+    <div className={styles.overlay} id='showDeleteBoardModal' onClick={(e) => handleOutsideClick(e)}>
+      <div className={`card ${styles.modal}`} onClick={e => e.stopPropagation()}>
         <span className='heading-m'>Delete this board?</span>
 
         <p className='body-m'>Are you sure you want to delete the '{currentBoard}'? This action will remove all columns and tasks and cannot be reversed.</p>

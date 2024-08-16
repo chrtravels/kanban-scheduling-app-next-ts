@@ -15,7 +15,7 @@ import DeleteBoard from '../board/deleteBoard/DeleteBoard';
 const Navbar = ( props ) => {
   const {sidebarExpanded, currentBoard, setCurrentBoard, statusList, boards} = props;
 
-  const {theme, setTheme} = useTheme();
+  const { theme } = useTheme();
   const [mounted, setMounted] = useState (false);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   // Shows the ellipsis actions modal
@@ -27,9 +27,6 @@ const Navbar = ( props ) => {
   if (currentBoard) navbarTitle = currentBoard.split(' ').map((word) => {
     return word.slice(0,1).toUpperCase() + word.slice(1);
   }).join(' ');
-
-  // const searchParams = useSearchParams();
-  // const boardName = searchParams.get('board');
 
   const contentStyle = {
     transition: "all 0.5s ease-in-out",
@@ -52,24 +49,48 @@ useEffect(() => {
     return null
   }
 
+  // Closes specified modal on outside click
+  function handleOutsideClick(e) {
+    const id = e.target.id;
+
+    switch(id) {
+      case 'showActions':
+        setShowActions(false)
+        break;
+      case 'showEditBoardModal':
+        setShowEditBoardModal(false)
+        break;
+      case 'showDeleteBoardModal':
+        setShowDeleteBoardModal(false)
+        break;
+      case 'showAddTaskModal':
+        setShowAddTaskModal(false)
+        break;
+    }
+  }
+
 
   return (
     <div className={styles.wrapper}>
       {showActions && (
-        <div className={`actions-container ${styles.actionsContainer}`}>
-          <button className='heading-s' value='edit' onClick={() => {
-            setShowEditBoardModal(true)
-            setShowActions(false)
-          }}>Edit Board</button>
-          <button className='heading-s' value='delete' onClick={() => {
-            setShowDeleteBoardModal(true)
-            setShowActions(false)
-          }}>Delete Board</button>
+        <div className={styles.actionsWrapper} id='showActions' onClick={(e) => handleOutsideClick(e)}>
+          <div className={`actions-container ${styles.actionsContainer}`} onClick={e => e.stopPropagation()}>
+            <button className='heading-s' value='edit' onClick={() => {
+              setShowEditBoardModal(true)
+              setShowActions(false)
+            }}>Edit Board</button>
+            <button className='heading-s' value='delete' onClick={() => {
+              setShowDeleteBoardModal(true)
+              setShowActions(false)
+            }}>Delete Board</button>
+          </div>
         </div>
+
       )}
 
       {showEditBoardModal && (
         <EditBoard
+        handleOutsideClick={handleOutsideClick}
         setShowEditBoardModal={setShowEditBoardModal}
         currentBoard={currentBoard}
         />
@@ -77,6 +98,7 @@ useEffect(() => {
 
       {showDeleteBoardModal && (
         <DeleteBoard
+        handleOutsideClick={handleOutsideClick}
         setShowDeleteBoardModal={setShowDeleteBoardModal}
         currentBoard={currentBoard}
         setCurrentBoard={setCurrentBoard}
@@ -85,13 +107,15 @@ useEffect(() => {
       )}
 
       {showAddTaskModal && (
-          <AddTask
-          currentBoard={currentBoard}
-          setCurrentBoard={setCurrentBoard}
-          setShowAddTaskModal={setShowAddTaskModal}
-          statusList={statusList}
-          />
-        )}
+        <AddTask
+        handleOutsideClick={handleOutsideClick}
+        currentBoard={currentBoard}
+        setCurrentBoard={setCurrentBoard}
+        setShowAddTaskModal={setShowAddTaskModal}
+        statusList={statusList}
+        />
+      )}
+
       <div className={`navbar ${styles.container}`}>
         <div className={styles.leftContent}>
           <div className={`sidebar ${styles.logo}`}>

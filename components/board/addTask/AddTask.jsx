@@ -9,7 +9,7 @@ import DropdownList from '../../dropownList/DropdownList';
 
 
 export default function AddTask(props) {
-  const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList } = props;
+  const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList, handleOutsideClick } = props;
   const [rowToUpdate, setRowToUpdate] = useState([])
 
   const [newTask, setNewTask] = useState({
@@ -100,121 +100,119 @@ export default function AddTask(props) {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={`card ${styles.addTaskModal}`}>
+    <div className={styles.container} id='showAddTaskModal' onClick={(e) => handleOutsideClick(e)}>
+      <div className={`card ${styles.addTaskModal}`} onClick={e => e.stopPropagation()}>
         <div className={styles.formWrapper}>
-        <div className={styles.header}>
-          <span className='modal-header heading-l'>Add Task</span>
-          <div className={styles.cancelButton}>
-            <button onClick={() => setShowAddTaskModal(false)}>x</button>
+          <div className={styles.header}>
+            <span className='modal-header heading-l'>Add Task</span>
+            <div className={styles.cancelButton}>
+              <button onClick={() => setShowAddTaskModal(false)}>x</button>
+            </div>
           </div>
-        </div>
 
-        <div className={styles.formContainer}>
-          <form onSubmit={(e) => handleSubmit(e)}>
-            <div className={styles.formRow}>
-              <span className='subtask-header body-m'>Title</span>
-              <input
-                type='text'
-                id='title'
-                name='title'
-                value={newTask.title}
-                placeholder='e.g. Take coffee break'
-                onChange={(e) => setNewTask((newTask) => ({
-                  ...newTask, [e.target.id]: e.target.value
-                }))}
-              />
-            </div>
-
-            <div className={styles.formRow}>
-              <span className='body-m'>Description</span>
-              <textarea
-                id='description'
-                name='description'
-                rows={4}
-                value={newTask.description}
-                placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
-                onChange={(e) => setNewTask((newTask) => ({
-                  ...newTask, [e.target.id]: e.target.value
-                }))}
-              />
-            </div>
-
-            <div className={styles.formRow}>
-              <span className='subtask-header body-m'>Subtasks</span>
-
-              {subtasks.map((subtask, index) => {
-                return (
-                  <div key={`${subtask.title}-${index}`} className={styles.subtaskRow}>
-                    <input
-                      type='text'
-                      id='subtasks'
-                      name='subtasks'
-                      value={subtask.title}
-                      onChange={(e) => {
-                        const tempSubtasks = [...subtasks];
-                        let obj = tempSubtasks[index];
-                        obj.title =  e.target.value;
-                        tempSubtasks[index] = obj;
-                        setSubtasks([...tempSubtasks])
-                        }
-                      }
-                    />
-
-                    <div className={styles.deleteButton} onClick={(e) => handleRemoveSubtask(e, index)}>
-                      <Image
-                      src='/assets/icon-cross.svg'
-                      height={15}
-                      width={15}
-                      alt='delete subtask button'
-                      />
-                    </div>
-                  </div>
-                )
-              })}
-
-              <div className={styles.btnContainer}>
-                <button className='btn-small btn-secondary' onClick={(e) => handleAddTask(e)}>+ Add New Subtask</button>
-              </div>
-            </div>
-
-            <div className={styles.status}>
-              <span className='body-m status-header'>Status</span>
-              <div className={styles.dropdownContainer}>
-                <select
-                id='status'
-                name='status'
-                className='nativeSelect'
-                aria-labelledby='statusLabel'
-                value={newTask.status}
-                onChange={(e) => setNewTask((newTask) => ({
+          <div className={styles.formContainer}>
+            <form onSubmit={(e) => handleSubmit(e)}>
+              <div className={styles.formRow}>
+                <span className='subtask-header body-m'>Title</span>
+                <input
+                  type='text'
+                  id='title'
+                  name='title'
+                  value={newTask.title}
+                  placeholder='e.g. Take coffee break'
+                  onChange={(e) => setNewTask((newTask) => ({
                     ...newTask, [e.target.id]: e.target.value
-                  }))}>
-                  {props.statusList.map((option) => {
-                    return <option key={option} value={option}>{option}</option>
-                  })}
-                </select>
-
-                <DropdownList
-                options={statusList}
-                selectedOption={selectedOption}
-                setSelectedOption={setSelectedOption}
-                currentFieldName='status'
-                state={newTask}
-                setState={setNewTask}
+                  }))}
                 />
               </div>
-            </div>
 
-            <div className={styles.btnContainer}>
-              <button className='btn-small btn-primary'>Create Task</button>
-            </div>
-          </form>
-        </div>
+              <div className={styles.formRow}>
+                <span className='body-m'>Description</span>
+                <textarea
+                  id='description'
+                  name='description'
+                  rows={4}
+                  value={newTask.description}
+                  placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
+                  onChange={(e) => setNewTask((newTask) => ({
+                    ...newTask, [e.target.id]: e.target.value
+                  }))}
+                />
+              </div>
 
+              <div className={styles.formRow}>
+                <span className='subtask-header body-m'>Subtasks</span>
+
+                {subtasks.map((subtask, index) => {
+                  return (
+                    <div key={`${subtask.title}-${index}`} className={styles.subtaskRow}>
+                      <input
+                        type='text'
+                        id='subtasks'
+                        name='subtasks'
+                        value={subtask.title}
+                        onChange={(e) => {
+                          const tempSubtasks = [...subtasks];
+                          let obj = tempSubtasks[index];
+                          obj.title =  e.target.value;
+                          tempSubtasks[index] = obj;
+                          setSubtasks([...tempSubtasks])
+                          }
+                        }
+                      />
+
+                      <div className={styles.deleteButton} onClick={(e) => handleRemoveSubtask(e, index)}>
+                        <Image
+                        src='/assets/icon-cross.svg'
+                        height={15}
+                        width={15}
+                        alt='delete subtask button'
+                        />
+                      </div>
+                    </div>
+                  )
+                })}
+
+                <div className={styles.btnContainer}>
+                  <button className='btn-small btn-secondary' onClick={(e) => handleAddTask(e)}>+ Add New Subtask</button>
+                </div>
+              </div>
+
+              <div className={styles.status}>
+                <span className='body-m status-header'>Status</span>
+                <div className={styles.dropdownContainer}>
+                  <select
+                  id='status'
+                  name='status'
+                  className='nativeSelect'
+                  aria-labelledby='statusLabel'
+                  value={newTask.status}
+                  onChange={(e) => setNewTask((newTask) => ({
+                      ...newTask, [e.target.id]: e.target.value
+                    }))}>
+                    {props.statusList.map((option) => {
+                      return <option key={option} value={option}>{option}</option>
+                    })}
+                  </select>
+
+                  <DropdownList
+                  options={statusList}
+                  selectedOption={selectedOption}
+                  setSelectedOption={setSelectedOption}
+                  currentFieldName='status'
+                  state={newTask}
+                  setState={setNewTask}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.btnContainer}>
+                <button className='btn-small btn-primary'>Create Task</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
-
     </div>
   )
 }
