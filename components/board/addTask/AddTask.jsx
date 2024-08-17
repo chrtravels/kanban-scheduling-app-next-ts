@@ -3,13 +3,13 @@
 import styles from './addTask.module.scss'
 
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import DropdownList from '../../dropownList/DropdownList';
+import SubtasksInput from './_components/SubtasksInput';
 
 
 export default function AddTask(props) {
-  const { currentBoard, setCurrentBoard, setShowAddTaskModal, statusList, handleOutsideClick } = props;
+  const { currentBoard, setShowAddTaskModal, statusList, handleOutsideClick } = props;
   const [rowToUpdate, setRowToUpdate] = useState([])
 
   const [newTask, setNewTask] = useState({
@@ -20,7 +20,7 @@ export default function AddTask(props) {
   })
 
   const [selectedOption, setSelectedOption] = useState(newTask.status);
-  const [subtasks, setSubtasks]  = useState(newTask.subtasks)
+  const [subtasks, setSubtasks]  = useState([])
 
   const router = useRouter();
 
@@ -31,7 +31,7 @@ export default function AddTask(props) {
       subtasks: subtasks,
       description: newTask.description
     });
-
+    console.log('subtasks: ', subtasks)
   }, [subtasks, selectedOption])
 
   useEffect(() => {
@@ -52,15 +52,15 @@ export default function AddTask(props) {
   function handleAddTask (e) {
     e.preventDefault();
 
-    const tempNewSubtasks = [...newTask.subtasks, {name: '', isCompleted: false}];
+    const tempNewSubtasks = [...subtasks, {title: '', isCompleted: false}];
     setSubtasks([...tempNewSubtasks]);
   }
 
-  function handleRemoveSubtask (e, index) {
-    const tempSubtasks = [...subtasks];
-    tempSubtasks.splice(index, 1)
-    setSubtasks([...tempSubtasks])
-  }
+  const handleChange = (e) => {
+    setNewTask((newTask) => ({
+      ...newTask, [e.target.id]: e.target.value
+    }))
+  };
 
 
   const handleSubmit = async (e) => {
@@ -120,9 +120,8 @@ export default function AddTask(props) {
                   name='title'
                   value={newTask.title}
                   placeholder='e.g. Take coffee break'
-                  onChange={(e) => setNewTask((newTask) => ({
-                    ...newTask, [e.target.id]: e.target.value
-                  }))}
+                  onChange={(e) => handleChange(e)}
+                  required
                 />
               </div>
 
@@ -134,44 +133,17 @@ export default function AddTask(props) {
                   rows={4}
                   value={newTask.description}
                   placeholder="e.g. It's always good to take a break. This 15 minute break will recharge the batteries a little."
-                  onChange={(e) => setNewTask((newTask) => ({
-                    ...newTask, [e.target.id]: e.target.value
-                  }))}
+                  onChange={(e) => handleChange(e)}
                 />
               </div>
 
               <div className={styles.formRow}>
                 <span className='subtask-header body-m'>Subtasks</span>
 
-                {subtasks.map((subtask, index) => {
-                  return (
-                    <div key={`${subtask.title}-${index}`} className={styles.subtaskRow}>
-                      <input
-                        type='text'
-                        id='subtasks'
-                        name='subtasks'
-                        value={subtask.title}
-                        onChange={(e) => {
-                          const tempSubtasks = [...subtasks];
-                          let obj = tempSubtasks[index];
-                          obj.title =  e.target.value;
-                          tempSubtasks[index] = obj;
-                          setSubtasks([...tempSubtasks])
-                          }
-                        }
-                      />
+                {subtasks.length > 0 && (
+                  <SubtasksInput subtasks={subtasks} setSubtasks={setSubtasks} />
+                )}
 
-                      <div className={styles.deleteButton} onClick={(e) => handleRemoveSubtask(e, index)}>
-                        <Image
-                        src='/assets/icon-cross.svg'
-                        height={15}
-                        width={15}
-                        alt='delete subtask button'
-                        />
-                      </div>
-                    </div>
-                  )
-                })}
 
                 <div className={styles.btnContainer}>
                   <button className='btn-small btn-secondary' onClick={(e) => handleAddTask(e)}>+ Add New Subtask</button>
@@ -187,9 +159,9 @@ export default function AddTask(props) {
                   className='nativeSelect'
                   aria-labelledby='statusLabel'
                   value={newTask.status}
-                  onChange={(e) => setNewTask((newTask) => ({
-                      ...newTask, [e.target.id]: e.target.value
-                    }))}>
+                  onChange={(e) => handleChange(e)}
+                  required
+                  >
                     {props.statusList.map((option) => {
                       return <option key={option} value={option}>{option}</option>
                     })}
