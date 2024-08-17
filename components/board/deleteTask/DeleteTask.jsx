@@ -10,7 +10,7 @@ export default function DeleteTask(props) {
   const [columns, setColumns] = useState([]);
   const [tasks, setTasks] = useState([]); // set type here for error on line 32
   const [currentTask, setCurrentTask] = useState({});
-  console.log('current task: ', currentTask)
+
   const router = useRouter();
 
   useEffect(() => {
