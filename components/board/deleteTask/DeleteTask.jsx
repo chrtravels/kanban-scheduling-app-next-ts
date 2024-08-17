@@ -8,7 +8,7 @@ export default function DeleteTask(props) {
   const { boardName, columnName, taskId, setShowDeleteTask } = props;
 
   const [columns, setColumns] = useState([]);
-  const [tasks, setTasks] = useState([]); // set type here for error on line 32
+  const [tasks, setTasks] = useState([]);
   const [currentTask, setCurrentTask] = useState({});
 
   const router = useRouter();
