@@ -19,8 +19,9 @@ export default function AddTask(props) {
     description: ''
   })
 
-  const [selectedOption, setSelectedOption] = useState(newTask.status);
+  const [selectedOption, setSelectedOption] = useState(newTask.status)
   const [subtasks, setSubtasks]  = useState([])
+  const [showStatusRequired, setShowStatusRequired] = useState(false)
 
   const router = useRouter();
 
@@ -31,7 +32,6 @@ export default function AddTask(props) {
       subtasks: subtasks,
       description: newTask.description
     });
-    console.log('subtasks: ', subtasks)
   }, [subtasks, selectedOption])
 
   useEffect(() => {
@@ -65,6 +65,11 @@ export default function AddTask(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+     // Truthy check if status is selected before submitting
+    if (!newTask.status) {
+      setShowStatusRequired(true)
+      return
+    }
 
     const { columns } = rowToUpdate[0];
 
@@ -152,7 +157,10 @@ export default function AddTask(props) {
 
               <div className={styles.status}>
                 <span className='body-m status-header'>Status</span>
-                <div className={styles.dropdownContainer}>
+                <div className={styles.dropdownContainer} onClick={() => {setShowStatusRequired(false)}}>
+                  {showStatusRequired && (
+                  <div className={styles.statusRequired}>Please fill out this field</div>
+                  )}
                   <select
                   id='status'
                   name='status'

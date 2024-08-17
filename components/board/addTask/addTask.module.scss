@@ -5,7 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 1, 18, .5);
+  background: rgba(0, 1, 18, 0.5);
   z-index: 100;
 }
 
@@ -17,19 +17,19 @@
   border-radius: 6px;
 
   h3 {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
     padding-right: 2rem;
   }
 }
 
 .formWrapper {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  margin: .8rem 0;
+  margin: 0.8rem 0;
 }
 
 .cancelButton {
@@ -50,11 +50,14 @@
 .formRow {
   margin-bottom: 1rem;
 
-  input, select, option, textarea {
+  input,
+  select,
+  option,
+  textarea {
     width: 94%;
     height: 2rem;
-    margin-top: .5rem;
-    padding: 0 .5rem 0 1rem;
+    margin-top: 0.5rem;
+    padding: 0 0.5rem 0 1rem;
     // color: $dark-font;
     background: none;
     border-radius: 2px;
@@ -64,12 +67,12 @@
 
   textarea {
     height: 6rem;
-    padding-top: .5rem;
+    padding-top: 0.5rem;
     resize: none;
   }
 
   textarea::placeholder {
-    padding-top: .5rem;
+    padding-top: 0.5rem;
   }
 }
 
@@ -77,26 +80,35 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: .2rem;
+  margin-bottom: 0.2rem;
 
   input {
     width: 100%;
     height: 2rem;
-    margin: .5rem 0 0 0;
-    padding: 0 .5rem 0 1rem;
+    margin: 0.5rem 0 0 0;
+    padding: 0 0.5rem 0 1rem;
   }
 }
 
 .deleteButton {
-  margin-top: .6rem;
+  margin-top: 0.6rem;
 }
 
 .status {
-  margin-bottom: .9rem;
+  margin-bottom: 0.9rem;
 }
 
 .dropdownContainer {
-  margin-top: .5rem;
+  position: relative;
+  margin-top: 0.5rem;
+}
+
+.statusRequired {
+  position: absolute;
+  top: 0.35rem;
+  left: 0.75rem;
+  color: red;
+  z-index: 10;
 }
 
 .btnContainer {
