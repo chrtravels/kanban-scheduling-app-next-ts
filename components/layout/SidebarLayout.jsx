@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Sidebar from '../sidebar/Sidebar';
 import Navbar from '../navbar/Navbar';
 
@@ -12,12 +13,16 @@ export default function SidebarLayout({ children }) {
   const [boardNames, setBoardNames] = useState([]);
   const [statusList, setStatusList] = useState([]);
   const [currentBoard, setCurrentBoard] = useState(boardNames[0]);
+  const pathname = usePathname().slice(1)
 
-  useMemo(() => {
+
+  useEffect(() => {
     if (boardNames.length > 0) {
-      if (!currentBoard) setCurrentBoard(boardNames[0]);
+      if (pathname.length > 0) {
+        setCurrentBoard(pathname.split('-').join(' '))
+      } else if (!currentBoard) setCurrentBoard(boardNames[0]);
     }
-  }, [boardNames])
+  }, [pathname, boardNames])
 
   useEffect(() => {
     const controller = new AbortController;
@@ -36,12 +41,12 @@ export default function SidebarLayout({ children }) {
   }, [currentBoard])
 
 
-  useMemo(() => {
+  useEffect(() => {
     const boardList = [];
     const statusTypes = [];
 
     if (boards.length > 0) {
-      boards.forEach((el, idx) => {
+      boards.forEach((el) => {
         if (!boardList.includes(el.board_name)) {
           boardList.push(el.board_name)
         }

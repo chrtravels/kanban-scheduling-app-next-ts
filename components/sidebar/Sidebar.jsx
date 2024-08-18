@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
 import CreateBoard from '../board/createBoard/CreateBoard';
 
-export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, setCurrentBoard }) {
+export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard }) {
   const { theme } = useTheme();
   const [isDarkTheme, setIsDarkTheme] = useState(false)
   const [active, setActive] = useState(true);
@@ -35,6 +35,10 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    setCurrentBoard(pathname.split('-').join(' '))
+  }, [pathname])
 
   if (!mounted) {
     return null
@@ -107,7 +111,7 @@ export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpande
                 style={{ textDecoration: 'none'}}
                 >
                   <div
-                  className={`${boardName.split(' ').join('-') === pathname ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}
+                  className={`${boardName === currentBoard ? `${styles.selected} btn-primary` : ''} ${styles.navItem}`}
                   >
                     <Image
                       src='/assets/icon-board.svg'

@@ -26,7 +26,7 @@ export default function DeleteBoard(props) {
         setCurrentBoard(boards[0].board_name)
         setShowDeleteBoardModal(false);
 
-        router.push(`/${boards[0].board_name.split(' ').join('-')}`);
+        router.push(`/`);
       }
     } catch (error) {
       throw new Error('Error deleting board')
