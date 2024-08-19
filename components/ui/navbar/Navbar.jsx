@@ -7,9 +7,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 // import { useSearchParams } from 'next/navigation'
 import styles from './navbar.module.scss'
-import AddTask from '../board/addTask/AddTask';
-import EditBoard from '../board/editBoard/EditBoard';
-import DeleteBoard from '../board/deleteBoard/DeleteBoard';
+import AddTask from '../../tasks/addTask/AddTask';
+import EditBoard from '../../board/editBoard/EditBoard';
+import DeleteBoard from '../../board/deleteBoard/DeleteBoard';
 
 
 const Navbar = ( props ) => {

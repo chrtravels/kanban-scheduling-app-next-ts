@@ -44,7 +44,7 @@ export default function EditTask(props) {
     tempSubtasks.splice(index, 1)
     setSubtasks([...tempSubtasks])
   }
-
+  // Remove?
   function handleChange (e) {
     const { name, value } = e.target;
     setCurrentTask({
@@ -211,7 +211,6 @@ export default function EditTask(props) {
           </div>
         </form>
       </div>
-
     </div>
   )
 }

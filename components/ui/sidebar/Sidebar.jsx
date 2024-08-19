@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { DarkModeToggle } from '../darkModeToggle/DarkModeToggle';
-import CreateBoard from '../board/createBoard/CreateBoard';
+import { DarkModeToggle } from '../../darkModeToggle/DarkModeToggle';
+import CreateBoard from '../../board/createBoard/CreateBoard';
 
 export default function Sidebar({ boardNames, sidebarExpanded, setSidebarExpanded, currentBoard, setCurrentBoard }) {
   const { theme } = useTheme();

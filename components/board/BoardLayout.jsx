@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './boardLayout.module.scss'
 import NewColumn from './newColumn/NewColumn';
-import TaskCards from './taskCard/TaskCards';
+import TaskCards from '../tasks/taskCard/TaskCards';
 import DeleteTask from './deleteTask/DeleteTask';
 
 

@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname } from 'next/navigation';
-import Sidebar from '../sidebar/Sidebar';
-import Navbar from '../navbar/Navbar';
+
+import Navbar from '../ui/navbar/Navbar';
+import Sidebar from '../ui/sidebar/Sidebar';
+
 
 
 export default function SidebarLayout({ children }) {
