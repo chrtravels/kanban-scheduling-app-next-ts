@@ -4,7 +4,7 @@ import styles from './createBoard.module.scss'
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import MapColumnInputs from '../_components/MapColumnInputs';
 
 
 export default function CreateBoard(props) {
@@ -33,13 +33,6 @@ export default function CreateBoard(props) {
     e.preventDefault();
     setColumnNames([...columnNames, '']);
   }
-
-  function handleRemoveColumn (e, index) {
-    const tempColumns = [...columnNames];
-    tempColumns.splice(index, 1)
-    setColumnNames([...tempColumns])
-  }
-
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -104,33 +97,7 @@ export default function CreateBoard(props) {
             <div className={styles.formRow}>
               <span className='subtask-header body-m'>Board Columns</span>
 
-              {columnNames.map((name, index) => {
-                return (
-                  <div key={name} className={styles.statusRow}>
-                    <input
-                      type='text'
-                      id='columnNames'
-                      name='columnNames'
-                      value={columnNames[index]}
-                      onChange={(e) => {
-                        e.preventDefault();
-                        const tempColumns = [...columnNames];
-                        tempColumns[index] = e.target.value;
-                        setColumnNames([...tempColumns]);
-                      }}
-                    />
-
-                    <div className={styles.deleteButton} onClick={(e) => handleRemoveColumn(e, index)}>
-                      <Image
-                      src='/assets/icon-cross.svg'
-                      height={15}
-                      width={15}
-                      alt='delete column button'
-                      />
-                    </div>
-                  </div>
-                )
-              })}
+              <MapColumnInputs columnNames={columnNames} setColumnNames={setColumnNames} />
 
               <div className={styles.btnContainer}>
                 <button className='btn-small btn-secondary' onClick={(e) => handleAddColumn(e)}>+ Add New Column</button>
